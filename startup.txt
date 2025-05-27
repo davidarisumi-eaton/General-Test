@@ -1,0 +1,1 @@
+25,PXR10,All Power,ABC,1,60,0,120,-120,90,90,90,Brainstem,Yes,Output A,Z:\Arisumi\Programs\General Test 3.5,Folder,Folder,Z:\Arisumi\Programs\General Test 3.5,Z:/Arisumi/Programs/General Test 3.4/Tests/PXR35/LD 3 Phase/Power Test.xlsx,

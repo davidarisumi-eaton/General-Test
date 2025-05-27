@@ -1,0 +1,147 @@
+;
+;
+; Installs WinUsb
+;
+
+[Version]
+Signature = "$Windows NT$"
+Class     = USBDevice
+ClassGUID = {88BAE032-5A81-49F0-BC3D-A4FF138216D6}
+Provider  = %ManufacturerName%
+CatalogFile = WinUSBInstallation.cat
+
+DriverVer=12/21/2015,2.2.0
+; Copyright 2017 by Acroname, Inc.
+
+
+; ========== Manufacturer/Models sections ===========
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTx86,NTamd64,NTia64
+
+[Standard.NTx86]
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0001
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0002
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0004
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0005
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000D&MI_08
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000E
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000F
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0010
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0011
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0012
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0013
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0014
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0015
+%DeviceName% =USB_Install, USB\VID_24FF&PID_00F7&MI_04
+
+
+[Standard.NTamd64]
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0001
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0002
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0004
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0005
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000D&MI_08
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000E
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000F
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0010
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0011
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0012
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0013
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0014
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0015
+%DeviceName% =USB_Install, USB\VID_24FF&PID_00F7&MI_04
+
+
+[Standard.NTia64]
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0001
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0002
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0004
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0005
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000D&MI_08
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000E
+%DeviceName% =USB_Install, USB\VID_24FF&PID_000F
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0010
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0011
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0012
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0013
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0014
+%DeviceName% =USB_Install, USB\VID_24FF&PID_0015
+%DeviceName% =USB_Install, USB\VID_24FF&PID_00F7&MI_04
+
+
+; ========== Class definition ===========
+
+[ClassInstall32]
+AddReg = ClassInstall_AddReg
+
+[ClassInstall_AddReg]
+HKR,,,,%ClassName%
+HKR,,NoInstallClass,,1
+HKR,,IconPath,%REG_MULTI_SZ%,"%systemroot%\system32\setupapi.dll,-20"
+HKR,,LowerLogoVersion,,5.2
+
+; =================== Installation ===================
+
+[USB_Install]
+Include = winusb.inf
+Needs   = WINUSB.NT
+
+[USB_Install.Services]
+Include = winusb.inf
+Needs   = WINUSB.NT.Services
+
+[USB_Install.HW]
+AddReg=Dev_AddReg
+
+[USB_Install.Wdf]
+KmdfService = WINUSB, WinUsb_Install
+
+[WinUSB_Install]
+KmdfLibraryVersion = 1.9
+
+[Dev_AddReg]
+HKR,,DeviceInterfaceGUIDs,0x10000,"{674C89A0-C20B-43BA-8114-390C78235250}"
+
+[USB_Install.CoInstallers]
+AddReg=CoInstallers_AddReg
+CopyFiles=CoInstallers_CopyFiles
+
+[CoInstallers_AddReg]
+HKR,,CoInstallers32,0x00010000,"WdfCoInstaller01009.dll,WdfCoInstaller","WinUsbCoInstaller2.dll"
+
+[CoInstallers_CopyFiles]
+WinUsbCoInstaller2.dll
+WdfCoInstaller01009.dll
+
+[DestinationDirs]
+; If your INF needs to copy files, you must not use the DefaultDestDir directive here.
+CoInstallers_CopyFiles=11
+
+; ================= Source Media Section =====================
+
+[SourceDisksNames]
+1 = %DiskName%,,,\x86
+2 = %DiskName%,,,\amd64
+3 = %DiskName%,,,\ia64
+
+[SourceDisksFiles.x86]
+WinUsbCoInstaller2.dll=1
+wdfCoInstaller01009.dll=1
+
+[SourceDisksFiles.amd64]
+WinUsbCoInstaller2.dll=2
+wdfCoInstaller01009.dll=2
+
+[SourceDisksFiles.ia64]
+WinUsbCoInstaller2.dll=3
+wdfCoInstaller01009.dll=3
+
+; =================== Strings ===================
+
+[Strings]
+ManufacturerName="Acroname Inc."
+ClassName="Universal Serial Bus devices"
+DeviceName="BrainStem"
+Diskname="InstallDirectory"
+REG_MULTI_SZ = 0x00010000

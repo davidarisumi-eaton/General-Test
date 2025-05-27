@@ -1,0 +1,21 @@
+===============================================================================
+BrainStem2 C++ Example Readme
+===============================================================================
+
+This is a basic blink LED C++ example for the BrainStem 2.0 library. When run,
+the executable will blink the User LED on the BrainStem module 10 times and exit.
+
+Notes:
+===============================================================================
+
+# To build, copy the lib directory into this directory. The lib directory contains
+    the required header files, and the Brainstem2 DLL and LIB files.
+
+# The output directory is win32_BrainStem2Example/Debug.
+
+# A build step has been added to the project that copies the shared object into 
+    the build output directory.
+
+If you have questions, please see the reference, or check out our guides 
+at www.acroname.com.
+

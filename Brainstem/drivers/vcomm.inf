@@ -1,0 +1,123 @@
+;
+; Acroname VCOMM Driver installation file
+;
+
+[Version]
+Signature = "$WINDOWS NT$"
+Class = Ports
+ClassGuid = {4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider = %COMPANY%
+DriverVer=12/23/2015,6.1.7600.16385
+DriverPackageType = PlugAndPlay
+DriverPackageDisplayName = %DISKDESC%
+CatalogFile = vcomm.cat
+
+; ================= Driver section =====================
+
+[Manufacturer]
+%COMPANY% = VCOMMDevice,ntx86,ntia64,ntamd64
+
+; Match on CDC ACM Common AT
+[VCOMMDevice.ntx86]
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_04
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_06
+[VCOMMDevice.ntia64]
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_04
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_06
+[VCOMMDevice.ntamd64]
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_00F7&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_00
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_02
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_04
+%VCOMMDESC% = VCOMMInstall,USB\VID_24FF&PID_000D&MI_06
+
+[SourceDisksNames]
+[SourceDisksFiles]
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+;---------------------------------------------------------------;
+
+[VCOMMInstall.ntx86]
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=VCOMMInstallAddReg.ntx86
+
+[VCOMMInstall.ntia64]
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=VCOMMInstallAddReg.ntia6
+
+[VCOMMInstall.ntamd64]
+include=mdmcpq.inf
+CopyFiles=FakeModemCopyFileSection
+AddReg=VCOMMInstallAddReg.ntamd64
+
+
+[VCOMMInstallAddReg.ntx86]
+HKR,,DevLoader,,*ntkern
+HKR,,NTPMDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[VCOMMInstallAddReg.ntia64]
+HKR,,DevLoader,,*ntkern
+HKR,,NTPMDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[VCOMMInstallAddReg.ntamd64]
+HKR,,DevLoader,,*ntkern
+HKR,,NTPMDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+
+[VCOMMInstall.ntx86.Services]
+AddService=usbser, 0x00000002, VCOMMInstallService.ntx86
+
+[VCOMMInstall.ntia64.Services]
+AddService=usbser, 0x00000002, VCOMMInstallService.ntia64
+
+[VCOMMInstall.ntamd64.Services]
+AddService=usbser, 0x00000002, VCOMMInstallService.ntamd64
+
+
+[VCOMMInstallService.ntx86]
+DisplayName=%VCOMMSERVICE%
+ServiceType = 1
+StartType = 3
+ErrorControl = 1
+ServiceBinary = %12%\usbser.sys
+LoadOrderGroup = Base
+
+[VCOMMInstallService.ntia64]
+DisplayName=%VCOMMSERVICE%
+ServiceType = 1
+StartType = 3
+ErrorControl = 1
+ServiceBinary = %12%\usbser.sys
+LoadOrderGroup = Base
+
+[VCOMMInstallService.ntamd64]
+DisplayName=%VCOMMSERVICE%
+ServiceType = 1
+StartType = 3
+ErrorControl = 1
+ServiceBinary = %12%\usbser.sys
+LoadOrderGroup = Base
+
+;---------------------------------------------------------------;
+
+[Strings]
+COMPANY = "Acroname Inc."
+DISKDESC = "VCOMM Drivers"
+VCOMMDESC = "Virtual COM Port"
+VCOMMSERVICE = "CDC ACM Driver"
