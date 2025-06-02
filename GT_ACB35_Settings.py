@@ -356,7 +356,7 @@ def add_setpoint_group_seven(repos):
     
 def add_setpoint_group_eight(repos):
 
-    repos.setpoint_eight_keys = ['ATS Function Enable/Disable'
+    repos.sp_eight_keys = ['ATS Function Enable/Disable'
                                  'Number of Generators',
                                  'Phase Seq',
                                  'Manual Retransfer',
@@ -410,12 +410,12 @@ def add_setpoint_group_eight(repos):
                                  'Spare 14',
                                  'Spare 15']
                                  
-    add_dictionary_values(repos, repos.setpoint_eight_keys)
+    add_dictionary_values(repos, repos.sp_eight_keys)
     repos.mapping_dictionary['Setpoint 8']  = [repos.sp_eight_keys,   "write_setpoint_eight_request", "read_setpoint_eight_request"]
     
 def add_setpoint_group_nine(repos):
     
-    repos.setpoint_nine_keys = ['Overtemperature Action',
+    repos.sp_nine_keys = ['Overtemperature Action',
                                 'Overtemperature Pickup',
                                 'Current THD Alarm Pickup',
                                 'Current THD Alarm Time',
@@ -426,13 +426,13 @@ def add_setpoint_group_nine(repos):
                                 'Sneakers Alarm',
                                 'Internal Error']
                                 
-    add_dictionary_values(repos, repos.setpoint_nine_keys)
-        repos.mapping_dictionary['Setpoint 9']  = [repos.sp_nine_keys,   "write_setpoint_nine_request", "read_setpoint_nine_request"]
+    add_dictionary_values(repos, repos.sp_nine_keys)
+    repos.mapping_dictionary['Setpoint 9']  = [repos.sp_nine_keys,   "write_setpoint_nine_request", "read_setpoint_nine_request"]
     
 def add_setpoint_group_ten(repos):
 
 
-    repos.setpoint_ten_keys = ['Device Name',
+    repos.sp_ten_keys = ['Device Name',
                                'Downstream Breaker 1',
                                'Downstream Breaker 2',
                                'Downstream Breaker 3',
@@ -518,14 +518,14 @@ def add_setpoint_group_ten(repos):
                                'Reserved',
                                'Reserved']
                 
-    add_dictionary_values(repos, repos.setpoint_ten_keys)
+    add_dictionary_values(repos, repos.sp_ten_keys)
     repos.mapping_dictionary['Setpoint 10']  = [repos.sp_ten_keys,   "write_setpoint_ten_request", "read_setpoint_ten_request"]
 
     
 def add_setpoint_group_eleven(repos):
 
 
-    repos.setpoint_eleven_keys = ['MBus Address',
+    repos.sp_eleven_keys = ['MBus Address',
                                   'MBus Baud',
                                   'MBus Parity',
                                   'MBus Stop Bit',
@@ -539,7 +539,7 @@ def add_setpoint_group_eleven(repos):
                                   'eCam Default One',
                                   'eCam Reset']
                                   
-    add_dictionary_values(repos, repos.setpoint_eleven_keys)
+    add_dictionary_values(repos, repos.sp_eleven_keys)
     repos.mapping_dictionary['Setpoint 11']  = [repos.sp_eleven_keys,   "write_setpoint_eleven_request", "read_setpoint_eleven_request"]
 
 '''
@@ -607,7 +607,7 @@ def add_buffer_zero(repos):
 
 def add_buffer_two(repos):
 
-    repos.buffer_fourty_two_keys = ['Forward Energy',
+    repos.buffer_two_keys = ['Forward Energy',
                                      'Reverse Energy',
                                      'Total Energy',
                                      'Net Energy',
@@ -697,7 +697,7 @@ def add_buffer_five(repos):
     repos.etu_dictionary['Min IG TS']           = [0, "Date"]
     repos.etu_dictionary['Last I Max-Min Reset TS']                = [0, "Date"]
 
-    repos.mapping_dictionary['Buffer 5']    = [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_five_request"]
+    repos.mapping_dictionary['Buffer 5']    = [repos.buffer_five_keys,     "N/A" , "read_real_time_data_buffer_five_request"]
 
     
 def add_buffer_six(repos):
@@ -787,7 +787,7 @@ def add_buffer_eleven(repos):
     repos.etu_dictionary['Int Run Day']             =  [0, "Uint16"]
     repos.etu_dictionary['Int Life Points']         =  [0, "Uint32"]
 
-    repos.mapping_dictionary['Buffer 11']    = [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_eleven_request"]
+    repos.mapping_dictionary['Buffer 11']    = [repos.buffer_eleven_keys,     "N/A" , "read_real_time_data_buffer_eleven_request"]
 
 def add_buffer_fifteen(repos):
 
@@ -797,7 +797,7 @@ def add_buffer_fifteen(repos):
     repos.etu_dictionary['Current Unbalance']   =  [0, "Int32"]
     repos.etu_dictionary['Voltage Unbalance']   =  [0, "Int32"]
 
-    repos.mapping_dictionary['Buffer 15']    = [repos.buffer_fifteen _keys,     "N/A" , "read_real_time_data_buffer_fifteen_request"]
+    repos.mapping_dictionary['Buffer 15']    = [repos.buffer_fifteen_keys,     "N/A" , "read_real_time_data_buffer_fifteen_request"]
 
 def add_buffer_twenty(repos):
 
@@ -838,7 +838,7 @@ def add_buffer_twenty_two(repos):
     repos.etu_dictionary['Time of Min Freq']                    =  [0, "Uint32"]
     repos.etu_dictionary['Time of Max/Min Freq Reset']          =  [0, "Date"]
 
-    repos.mapping_dictionary['Buffer 22']    = [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_twenty_two_request"]
+    repos.mapping_dictionary['Buffer 22']    = [repos.buffer_twenty_two_keys,     "N/A" , "read_real_time_data_buffer_twenty_two_request"]
 
 ## May need to change the data types. Check
 ##                            'Max Power Factor':[0, "Q10"],
@@ -1184,8 +1184,8 @@ def add_buffer_fifty_three(repos):
      repos.etu_dictionary['Min Vbc2 TS']              = [0, "Date"]
      repos.etu_dictionary['Min Vca2']                 = [0, "Q4Padded"]
      repos.etu_dictionary['Min Vca2 TS']              = [0, "Date"]
-     
-    repos.mapping_dictionary['Buffer 53']    = [repos.buffer_fifty_three_keys,     "N/A" , "read_real_time_data_buffer_fifty_three_request"]
+
+     repos.mapping_dictionary['Buffer 53']    = [repos.buffer_fifty_three_keys,     "N/A" , "read_real_time_data_buffer_fifty_three_request"]
         
 def add_buffer_fifty_four(repos):
 
@@ -1239,7 +1239,7 @@ def add_buffer_fifty_four(repos):
      repos.etu_dictionary['Min Vcn2']                 = [0, "Float"]
      repos.etu_dictionary['Min Vcn2 TS']              = [0, "Date"]
 
-    repos.mapping_dictionary['Buffer 54']    = [repos.buffer_fifty_four_keys,     "N/A" , "read_real_time_data_buffer_fifty_four_request"]
+     repos.mapping_dictionary['Buffer 54']    = [repos.buffer_fifty_four_keys,     "N/A" , "read_real_time_data_buffer_fifty_four_request"]
      
 def add_buffer_fifty_five(repos):
 
@@ -1261,7 +1261,7 @@ def add_buffer_fifty_five(repos):
 def add_buffer_fifty_seven(repos):
 
     
-    repos.buffer_fifty_five_keys = ['THD Ia',
+    repos.buffer_fifty_seven_keys = ['THD Ia',
                                     'THD Ib',
                                     'THD Ic',
                                     'THD In',
@@ -2137,7 +2137,7 @@ def add_buffer_sixty_seven(repos):
     repos.etu_dictionary['Harmonic  Vca39'] = [0, "Uint16"]
     repos.etu_dictionary['Harmonic  Vca40'] = [0, "Uint16"]
 
-    repos.mapping_dictionary['Buffer 68']    = [repos.buffer_sixty_eight_keys,     "N/A" , "read_real_time_data_buffer_sixty_eight_request"]
+    repos.mapping_dictionary['Buffer 67']    = [repos.buffer_sixty_seven_keys,     "N/A" , "read_real_time_data_buffer_sixty_seven_request"]
 
     
 def add_buffer_sixty_nine(repos):
@@ -2205,7 +2205,7 @@ def add_buffer_sixty_nine(repos):
 
 def add_buffer_seventy(repos):
 
-    repos.crest_seventy_keys = ['Ia Current Crest Factor',
+    repos.buffer_seventy_keys = ['Ia Current Crest Factor',
                                 'Ib Current Crest Factor',
                                 'Ic Current Crest Factor',
                                 'In Current Crest Factor']
@@ -2762,8 +2762,7 @@ def add_configuration(repos):
     
 def get_dictionary(repos):
  
-    repos.mapping_dictionary = {'Configuration'   : [repos.configuration_keys,  "write_breaker_configuraiton", "read_breaker_configuraiton_request"],
-                                'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
+    repos.mapping_dictionary = {'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
                                 'Main'            : [repos.main_keys, "N/A", "N/A"],
                                 'Inputs'          : [repos.expected_keys, "N/A", "N/A"]}
 
@@ -2820,7 +2819,7 @@ def get_dictionary(repos):
     add_buffer_fifty(repos)
     add_buffer_fifty_two(repos)
     add_buffer_fifty_five(repos)
-    add_buffer_fifty_six(repos)
+    #add_buffer_fifty_six(repos)
     add_buffer_fifty_seven(repos)
     add_buffer_fifty_eight(repos)
     add_buffer_fifty_nine(repos)
@@ -2832,7 +2831,7 @@ def get_dictionary(repos):
     add_buffer_sixty_five(repos)
     add_buffer_sixty_six(repos)
     add_buffer_sixty_seven(repos)
-    add_buffer_sixty_eight(repos)
+    #add_buffer_sixty_eight(repos)
     add_buffer_sixty_nine(repos)
     add_buffer_seventy(repos)
     add_buffer_seventy_one(repos)
