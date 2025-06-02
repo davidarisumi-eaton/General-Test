@@ -767,7 +767,68 @@ def add_buffer_eleven(repos):
     repos.etu_dictionary['Int Run Day']             =  [0, "Uint16"]
     repos.etu_dictionary['Int Life Points']         =  [0, "Uint32"]
 
+def add_buffer_fifteen(repos):
 
+    repos.buffer_fifteen_keys = ['Current Unbalance',
+                                 'Voltage Unbalance']
+
+    repos.etu_dictionary['Current Unbalance']   =  [0, "Int32"]
+    repos.etu_dictionary['Voltage Unbalance']   =  [0, "Int32"]
+
+
+def add_buffer_twenty(repos):
+
+    repos.crest_seventy_keys = ['Ia Current Crest Factor',
+                                'Ib Current Crest Factor',
+                                'Ic Current Crest Factor',
+                                'In Current Crest Factor']
+    
+    repos.etu_dictionary['Ia Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['Ib Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['Ic Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['In Current Crest Factor']=[0, "Q9"]
+
+
+    
+def add_buffer_twenty_two(repos):
+
+    repos.buffer_twenty_two    = ['Max Power Factor',
+                                 'Time of Max Power Factor',
+                                 'Min Power Factor',
+                                 'Time Of Min Power Factor',
+                                 'Time of Max/Min Power Factor Reset'
+                                 'Max Freq',
+                                 'Time of Max Freq',
+                                 'Min Freq',
+                                 'Time of Min Freq',
+                                 'Time of Max/Min Freq Reset']
+    
+    
+    repos.etu_dictionary['Max Power Factor']                    =  [0, "Uint32"]
+    repos.etu_dictionary['Time of Max Power Factor']            =  [0, "Date"]
+    repos.etu_dictionary['Min Power Factor']                    =  [0, "Uint32"]
+    repos.etu_dictionary['Time Of Min Power Factor']            =  [0, "Date"]
+    repos.etu_dictionary['Time of Max/Min Power Factor Reset']  =  [0, "Uint32"]
+    repos.etu_dictionary['Max Freq']                            =  [0, "Uint32"]
+    repos.etu_dictionary['Time of Max Freq']                    =  [0, "Date"]
+    repos.etu_dictionary['Min Freq']                            =  [0, "Date"]
+    repos.etu_dictionary['Time of Min Freq']                    =  [0, "Uint32"]
+    repos.etu_dictionary['Time of Max/Min Freq Reset']          =  [0, "Date"]
+
+
+
+## May need to change the data types. Check
+##                            'Max Power Factor':[0, "Q10"],
+##                            'Time of Max Power Factor':[0, "Date"],
+##                            'Min Power Factor':[0, "Q10"],
+##                            'Time Of Min Power Factor':[0, "Date"],
+##                            'Time of Max/Min Power Factor Reset':[0, "Date"],
+##                            'Max Freq':[0, "Q4"],
+##                            'Time of Max Freq':[0, "Date"],
+##                            'Min Freq':[0, "Q4"],
+##                            'TIme of Min Freq':[0, "Date"],
+##                            'Time of Max/Min Freq Reset':[0, "Date"],
+    
 def add_buffer_fourty_two(repos):
 
     repos.buffer_fourty_two_keys = ["E Op Counter",
@@ -1150,12 +1211,875 @@ def add_buffer_fifty_five(repos):
                                     'Internal In',
                                     'Internal Ig']
 
-    repos.etu_dictionary['Internal Ia'] = [0, "Float"] #Q4 For PXR25
+    repos.etu_dictionary['Internal Ia'] = [0, "Float"] 
     repos.etu_dictionary['Internal Ib'] = [0, "Float"]
     repos.etu_dictionary['Internal Ic'] = [0, "Float"]
     repos.etu_dictionary['Internal In'] = [0, "Float"]
     repos.etu_dictionary['Internal Ig'] = [0, "Float"]
 
+
+     
+def add_buffer_fifty_seven(repos):
+
+    
+    repos.buffer_fifty_five_keys = ['THD Ia',
+                                    'THD Ib',
+                                    'THD Ic',
+                                    'THD In',
+                                    'THD Ig']
+
+    repos.etu_dictionary['THD Ia'] = [0, "Float"] 
+    repos.etu_dictionary['THD Ib'] = [0, "Float"]
+    repos.etu_dictionary['THD Ic'] = [0, "Float"]
+    repos.etu_dictionary['THD In'] = [0, "Float"]
+    repos.etu_dictionary['THD Ig'] = [0, "Float"]
+
+
+
+def add_buffer_fifty_eight(repos):
+
+    repos.buffer_fifty_eight_keys = ["Harmonic Ia1",
+                                    "Harmonic Ia2",
+                                    "Harmonic Ia3",
+                                    "Harmonic Ia4",
+                                    "Harmonic Ia5",
+                                    "Harmonic Ia6",
+                                    "Harmonic Ia7",
+                                    "Harmonic Ia8",
+                                    "Harmonic Ia9",
+                                    "Harmonic Ia10",
+                                    "Harmonic Ia11",
+                                    "Harmonic Ia12",
+                                    "Harmonic Ia13",
+                                    "Harmonic Ia14",
+                                    "Harmonic Ia15",
+                                    "Harmonic Ia16",
+                                    "Harmonic Ia17",
+                                    "Harmonic Ia18",
+                                    "Harmonic Ia19",
+                                    "Harmonic Ia20",
+                                    "Harmonic Ia21",
+                                    "Harmonic Ia22",
+                                    "Harmonic Ia23",
+                                    "Harmonic Ia24",
+                                    "Harmonic Ia25",
+                                    "Harmonic Ia26",
+                                    "Harmonic Ia27",
+                                    "Harmonic Ia28",
+                                    "Harmonic Ia29",
+                                    "Harmonic Ia30",
+                                    "Harmonic Ia31",
+                                    "Harmonic Ia32",
+                                    "Harmonic Ia32",
+                                    "Harmonic Ia34",
+                                    "Harmonic Ia35",
+                                    "Harmonic Ia36",
+                                    "Harmonic Ia37",
+                                    "Harmonic Ia38",
+                                    "Harmonic Ia39",
+                                    "Harmonic Ia40"]
+
+    repos.etu_dictionary['Harmonic Ia1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ia40'] = [0, "Uint16"]
+    
+def add_buffer_fifty_nine(repos):
+
+    repos.buffer_fifty_nine_keys = ["Harmonic Ib1",
+                                    "Harmonic Ib2",
+                                    "Harmonic Ib3",
+                                    "Harmonic Ib4",
+                                    "Harmonic Ib5",
+                                    "Harmonic Ib6",
+                                    "Harmonic Ib7",
+                                    "Harmonic Ib8",
+                                    "Harmonic Ib9",
+                                    "Harmonic Ib10",
+                                    "Harmonic Ib11",
+                                    "Harmonic Ib12",
+                                    "Harmonic Ib13",
+                                    "Harmonic Ib14",
+                                    "Harmonic Ib15",
+                                    "Harmonic Ib16",
+                                    "Harmonic Ib17",
+                                    "Harmonic Ib18",
+                                    "Harmonic Ib19",
+                                    "Harmonic Ib20",
+                                    "Harmonic Ib21",
+                                    "Harmonic Ib22",
+                                    "Harmonic Ib23",
+                                    "Harmonic Ib24",
+                                    "Harmonic Ib25",
+                                    "Harmonic Ib26",
+                                    "Harmonic Ib27",
+                                    "Harmonic Ib28",
+                                    "Harmonic Ib29",
+                                    "Harmonic Ib30",
+                                    "Harmonic Ib31",
+                                    "Harmonic Ib32",
+                                    "Harmonic Ib32",
+                                    "Harmonic Ib34",
+                                    "Harmonic Ib35",
+                                    "Harmonic Ib36",
+                                    "Harmonic Ib37",
+                                    "Harmonic Ib38",
+                                    "Harmonic Ib39",
+                                    "Harmonic Ib40"]
+
+    repos.etu_dictionary['Harmonic Ib1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ib40'] = [0, "Uint16"]
+    
+def add_buffer_sixty(repos):
+
+    repos.buffer_sixty_keys = ["Harmonic Ic1",
+                                    "Harmonic Ic2",
+                                    "Harmonic Ic3",
+                                    "Harmonic Ic4",
+                                    "Harmonic Ic5",
+                                    "Harmonic Ic6",
+                                    "Harmonic Ic7",
+                                    "Harmonic Ic8",
+                                    "Harmonic Ic9",
+                                    "Harmonic Ic10",
+                                    "Harmonic Ic11",
+                                    "Harmonic Ic12",
+                                    "Harmonic Ic13",
+                                    "Harmonic Ic14",
+                                    "Harmonic Ic15",
+                                    "Harmonic Ic16",
+                                    "Harmonic Ic17",
+                                    "Harmonic Ic18",
+                                    "Harmonic Ic19",
+                                    "Harmonic Ic20",
+                                    "Harmonic Ic21",
+                                    "Harmonic Ic22",
+                                    "Harmonic Ic23",
+                                    "Harmonic Ic24",
+                                    "Harmonic Ic25",
+                                    "Harmonic Ic26",
+                                    "Harmonic Ic27",
+                                    "Harmonic Ic28",
+                                    "Harmonic Ic29",
+                                    "Harmonic Ic30",
+                                    "Harmonic Ic31",
+                                    "Harmonic Ic32",
+                                    "Harmonic Ic32",
+                                    "Harmonic Ic34",
+                                    "Harmonic Ic35",
+                                    "Harmonic Ic36",
+                                    "Harmonic Ic37",
+                                    "Harmonic Ic38",
+                                    "Harmonic Ic39",
+                                    "Harmonic Ic40"]
+
+    repos.etu_dictionary['Harmonic Ic1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Ic40'] = [0, "Uint16"]
+
+def add_buffer_sixty_one(repos):
+
+    repos.buffer_sixty_one_keys = ["Harmonic In1",
+                                    "Harmonic In2",
+                                    "Harmonic In3",
+                                    "Harmonic In4",
+                                    "Harmonic In5",
+                                    "Harmonic In6",
+                                    "Harmonic In7",
+                                    "Harmonic In8",
+                                    "Harmonic In9",
+                                    "Harmonic In10",
+                                    "Harmonic In11",
+                                    "Harmonic In12",
+                                    "Harmonic In13",
+                                    "Harmonic In14",
+                                    "Harmonic In15",
+                                    "Harmonic In16",
+                                    "Harmonic In17",
+                                    "Harmonic In18",
+                                    "Harmonic In19",
+                                    "Harmonic In20",
+                                    "Harmonic In21",
+                                    "Harmonic In22",
+                                    "Harmonic In23",
+                                    "Harmonic In24",
+                                    "Harmonic In25",
+                                    "Harmonic In26",
+                                    "Harmonic In27",
+                                    "Harmonic In28",
+                                    "Harmonic In29",
+                                    "Harmonic In30",
+                                    "Harmonic In31",
+                                    "Harmonic In32",
+                                    "Harmonic In32",
+                                    "Harmonic In34",
+                                    "Harmonic In35",
+                                    "Harmonic In36",
+                                    "Harmonic In37",
+                                    "Harmonic In38",
+                                    "Harmonic In39",
+                                    "Harmonic In40"]
+
+    repos.etu_dictionary['Harmonic In1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic In40'] = [0, "Uint16"]   
+
+def add_buffer_sixty_two(repos):
+
+    repos.buffer_sixty_two_keys = ["Harmonic Van1",
+                                    "Harmonic Van2",
+                                    "Harmonic Van3",
+                                    "Harmonic Van4",
+                                    "Harmonic Van5",
+                                    "Harmonic Van6",
+                                    "Harmonic Van7",
+                                    "Harmonic Van8",
+                                    "Harmonic Van9",
+                                    "Harmonic Van10",
+                                    "Harmonic Van11",
+                                    "Harmonic Van12",
+                                    "Harmonic Van13",
+                                    "Harmonic Van14",
+                                    "Harmonic Van15",
+                                    "Harmonic Van16",
+                                    "Harmonic Van17",
+                                    "Harmonic Van18",
+                                    "Harmonic Van19",
+                                    "Harmonic Van20",
+                                    "Harmonic Van21",
+                                    "Harmonic Van22",
+                                    "Harmonic Van23",
+                                    "Harmonic Van24",
+                                    "Harmonic Van25",
+                                    "Harmonic Van26",
+                                    "Harmonic Van27",
+                                    "Harmonic Van28",
+                                    "Harmonic Van29",
+                                    "Harmonic Van30",
+                                    "Harmonic Van31",
+                                    "Harmonic Van32",
+                                    "Harmonic Van32",
+                                    "Harmonic Van34",
+                                    "Harmonic Van35",
+                                    "Harmonic Van36",
+                                    "Harmonic Van37",
+                                    "Harmonic Van38",
+                                    "Harmonic Van39",
+                                    "Harmonic Van40"]
+
+    repos.etu_dictionary['Harmonic Van1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Van40'] = [0, "Uint16"]
+
+def add_buffer_sixty_three(repos):
+
+    repos.buffer_sixty_three_keys = ["Harmonic Vbn1",
+                                    "Harmonic Vbn2",
+                                    "Harmonic Vbn3",
+                                    "Harmonic Vbn4",
+                                    "Harmonic Vbn5",
+                                    "Harmonic Vbn6",
+                                    "Harmonic Vbn7",
+                                    "Harmonic Vbn8",
+                                    "Harmonic Vbn9",
+                                    "Harmonic Vbn10",
+                                    "Harmonic Vbn11",
+                                    "Harmonic Vbn12",
+                                    "Harmonic Vbn13",
+                                    "Harmonic Vbn14",
+                                    "Harmonic Vbn15",
+                                    "Harmonic Vbn16",
+                                    "Harmonic Vbn17",
+                                    "Harmonic Vbn18",
+                                    "Harmonic Vbn19",
+                                    "Harmonic Vbn20",
+                                    "Harmonic Vbn21",
+                                    "Harmonic Vbn22",
+                                    "Harmonic Vbn23",
+                                    "Harmonic Vbn24",
+                                    "Harmonic Vbn25",
+                                    "Harmonic Vbn26",
+                                    "Harmonic Vbn27",
+                                    "Harmonic Vbn28",
+                                    "Harmonic Vbn29",
+                                    "Harmonic Vbn30",
+                                    "Harmonic Vbn31",
+                                    "Harmonic Vbn32",
+                                    "Harmonic Vbn32",
+                                    "Harmonic Vbn34",
+                                    "Harmonic Vbn35",
+                                    "Harmonic Vbn36",
+                                    "Harmonic Vbn37",
+                                    "Harmonic Vbn38",
+                                    "Harmonic Vbn39",
+                                    "Harmonic Vbn40"]
+
+    repos.etu_dictionary['Harmonic Vbn1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vbn40'] = [0, "Uint16"]
+
+def add_buffer_sixty_four(repos):
+
+    repos.buffer_sixty_four_keys = ["Harmonic Vcn1",
+                                    "Harmonic Vcn2",
+                                    "Harmonic Vcn3",
+                                    "Harmonic Vcn4",
+                                    "Harmonic Vcn5",
+                                    "Harmonic Vcn6",
+                                    "Harmonic Vcn7",
+                                    "Harmonic Vcn8",
+                                    "Harmonic Vcn9",
+                                    "Harmonic Vcn10",
+                                    "Harmonic Vcn11",
+                                    "Harmonic Vcn12",
+                                    "Harmonic Vcn13",
+                                    "Harmonic Vcn14",
+                                    "Harmonic Vcn15",
+                                    "Harmonic Vcn16",
+                                    "Harmonic Vcn17",
+                                    "Harmonic Vcn18",
+                                    "Harmonic Vcn19",
+                                    "Harmonic Vcn20",
+                                    "Harmonic Vcn21",
+                                    "Harmonic Vcn22",
+                                    "Harmonic Vcn23",
+                                    "Harmonic Vcn24",
+                                    "Harmonic Vcn25",
+                                    "Harmonic Vcn26",
+                                    "Harmonic Vcn27",
+                                    "Harmonic Vcn28",
+                                    "Harmonic Vcn29",
+                                    "Harmonic Vcn30",
+                                    "Harmonic Vcn31",
+                                    "Harmonic Vcn32",
+                                    "Harmonic Vcn32",
+                                    "Harmonic Vcn34",
+                                    "Harmonic Vcn35",
+                                    "Harmonic Vcn36",
+                                    "Harmonic Vcn37",
+                                    "Harmonic Vcn38",
+                                    "Harmonic Vcn39",
+                                    "Harmonic Vcn40"]
+
+    repos.etu_dictionary['Harmonic Vcn1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic Vcn40'] = [0, "Uint16"]
+    
+
+
+def add_buffer_sixty_five(repos):
+
+    repos.buffer_sixty_five_keys = ["Harmonic  Vab1",
+                                    "Harmonic  Vab2",
+                                    "Harmonic  Vab3",
+                                    "Harmonic  Vab4",
+                                    "Harmonic  Vab5",
+                                    "Harmonic  Vab6",
+                                    "Harmonic  Vab7",
+                                    "Harmonic  Vab8",
+                                    "Harmonic  Vab9",
+                                    "Harmonic  Vab10",
+                                    "Harmonic  Vab11",
+                                    "Harmonic  Vab12",
+                                    "Harmonic  Vab13",
+                                    "Harmonic  Vab14",
+                                    "Harmonic  Vab15",
+                                    "Harmonic  Vab16",
+                                    "Harmonic  Vab17",
+                                    "Harmonic  Vab18",
+                                    "Harmonic  Vab19",
+                                    "Harmonic  Vab20",
+                                    "Harmonic  Vab21",
+                                    "Harmonic  Vab22",
+                                    "Harmonic  Vab23",
+                                    "Harmonic  Vab24",
+                                    "Harmonic  Vab25",
+                                    "Harmonic  Vab26",
+                                    "Harmonic  Vab27",
+                                    "Harmonic  Vab28",
+                                    "Harmonic  Vab29",
+                                    "Harmonic  Vab30",
+                                    "Harmonic  Vab31",
+                                    "Harmonic  Vab32",
+                                    "Harmonic  Vab32",
+                                    "Harmonic  Vab34",
+                                    "Harmonic  Vab35",
+                                    "Harmonic  Vab36",
+                                    "Harmonic  Vab37",
+                                    "Harmonic  Vab38",
+                                    "Harmonic  Vab39",
+                                    "Harmonic  Vab40"]
+
+    repos.etu_dictionary['Harmonic  Vab1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vab40'] = [0, "Uint16"]
+
+
+def add_buffer_sixty_six(repos):
+
+    repos.buffer_sixty_six_keys  = ["Harmonic  Vbc1",
+                                    "Harmonic  Vbc2",
+                                    "Harmonic  Vbc3",
+                                    "Harmonic  Vbc4",
+                                    "Harmonic  Vbc5",
+                                    "Harmonic  Vbc6",
+                                    "Harmonic  Vbc7",
+                                    "Harmonic  Vbc8",
+                                    "Harmonic  Vbc9",
+                                    "Harmonic  Vbc10",
+                                    "Harmonic  Vbc11",
+                                    "Harmonic  Vbc12",
+                                    "Harmonic  Vbc13",
+                                    "Harmonic  Vbc14",
+                                    "Harmonic  Vbc15",
+                                    "Harmonic  Vbc16",
+                                    "Harmonic  Vbc17",
+                                    "Harmonic  Vbc18",
+                                    "Harmonic  Vbc19",
+                                    "Harmonic  Vbc20",
+                                    "Harmonic  Vbc21",
+                                    "Harmonic  Vbc22",
+                                    "Harmonic  Vbc23",
+                                    "Harmonic  Vbc24",
+                                    "Harmonic  Vbc25",
+                                    "Harmonic  Vbc26",
+                                    "Harmonic  Vbc27",
+                                    "Harmonic  Vbc28",
+                                    "Harmonic  Vbc29",
+                                    "Harmonic  Vbc30",
+                                    "Harmonic  Vbc31",
+                                    "Harmonic  Vbc32",
+                                    "Harmonic  Vbc32",
+                                    "Harmonic  Vbc34",
+                                    "Harmonic  Vbc35",
+                                    "Harmonic  Vbc36",
+                                    "Harmonic  Vbc37",
+                                    "Harmonic  Vbc38",
+                                    "Harmonic  Vbc39",
+                                    "Harmonic  Vbc40"]
+
+    repos.etu_dictionary['Harmonic  Vbc1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vbc40'] = [0, "Uint16"]
+
+def add_buffer_sixty_seven(repos):
+
+    repos.buffer_sixty_seven_keys = ["Harmonic  Vca1",
+                                    "Harmonic  Vca2",
+                                    "Harmonic  Vca3",
+                                    "Harmonic  Vca4",
+                                    "Harmonic  Vca5",
+                                    "Harmonic  Vca6",
+                                    "Harmonic  Vca7",
+                                    "Harmonic  Vca8",
+                                    "Harmonic  Vca9",
+                                    "Harmonic  Vca10",
+                                    "Harmonic  Vca11",
+                                    "Harmonic  Vca12",
+                                    "Harmonic  Vca13",
+                                    "Harmonic  Vca14",
+                                    "Harmonic  Vca15",
+                                    "Harmonic  Vca16",
+                                    "Harmonic  Vca17",
+                                    "Harmonic  Vca18",
+                                    "Harmonic  Vca19",
+                                    "Harmonic  Vca20",
+                                    "Harmonic  Vca21",
+                                    "Harmonic  Vca22",
+                                    "Harmonic  Vca23",
+                                    "Harmonic  Vca24",
+                                    "Harmonic  Vca25",
+                                    "Harmonic  Vca26",
+                                    "Harmonic  Vca27",
+                                    "Harmonic  Vca28",
+                                    "Harmonic  Vca29",
+                                    "Harmonic  Vca30",
+                                    "Harmonic  Vca31",
+                                    "Harmonic  Vca32",
+                                    "Harmonic  Vca32",
+                                    "Harmonic  Vca34",
+                                    "Harmonic  Vca35",
+                                    "Harmonic  Vca36",
+                                    "Harmonic  Vca37",
+                                    "Harmonic  Vca38",
+                                    "Harmonic  Vca39",
+                                    "Harmonic  Vca40"]
+
+    repos.etu_dictionary['Harmonic  Vca1'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca2'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca3'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca4'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca5'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca6'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca7'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca8'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca9'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca10'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca11'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca12'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca13'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca14'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca15'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca16'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca17'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca18'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca19'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca20'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca21'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca22'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca23'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca24'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca25'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca26'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca27'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca28'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca29'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca30'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca31'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca32'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca33'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca34'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca35'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca36'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca37'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca38'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca39'] = [0, "Uint16"]
+    repos.etu_dictionary['Harmonic  Vca40'] = [0, "Uint16"]
+
+    
 def add_buffer_sixty_nine(repos):
 
     repos.buffer_sixty_nine_keys = ['IA Unbalance Max',
@@ -1313,9 +2237,113 @@ def add_buffer_seventy_one(repos):
     repos.etu_dictionary["Min Disp Total PF TS"] = [0, "Date"]
     repos.etu_dictionary["Max Disp Total PF"]    = [0, "Float"]
     repos.etu_dictionary["Max Disp Total PF TS"]    = [0, "Date"]
+
+def add_buffer_seventy_two(repos):
     
+    repos.buffer_seventy_two_keys =   ["Freq Load Min",
+                                      "Freq Load Min TS",
+                                      "Freq Load Max",
+                                      "Freq Load Max TS",
+                                      "Freq Line Min",
+                                      "Freq Line Min TS",
+                                      "Freq Line Max",
+                                      "Freq Line Max TS",
+                                      "LD Bucket Max",
+                                      "LD Bucket Max TS",
+                                      "SD Bucket Max",
+                                      "SD Bucket Max TS"]
+                                      
+    repos.etu_dictionary["Freq Load Min"]    = [0, "Uint32"]
+    repos.etu_dictionary["Freq Load Min TS"] = [0, "Date"]
+    repos.etu_dictionary["Freq Load Max"]    = [0, "Uint32"]
+    repos.etu_dictionary["Freq Load Max TS"] = [0, "Date"]
+    repos.etu_dictionary["Freq Line Min"]    = [0, "Uint32"]
+    repos.etu_dictionary["Freq Line Min TS"] = [0, "Date"]
+    repos.etu_dictionary["Freq Line Max"]    = [0, "Uint32"]
+    repos.etu_dictionary["Freq Line Max TS"] = [0, "Date"]
+    repos.etu_dictionary["LD Bucket Max"]    = [0, "Uint32"]
+    repos.etu_dictionary["LD Bucket Max TS"] = [0, "Date"]
+    repos.etu_dictionary["SD Bucket Max"]    = [0, "Uint32"]
+    repos.etu_dictionary["SD Bucket Max TS"] = [0, "Date"]
+ 
+
+def add_buffer_seventy_three(repos):
+
+    repos.buffer_seventy_three_keys = ["Five Min Avg Ia",
+                                       "Five Min Avg Ib",
+                                       "Five Min Avg Ic",
+                                       "Five Min Avg Iavg",
+                                       "Five Min Avg W Pha",
+                                       "Five Min Avg W Phb",
+                                       "Five Min Avg W Phc",
+                                       "Five Min Avg W Tot",
+                                       "Five Min Avg VA Pha",
+                                       "Five Min Avg VA Phb",
+                                       "Five Min Avg VA Phc",
+                                       "Five Min Avg VA Tot",
+                                       "Five Min Avg Ia Max",
+                                       "Five Min Avg Ia Min",
+                                       "Five Min Avg Ib Max",
+                                       "Five Min Avg Ib Min",
+                                       "Five Min Avg Ic Max",
+                                       "Five Min Avg Ic Min",
+                                       "Five Min Avg Iavg Max",
+                                       "Five Min Avg Iavg Min",
+                                       "Five Min Avg W Pha Max",
+                                       "Five Min Avg W Pha Min",
+                                       "Five Min Avg W Phb Max",
+                                       "Five Min Avg W Phb Min",
+                                       "Five Min Avg W Phc Max",
+                                       "Five Min Avg W Phc Min",
+                                       "Five Min Avg W Tot Max",
+                                       "Five Min Avg W Tot Min",
+                                       "Five Min Avg VA Pha Max",
+                                       "Five Min Avg VA Pha Min",
+                                       "Five Min Avg VA Phb Max",
+                                       "Five Min Avg VA Phb Min",
+                                       "Five Min Avg VA Phc Max",
+                                       "Five Min Avg VA Phc Min",
+                                       "Five Min Avg VA tot Max",
+                                       "Five Min Avg VA tot Min"]
+                                    
+    repos.etu_dictionary["Five Min Avg Ia"]        = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ib"]        = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ic"]        = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Iavg"]      = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Pha"]     = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phb"]     = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phc"]     = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Tot"]     = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Pha"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phb"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phc"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Tot"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ia Max"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ia Min"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ib Max"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ib Min"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ic Max"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Ic Min"]    = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Iavg Max"]  = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg Iavg Min"]  = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Pha Max"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Pha Min"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phb Max"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phb Min"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phc Max"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Phc Min"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Tot Max"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg W Tot Min"] = [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Pha Max"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Pha Min"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phb Max"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phb Min"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phc Max"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA Phc Min"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA tot Max"]= [0, "Float"]
+    repos.etu_dictionary["Five Min Avg VA tot Min"]= [0, "Float"]
     
-def add_bufer_seventy_four(repos):
+def add_buffer_seventy_four(repos):
 
     repos.buffer_seventy_four_keys = ["Min Real Power A",
                                       "Min Real Power A TS",
@@ -1342,7 +2370,81 @@ def add_bufer_seventy_four(repos):
     repos.etu_dictionary["Min Real Power C TS"] = [0, "Date"]
     repos.etu_dictionary["Max Real Power C"]    = [0, "Float"]
     repos.etu_dictionary["Max Real Power C TS"] = [0, "Date"]
-    
+
+
+def add_buffer_seventy_five(repos):
+
+    repos.buffer_seventy_five_keys = ["Pwr Max RPa",
+                                      "Pwr Max RPa TS",
+                                      "Pwr Min RPa",
+                                      "Pwr Min RPa TS",
+                                      "Pwr Max RPb",
+                                      "Pwr Max RPb TS",
+                                      "Pwr Min RPb",
+                                      "Pwr Min RPb TS",
+                                      "Pwr Max RPc",
+                                      "Pwr Max RPc TS",
+                                      "Pwr Min RPc",
+                                      "Pwr Min RPc TS",
+                                      "Pwr Max RPtot",
+                                      "Pwr Max RPtot TS",
+                                      "Pwr Min RPtot",
+                                      "Pwr Min RPtot TS"]
+
+    repos.etu_dictionary["Pwr Max RPa"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max RPa TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min RPa"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min RPa TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max RPb"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max RPb TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min RPb"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min RPb TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max RPc"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max RPc TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min RPc"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min RPc TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max RPtot"]    = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max RPtot TS"] = [0, "Date"]
+    repos.etu_dictionary["Pwr Min Rtot"]    = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min Rtot TS"] = [0, "Date"]
+
+
+def add_buffer_seventy_six(repos):
+
+    repos.buffer_seventy_six_keys = ["Pwr Max AppPa",
+                                      "Pwr Max AppPa TS",
+                                      "Pwr Min RPa",
+                                      "Pwr Min AppPa TS",
+                                      "Pwr Max AppPb",
+                                      "Pwr Max AppPb TS",
+                                      "Pwr Min AppPb",
+                                      "Pwr Min AppPb TS",
+                                      "Pwr Max AppPc",
+                                      "Pwr Max AppPc TS",
+                                      "Pwr Min AppPc",
+                                      "Pwr Min AppPc TS",
+                                      "Pwr Max AppPtot",
+                                      "Pwr Max AppPtot TS",
+                                      "Pwr Min AppPtot",
+                                      "Pwr Min AppPtot TS"]
+
+    repos.etu_dictionary["Pwr Max AppPa"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max AppPa TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min AppPa"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min AppPa TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max AppPb"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max AppPb TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min AppPb"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min AppPb TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max AppPc"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max AppPc TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Min AppPc"]      = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min AppPc TS"]   = [0, "Date"]
+    repos.etu_dictionary["Pwr Max Apptot"]    = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Max Apptot TS"] = [0, "Date"]
+    repos.etu_dictionary["Pwr Min Apptot"]    = [0,"Uint32"]
+    repos.etu_dictionary["Pwr Min Apptot TS"] = [0, "Date"]    
+
 def add_buffer_seventy_seven(repos):
 
 
@@ -1398,7 +2500,63 @@ def add_buffer_seventy_seven(repos):
     repos.etu_dictionary['Window Status'] = [0, "Uint16"]
     repos.etu_dictionary['Measurment Time'] = [0, "Uint16"]
 
+def add_buffer_seventy_eight(repos):
 
+    repos.buffer_seventy_eight = ["KF Val Ia",
+                                  "KF Val Ib",
+                                  "KF Val Ic",
+                                  "Seq Comp V PosMag",
+                                  "Seq Comp V PosPh",
+                                  "Seq Comp V NegMag",
+                                  "Seq Comp V NegPh",
+                                  "Seq Comp I PosMag",
+                                  "Seq Comp I NegMag",
+                                  "Seq Comp I ZeroMag",
+                                  "Seq Comp I PosPh",
+                                  "Seq Comp I NegPh",
+                                  "Seq Comp I ZeroPh",
+                                  "PhAngles1 Ia",
+                                  "PhAngles1 Ib",
+                                  "PhAngles1 Ic",
+                                  "PhAngles1 Van",
+                                  "PhAngles1 Vbn",
+                                  "PhAngles1 Vcn",
+                                  "PhAngles1 Vab",
+                                  "PhAngles1 Vbc",
+                                  "PHAngles1 Vca",
+                                  "PhAngles2 Van",
+                                  "PhAngles2 Vbn",
+                                  "PhAngles2 Vcn",
+                                  "PhAngles2 Vab",
+                                  "PhAngles2 Vbc",
+                                  "PHAngles2 Vca"]
+
+    repos.etu_dictionary['KF Val Ia'] = [0, "Uint32"]
+    repos.etu_dictionary['KF Val Ib'] = [0, "Uint32"]
+    repos.etu_dictionary['KF Val Ic'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp V PosMag'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp V PosPh'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp V NegMag'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp V NegPh'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I PosMag'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I NegMag'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I ZeroMag'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I PosPh'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I NegPh'] = [0, "Uint32"]
+    repos.etu_dictionary['Seq Comp I ZeroPh'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Van'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Vbn'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Vcn'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Vab'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Vbc'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles1 Vca'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Van'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Vbn'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Vcn'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Vab'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Vbc'] = [0, "Uint32"]
+    repos.etu_dictionary['PhAngles2 Vca'] = [0, "Uint32"]
+                                  
 def add_buffer_seventy_nine(repos):
 
     repos.buffer_seventy_nine_keys = ["THD Van",
@@ -1531,16 +2689,6 @@ def get_dictionary(repos):
                             'Extended Capture Triggers'       :  [0,"Uint16"],
                             'IEC61860 Configuration'          :  [0,"Uint16"],
                             'Demand Logging Interval'         :  [0,"Uint16"],
-                            'Max Power Factor':[0, "Q10"],
-                            'Time of Max Power Factor':[0, "Date"],
-                            'Min Power Factor':[0, "Q10"],
-                            'Time Of Min Power Factor':[0, "Date"],
-                            'Time of Max/Min Power Factor Reset':[0, "Date"],
-                            'Max Freq':[0, "Q4"],
-                            'Time of Max Freq':[0, "Date"],
-                            'Min Freq':[0, "Q4"],
-                            'TIme of Min Freq':[0, "Date"],
-                            'Time of Max/Min Freq Reset':[0, "Date"],
                             "Source_Freq"       :  [0,"None"], 
                             "Ra_Phase_Angle"    :  [0,"None"],
                             "Rb_Phase_Angle"    :  [0,"None"],
@@ -1585,7 +2733,7 @@ def get_dictionary(repos):
     add_buffer_sixty_nine(repos)
     add_buffer_seventy(repos)
     add_buffer_seventy_one(repos)
-    add_bufer_seventy_four(repos)
+    add_buffer_seventy_four(repos)
     add_buffer_seventy_seven(repos)
     add_configuration(repos)
 
@@ -1803,19 +2951,8 @@ def get_buffer_keys(repos):
                                   "THD Ic",
                                   "THD In"] 
 
-    repos.buffer_fifteen_keys = ['Current Unbalance',
-                                 'Voltage Unbalance']
 
-    repos.pf_and_freq_keys    = ['Max Power Factor',
-                                 'Time of Max Power Factor',
-                                 'Min Power Factor',
-                                 'Time Of Min Power Factor',
-                                 'Time of Max/Min Power Factor Reset'
-                                 'Max Freq',
-                                 'Time of Max Freq',
-                                 'Min Freq',
-                                 'TIme of Min Freq',
-                                 'Time of Max/Min Freq Reset']
+
 
   
 
@@ -1849,7 +2986,7 @@ def get_mapping_dictionary(repos):
                                 'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
                                 'Main'            : [repos.main_keys, "N/A", "N/A"],
                                 'Inputs'          : [repos.expected_keys, "N/A", "N/A"],
-                                'pf_and_freq'     : [repos.pf_and_freq_keys, "N/A", "N/A"]}
+                                'Buffer 22'     : [repos.buffer_twenty_two, "N/A", "read_real_time_data_buffer_twenty_two"]}
   
     repos.default_array =  ['Setpoint etu',
                              'Setpoint 0',
