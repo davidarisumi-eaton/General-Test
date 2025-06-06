@@ -911,6 +911,11 @@ class General_Test_UI(object):
         self.s_write_button_zero = Button(self.tab_two, text = "Write", command = lambda: self.write_command(repos, usb, 0))
         self.s_read_button_zero.grid(row = 1, column = 2)
         self.s_write_button_zero.grid(row = 1, column = 3)
+
+        self.sp_zero_refresh = BooleanVar()
+        self.sp_zero_refresh.set(False)
+        self.sp_zero_check = Checkbutton(self.tab_two, text = "2s Refresh", variable = self.sp_zero_refresh, command = lambda: self.change_sp_zero_check(repos, usb))
+        self.sp_zero_check.grid(row = 2, column = 3)
         
 
 
@@ -2507,6 +2512,7 @@ class General_Test_UI(object):
             entry_array = self.s_entry_one_array
 
         keys = repos.mapping_dictionary[choice][0]
+        usb_com = repos.mapping_dictionary[choice][1]
         
         for i in range(0, len(keys)):
             data = entry_array[i].get()
@@ -2514,27 +2520,27 @@ class General_Test_UI(object):
             print(msg)
             repos.etu_dictionary[keys[i]][0] = float(data)
 
-        if choice == "Setpoint 0":
-            usb_com = "write_setpoint_zero_request"
-            
-        elif choice == "Setpoint 1":
-            GT_Conversions.convert_standard_to_etu(repos)
-            usb_com = "write_setpoint_one_request"
-            
-        elif choice == "Setpoint 2":
-            usb_com = "write_setpoint_two_request"
-
-        elif choice == "Setpoint 3":
-            usb_com = "write_setpoint_three_request"
-
-        elif choice == "Setpoint 4":
-            usb_com = "write_setpoint_four_request"
-            
-        elif choice == "Setpoint 5":
-            usb_com = "write_setpoint_five_request"
-
-        elif choice == "Setpoint 6":
-            usb_com = "write_setpoint_six_request"
+##        if choice == "Setpoint 0":
+##            usb_com = "write_setpoint_zero_request"
+##            
+##        elif choice == "Setpoint 1":
+##            GT_Conversions.convert_standard_to_etu(repos)
+##            usb_com = "write_setpoint_one_request"
+##            
+##        elif choice == "Setpoint 2":
+##            usb_com = "write_setpoint_two_request"
+##
+##        elif choice == "Setpoint 3":
+##            usb_com = "write_setpoint_three_request"
+##
+##        elif choice == "Setpoint 4":
+##            usb_com = "write_setpoint_four_request"
+##            
+##        elif choice == "Setpoint 5":
+##            usb_com = "write_setpoint_five_request"
+##
+##        elif choice == "Setpoint 6":
+##            usb_com = "write_setpoint_six_request"
             
         GT_Conversions.convert_standard_to_etu(repos)
         rsp = usb.communicate("enter_password_request", 0, 0, 0,0, 0, 0)
@@ -2575,8 +2581,33 @@ class General_Test_UI(object):
             self.two_refresh.set(True)
             self.section_two_refresh(repos, usb)
 
+
+    def change_sp_zero_check(self, repos, usb):
+
+        zero = self.sp_zero_refresh.get()
+
+        if zero == False:
+            self.sp_zero_refresh.set(False)
             
-                        
+        else:
+            self.sp_zero_refresh.set(True)
+            self.section_sp_zero_refresh(repos, usb)
+            
+
+    def section_sp_zero_refresh(self, repos, usb):
+
+        zero = self.sp_zero_refresh.get()
+        print(zero)
+        if zero == True:
+
+            choice = self.s_zero_cbox.get() 
+            usb_req, trnslt_op, keys = self.get_buffset_info(repos, choice, "r")            
+            self.read_buffset(repos, usb, usb_req, trnslt_op, keys)                         
+
+            self.update_buffset(repos, 0, choice)
+                             
+            self.tab_one.after(1000, lambda: self.section_sp_zero_refresh(repos, usb))
+            
     def section_zero_refresh(self, repos, usb):
 
         zero = self.zero_refresh.get()
@@ -3194,6 +3225,20 @@ class General_Test_UI(object):
                 print(repos.pxr)
 
             repos.set_mapping_dictionary()
+
+            self.ui_buffer_keys = []
+            self.ui_setpoint_keys = []
+            for val in repos.mapping_keys:
+                if "Buffer" in val:
+                    self.ui_buffer_keys.append(val)
+                    
+            for val in repos.mapping_keys:
+                if "Setpoint" in val:
+                    self.ui_setpoint_keys.append(val)
+                    
+            
+            self.zero_cbox['values'] = self.ui_buffer_keys
+            self.s_zero_cbox['values'] = self.ui_setpoint_keys
             
         return connected
 

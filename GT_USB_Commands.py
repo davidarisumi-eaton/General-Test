@@ -663,6 +663,7 @@ class usb_commands():
         self.command_dictionary["read_setpoint_seven_request"]          = [[128, 0, 0, 64], "No Input"]
         self.command_dictionary["read_setpoint_eight_request"]          = [[128, 0, 0, 72], "No Input"]
         self.command_dictionary["read_setpoint_nine_request"]           = [[128, 0, 0, 80], "No Input"]
+        self.command_dictionary["read_setpoint_ten_request"]            = [[128, 0, 0, 88], "No Input"]
         
         self.command_dictionary["write_setpoint_zero_request"]          = [[128, 2, 0, 8, 1, 1, 75], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_one_request"]           = [[128, 2, 0, 16, 1, 1, 77], "dictionary and Keys"]
@@ -674,6 +675,7 @@ class usb_commands():
         self.command_dictionary["write_setpoint_seven_request"]         = [[128, 2, 0, 64, 1, 1, 33], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_eight_request"]         = [[128, 2, 0, 72, 1, 1, 71], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_nine_request"]          = [[128, 2, 0, 80, 1, 1, 33], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_nine_request"]          = [[128, 2, 0, 88, 1, 1, 182, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255], "dictionary and Keys"]
 
 
 

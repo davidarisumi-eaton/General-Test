@@ -184,7 +184,8 @@ def add_setpoint_group_one(repos):
     
     add_dictionary_values(repos, repos.sp_one_keys)
     add_dictionary_values(repos, repos.sp_etu_keys)
-    repos.mapping_dictionary['Setpoint 1']  = [repos.sp_one_keys,   "write_setpoint_one_request", "read_setpoint_one_request"]
+    repos.mapping_dictionary['Setpoint 1']    = [repos.sp_one_keys,   "write_setpoint_one_request", "read_setpoint_one_request"]
+    repos.mapping_dictionary['Setpoint etu']  = [repos.sp_etu_keys,   "write_setpoint_one_request", "read_setpoint_one_request"]
 
 def add_setpoint_group_two(repos):
 
@@ -351,7 +352,7 @@ def add_setpoint_group_seven(repos):
                                  'Reserved16',
                                  'Reserved16']
     
-    add_dictionary_values(repos, repos.sp_six_keys)
+    add_dictionary_values(repos, repos.sp_seven_keys)
     repos.mapping_dictionary['Setpoint 7']  = [repos.sp_seven_keys,   "write_setpoint_seven_request", "read_setpoint_seven_request"]
     
 def add_setpoint_group_eight(repos):
@@ -929,11 +930,11 @@ def add_buffer_fourty_eight(repos):
                                     'External Va',
                                     'External Vb',
                                     'External Vc',
-                                    'V LN_Average',
+                                    'V LN Average',
                                     'External Vab',
                                     'External Vbc',
                                     'External Vca',
-                                    'V LL_Average',
+                                    'V LL Average',
                                     'External Va Two',
                                     'External Vb Two',
                                     'External Vc Two',
@@ -968,7 +969,7 @@ def add_buffer_fourty_eight(repos):
     repos.etu_dictionary["External Vab Two"]  =  [0,"Float"]
     repos.etu_dictionary["External Vbc Two"]  =  [0,"Float"]
     repos.etu_dictionary["External Vca Two"]  =  [0,"Float"]
-    repos.etu_dictionary["V LL_ verage"]      =  [0,"Float"]
+    repos.etu_dictionary["V LL Average"]      =  [0,"Float"]
     repos.etu_dictionary["VLL Average Two"]   =  [0,"Float"]
     repos.etu_dictionary["Freq Two"]          =  [0,"Float"]
     repos.etu_dictionary['External Va Two']   =  [0,"Float"]
@@ -1620,7 +1621,7 @@ def add_buffer_sixty_one(repos):
     repos.etu_dictionary['Harmonic In39'] = [0, "Uint16"]
     repos.etu_dictionary['Harmonic In40'] = [0, "Uint16"]
 
-    repos.mapping_dictionary['Buffer sixty_one']    = [repos.buffer_sixty_one_keys,     "N/A" , "read_real_time_data_buffer_sixty_one_request"]
+    repos.mapping_dictionary['Buffer 61']    = [repos.buffer_sixty_one_keys,     "N/A" , "read_real_time_data_buffer_sixty_one_request"]
 
 def add_buffer_sixty_two(repos):
 
@@ -1965,7 +1966,7 @@ def add_buffer_sixty_five(repos):
     repos.etu_dictionary['Harmonic  Vab39'] = [0, "Uint16"]
     repos.etu_dictionary['Harmonic  Vab40'] = [0, "Uint16"]
 
-    repos.mapping_dictionary['Buffer sixty_five']    = [repos.buffer_sixty_five_keys,     "N/A" , "read_real_time_data_buffer_sixty_five_request"]
+    repos.mapping_dictionary['Buffer 65']    = [repos.buffer_sixty_five_keys,     "N/A" , "read_real_time_data_buffer_sixty_five_request"]
 
 def add_buffer_sixty_six(repos):
 
@@ -2210,10 +2211,10 @@ def add_buffer_seventy(repos):
                                 'Ic Current Crest Factor',
                                 'In Current Crest Factor']
     
-    repos.etu_dictionary['Ia Current Crest Factor']=[0, "Q9"]
-    repos.etu_dictionary['Ib Current Crest Factor']=[0, "Q9"]
-    repos.etu_dictionary['Ic Current Crest Factor']=[0, "Q9"]
-    repos.etu_dictionary['In Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['Ia Current Crest Factor']=[0, "Q8Padded"]
+    repos.etu_dictionary['Ib Current Crest Factor']=[0, "Q8Padded"]
+    repos.etu_dictionary['Ic Current Crest Factor']=[0, "Q8Padded"]
+    repos.etu_dictionary['In Current Crest Factor']=[0, "Q8Padded"]
 
     repos.mapping_dictionary['Buffer 70']    = [repos.buffer_seventy_keys,     "N/A" , "read_real_time_data_buffer_seventy_request"]
         
@@ -2229,15 +2230,15 @@ def add_buffer_seventy_one(repos):
                                       "Max Disp PF TS",
                                       "Min Apparent A PF",
                                       "Min Apparent A PF TS",
-                                      "Max Apparent A  PF",
+                                      "Max Apparent A PF",
                                       "Max Apaprent A PF TS",
                                       "Min Apparent B PF",
                                       "Min Apparent B PF TS",
-                                      "Max Apparent B  PF",
+                                      "Max Apparent B PF",
                                       "Max Apaprent B PF TS",
                                       "Min Apparent C PF",
                                       "Min Apparent C PF TS",
-                                      "Max Apparent C  PF",
+                                      "Max Apparent C PF",
                                       "Max Apaprent C PF TS",
                                       "Min Disp A PF",
                                       "Min Disp A PF TS",
@@ -2253,7 +2254,7 @@ def add_buffer_seventy_one(repos):
                                       "Max Disp C PF TS",
                                       "Min Apparent Total PF",
                                       "Min Apparent Total PF TS",
-                                      "Max Apparent Total  PF",
+                                      "Max Apparent Total PF",
                                       "Max Apaprent Total PF TS",
                                       "Min Disp Total PF TS",
                                       "Min Disp Total PF",
@@ -2435,13 +2436,13 @@ def add_buffer_seventy_four(repos):
     repos.etu_dictionary["Min Real Power B"]    = [0, "Float"]
     repos.etu_dictionary["Min Real Power B TS"] = [0, "Date"]
     repos.etu_dictionary["Max Real Power B"]    = [0, "Float"]
-    repos.etu_dictionary["Max Real Power C TS"] = [0, "Date"]
+    repos.etu_dictionary["Max Real Power B TS"]    = [0, "Float"]
     repos.etu_dictionary["Min Real Power C"]    = [0, "Float"]
     repos.etu_dictionary["Min Real Power C TS"] = [0, "Date"]
     repos.etu_dictionary["Max Real Power C"]    = [0, "Float"]
     repos.etu_dictionary["Max Real Power C TS"] = [0, "Date"]
 
-    repos.mapping_dictionary['Buffer 2']    = [repos.buffer_seventy_four_keys,     "N/A" , "read_real_time_data_buffer_seventy_four_request"]
+    repos.mapping_dictionary['Buffer 74']    = [repos.buffer_seventy_four_keys,     "N/A" , "read_real_time_data_buffer_seventy_four_request"]
 
 
 def add_buffer_seventy_five(repos):
@@ -2576,7 +2577,7 @@ def add_buffer_seventy_seven(repos):
     repos.etu_dictionary['Window Status'] = [0, "Uint16"]
     repos.etu_dictionary['Measurment Time'] = [0, "Uint16"]
 
-    repos.mapping_dictionary['Buffer seventy_seven']    = [repos.buffer_seventy_seven_keys,     "N/A" , "read_real_time_data_buffer_seventy_seven_request"]
+    repos.mapping_dictionary['Buffer 77']    = [repos.buffer_seventy_seven_keys,     "N/A" , "read_real_time_data_buffer_seventy_seven_request"]
 
 def add_buffer_seventy_eight(repos):
 
@@ -2766,6 +2767,9 @@ def get_dictionary(repos):
                                 'Main'            : [repos.main_keys, "N/A", "N/A"],
                                 'Inputs'          : [repos.expected_keys, "N/A", "N/A"]}
 
+
+
+
     
     repos.etu_dictionary =  {'time_reset'              : [0, "Date"],
                             'date_raw_op'             :  [0, "Date"],
@@ -2839,8 +2843,18 @@ def get_dictionary(repos):
     add_buffer_seventy_seven(repos)
     add_configuration(repos)
 
+    mapping_keys = []
+##    for val in repos.mapping_dictionary:
+##        mapping_keys.append[val]
+##
+##    print(mapping_keys)
 
+    repos.mapping_keys = list(repos.mapping_dictionary.keys())
 
+    #mapping_keys = sorted(mapping_keys)
+
+        
+    ##print(mapping_keys)
 def get_setpoint_keys(repos):
 
     repos.mech_time = .019
