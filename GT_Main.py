@@ -552,10 +552,13 @@ def update_frame_and_rating(repos, usb, in_file, omicron):     #  updates the br
     else:
         print("Invalid Frame Name")
       
-    if repos.family == "ACB" or repos.family == "35":
+    if repos.family == "ACB":
         print("Rating " + str(repos.etu_dictionary['Rating'][0]))
         usb.communicate("write_breaker_plug_request", repos.etu_dictionary['Rating'][0])
         cor = usb.communicate_with_check("write_breaker_plug_check")
+    elif repos.family == "35":
+        usb.communicate("write_breaker_rating_request", repos.etu_dictionary['Rating'][0])
+        cor = usb.communicate_with_check("write_breaker_rating_check")
     else:
         usb.communicate("write_breaker_rating_request", repos.etu_dictionary['Rating'][0])
         cor = usb.communicate_with_check("write_breaker_rating_check")
