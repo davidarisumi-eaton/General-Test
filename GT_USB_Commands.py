@@ -316,10 +316,10 @@ class usb_commands():
         self.command_dictionary["test_thermal_memory_check"]        = [[128, 8, 11, 11], "No Input"]
 
 
-        self.command_dictionary["enter_into_manufactory_mode_request"]                   = [[128, 4, 11, 2], "No Input"]
-        self.command_dictionary["enter_into_manufactory_mode_check"]                     = [[128, 8, 11, 2], "No Input"]
-        self.command_dictionary["exit_out_of_manufactory_mode_request"]                  = [[128, 4, 11, 3], "No Input"]
-        self.command_dictionary["exit_out_of_manufactory_mode_check"]                    = [[128, 8, 11, 3], "No Input"]
+        #self.command_dictionary["enter_into_manufactory_mode_request"]                   = [[128, 4, 11, 2], "No Input"]
+        #self.command_dictionary["enter_into_manufactory_mode_check"]                     = [[128, 8, 11, 2], "No Input"]
+        #self.command_dictionary["exit_out_of_manufactory_mode_request"]                  = [[128, 4, 11, 3], "No Input"]
+        #self.command_dictionary["exit_out_of_manufactory_mode_check"]                    = [[128, 8, 11, 3], "No Input"]
         self.command_dictionary["enter_into_auto_test_mode_request"]                     = [[128, 4, 11, 0], "No Input"]
         self.command_dictionary["enter_into_auto_test_mode_check"]                       = [[128, 8, 11, 0], "No Input"]
         self.command_dictionary["exit_out_of_auto_test_mode_request"]                    = [[128, 4, 11, 1], "No Input"]
@@ -953,6 +953,7 @@ class usb_commands():
 
         
         for val in argv:
+            val = int(val)
             data_packet.append(val%256)
             data_packet.append(math.floor(val/256))
 
