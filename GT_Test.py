@@ -54,12 +54,20 @@ def main(repos, in_file, output_file, usb, omicron):             #  test type se
     repos.append_output_msg(msg)
 
     #rsp = usb.communicate("enter_password_request",0,0,0,0)
+    p0 = repos.password[0]
+    p1 = repos.password[1]
+    p2 = repos.password[2]
+    p3 = repos.password[3]
+    p4 = repos.password[4]
+    p5 = repos.password[5]
+
     
     for val in repos.default_array:
         if repos.family == "35":
-            rsp = usb.communicate("enter_password_request",0,0,0,0,0,1)
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
         else:
-            rsp = usb.communicate("enter_password_request",0,0,0,0)
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+            
         time.sleep(.5)
         request = repos.mapping_dictionary[val][1]
         key = repos.mapping_dictionary[val][0]
@@ -320,11 +328,20 @@ def write_setpoints_from_excel(usb, repos, test_type):
         #Setpoint 1 needs to write the scaled etu_values instead of the actual Setpoint 1 Values
 
         
-        if repos.family == "35":
-            rsp = usb.communicate("enter_password_request",0,0,0,0,0,1)
-        else:
-            rsp = usb.communicate("enter_password_request",0,0,0,0)
-            
+        p0 = repos.password[0]
+        p1 = repos.password[1]
+        p2 = repos.password[2]
+        p3 = repos.password[3]
+        p4 = repos.password[4]
+        p5 = repos.password[5]
+
+        
+        for val in repos.default_array:
+            if repos.family == "35":
+                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
+            else:
+                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+                
             
         if key == "Setpoint 1":
             GT_Conversions.convert_standard_to_etu(repos)

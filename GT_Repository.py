@@ -58,6 +58,7 @@ class Repository(object):           #  creates object to manage core setpoints
         self.ph_type    = 0
         self.pxr        = 35
         self.more_config = True
+        self.password   = [0,0,0,0,0,1]
         
         self.mech_time  = 0         # This is the mechanical time it takes to trip. Used for t_adj
         self.failure_mode = 'None'  #Stores why a test has failed
@@ -84,6 +85,7 @@ class Repository(object):           #  creates object to manage core setpoints
     
         self.main_dict     =   {}
         self.main_keys     =   []
+
 
 
         

@@ -142,6 +142,7 @@ def translate_generic_no_write(msg, key_array, dictionary):
     da = calc_data_amount(key_array, dictionary)
     byte_num = message_length - da - 9 #Subtracts length of the message from the data amount and 9(3 bytes of checksum and endbyte)
 
+
     
     for key in key_array:
         data_type = dictionary[key][1]
@@ -185,7 +186,10 @@ def translate_generic_no_write(msg, key_array, dictionary):
         if data_type == "Date":
             val = GT_Conversions.convert_to_date(msg, byte_num)
             byte_num = byte_num + 24
-
+        elif data_type == "Date35":
+            val = GT_Conversions.convert_to_35date(msg, byte_num)
+            byte_num = byte_num + 24
+            
         val_array.append(val)
 
         
@@ -224,6 +228,8 @@ def calc_data_amount(key_array, dictionary):
         if data_type == "Float":
             data_amount = data_amount + 12
         if data_type == "Date":
+            data_amount = data_amount + 24
+        if data_type == "Date35":
             data_amount = data_amount + 24
 
     return data_amount
@@ -788,7 +794,6 @@ def translate_setpoint_zero(msg, *argv):
 
         
         data_amount = msg[21] + msg[22]
-        print(data_amount)
         if data_amount != "2c":
             syv = GT_Conversions.uint_sixteen_to_dec(msg, 156) # System Voltage
             neu = GT_Conversions.uint_sixteen_to_dec(msg, 162) #Neutral Sensor
@@ -971,7 +976,7 @@ def translate_external_diagnostics(msg, *argv):
 
 def translate_firmware(msg):
 
-    print(str(msg[22]))
+
     if msg[22] == "A":
         m_one_v = GT_Conversions.uint_eight_to_dec(msg,24)
         m_one_r = GT_Conversions.uint_eight_to_dec(msg,27)

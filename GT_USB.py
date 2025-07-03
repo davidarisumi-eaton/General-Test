@@ -329,7 +329,6 @@ class USB_Communication(object):
     def communicate(self, command, *argv):
 
         tx, packet = self.commands.get_message(command, *argv) #Gets the message in bytes and as an index
-
         if tx == False: #If no valid message was found, quits out of the method
             return False
         
@@ -358,8 +357,6 @@ class USB_Communication(object):
     def communicate_with_check(self, command, *argv):
 
         tx, packet = self.commands.get_message(command, *argv) #Gets the message in bytes and as an index
-        print(tx)
-        print(packet)
         if tx == False: #If no valid message was found, quits out of the method
             return False
         

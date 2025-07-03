@@ -107,6 +107,7 @@ class General_Test_UI(object):
 
         
         Label(self.my_tk, text = 'General Test 3.7', font = 'Courier" 15 bold').grid(row = 0, rowspan = 2, column = 5)
+        
 
 
         '''
@@ -155,6 +156,14 @@ class General_Test_UI(object):
         #self.exit_manu_button.config(font=("Arial", 7))
         self.exit_manu_button.grid(row = 1, column = 1)
         self.exit_manu_button.grid_remove()
+
+        Label(self.tab_zero, text = 'Password').grid(row = 1, column = 4)
+         
+        self.pass_entry = Entry(self.serial_frame)
+        self.pass_entry.grid(row = 2, column = 0, columnspan = 1)
+
+        self.save_dir_button = Button(self.serial_frame, text = "Set Password", command = lambda: self.set_pass(usb, repos))
+        self.save_dir_button.grid(row = 2, column = 1)
         
 
         '''
@@ -304,13 +313,7 @@ class General_Test_UI(object):
         self.omi_llo_cbox.current(0)
         self.omi_llo_cbox.grid(row = 7, column = 4)
 
-
-        self.save_dir_button = Button(self.tab_zero, text = "Set Password to 0000", command = lambda: self.set_pass(usb))
-        self.save_dir_button.grid(row = 8, column = 4)
-
-
-        self.save_pause_button = Button(self.tab_zero, text = "Pause/Redo", command = lambda: self.pause_test(usb))
-        self.save_pause_button.grid(row = 10, column = 4)
+   
 
         self.save_unpause_button = Button(self.tab_zero, text = "Pause/Redo", command = lambda: self.unpause_test(usb))
         self.save_unpause_button.grid(row = 12, column = 4)
@@ -2038,10 +2041,18 @@ class General_Test_UI(object):
         self.enter_auto_button["state"] = "disabled"
         self.reset_therm["state"] = "disabled"
         
-    def set_pass(self,usb):
-        
-        usb.communicate("set_password_request", 0,0,0,0)
+    def set_pass(self,usb,repos):
 
+        password = self.pass_entry.get()
+
+        x = 0
+        for character in password:
+            repos.password[x] = int(character)
+            x = x + 1
+
+            if x > 5:
+                break
+        
         
     def create_test_group(self):
 
@@ -2543,7 +2554,18 @@ class General_Test_UI(object):
 ##            usb_com = "write_setpoint_six_request"
             
         GT_Conversions.convert_standard_to_etu(repos)
-        rsp = usb.communicate("enter_password_request", 0, 0, 0,0, 0, 0)
+        
+        p0 = repos.password[0]
+        p1 = repos.password[1]
+        p2 = repos.password[2]
+        p3 = repos.password[3]
+        p4 = repos.password[4]
+        p5 = repos.password[5]
+        if repos.family == "35":
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
+        else:
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+                
         cor = usb.get_correctness(rsp)
         rsp = usb.communicate(usb_com, keys,  repos.etu_dictionary)
         cor = usb.get_correctness(rsp)
@@ -2861,6 +2883,7 @@ class General_Test_UI(object):
         rating = int(self.rating_entry.get())
         
         rsp = usb.communicate("write_breaker_rating_request", rating)
+        time.sleep(1)
         rsp = usb.communicate("write_breaker_rating_check")
 
         cor = usb.get_correctness(rsp)

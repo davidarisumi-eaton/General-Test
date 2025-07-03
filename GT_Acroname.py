@@ -46,15 +46,25 @@ class BrainstemObject:
     def Connect(self):
         self.stem = brainstem.stem.USBHub3p()
         self.result = self.stem.discoverAndConnect(brainstem.link.Spec.USB)
-
+        print("CONNECTIONS")
+        print(self.result)
+        print(Result.NO_ERROR)
         if self.result == Result.NO_ERROR:
             success = True
             #connectionSuccesful.set()
-            print('Connection Succesful')
+            print('Brainstem Connection Succesful')
         else:
             #connectionSuccesful.clear()
-            print('Connection Failed')
-            success = False
+            self.stem = brainstem.stem.USBHub2x4()
+            self.result = self.stem.discoverAndConnect(brainstem.link.Spec.USB)
+            
+            if self.result == Result.NO_ERROR:
+                success = True
+                print('Brainstem Connection Succesful')
+                
+            else: 
+                print('Connection Failed')
+                success = False
 
         return success
 

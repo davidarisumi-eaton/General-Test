@@ -310,9 +310,12 @@ def create_report_file(part_file, save_dir, j):
         report = GT_Excel_Interface.Test_File("Write")
         try: 
             report.name_file_std_method(part_file, save_dir, j)
+            report.write_cell(1, 4, i, "Index") #If this file is open somewhere else it will create exception
+            
         except:
             j = j + 1
             report.name_file_std_method(part_file, save_dir, j)
+
 
         return report
     
@@ -336,7 +339,6 @@ def get_headings(repos, in_file):
 
         
         key_name = in_file.read_string_from_cell(1,1,i)
-        print(key_name)
         if key_name in repos.mapping_dictionary:
             keys = repos.mapping_dictionary[key_name][0]
 
@@ -372,35 +374,14 @@ def get_headings(repos, in_file):
 
     if custom_keys_present:
         for val in repos.custom_keys:
-            
-            print(val)
-            if val in repos.sp_zero_keys:
-                key_name = "Setpoint 0" 
-                    
-            elif val in repos.sp_one_keys:
-                key_name = "Setpoint 1"
-                
-            elif val in repos.sp_two_keys:
-                key_name = "Setpoint 2"
-                
-            elif val in repos.sp_three_keys:
-                key_name = "Setpoint 3"
-                
-            elif val in repos.sp_four_keys:
-                key_name = "Setpoint 4"
-                
-            elif val in repos.sp_five_keys:
-                key_name = "Setpoint 5"
-                
-            elif val in repos.sp_six_keys:
-                key_name = "Setpoint 6"
-                
-            elif val in repos.configuration_keys:
-                key_name = "Configuration"
-            else:
-                key_name = "Not Found"
-            print(key_name)
 
+            print(val)
+            key_name = "Not Found"
+            
+            for key in repos.mapping_dictionary:
+                if val in repos.mapping_dictionary[key][0]:
+                    key_name = key
+                    
             if key_name in repos.excel_file_tab_names and key_name != "Not Found":
                 pass
             elif key_name == "Not Found":
@@ -484,10 +465,6 @@ def get_breaker_inputs(repos, usb):
             print("Issue, retrying")
             time.sleep(2)
             i = i + 1
-            
-
-        
-    time.sleep(1)
     
     rsp = usb.communicate("read_setpoint_one_request")
     repos.translator.translate_generic(rsp, repos.sp_etu_keys, repos.etu_dictionary)
@@ -495,13 +472,11 @@ def get_breaker_inputs(repos, usb):
 
 
     if repos.family == "35":
-##        rsp = usb.communicate("read_setpoint_two_request")
-##        setpoints = repos.translator.translate_generic(rsp, repos.sp_two_keys, repos.etu_dictionary)
-##        time.sleep(2)
-##        rsp = usb.communicate("read_setpoint_three_request")
-##        setpoints = repos.translator.translate_generic(rsp, repos.sp_three_keys, repos.etu_dictionary)
-##        time.sleep(2)
-##        rsp = usb.communicate("read_setpoint_four_request")
+        rsp = usb.communicate("read_setpoint_two_request")
+        setpoints = repos.translator.translate_generic(rsp, repos.sp_two_keys, repos.etu_dictionary)
+        rsp = usb.communicate("read_setpoint_three_request")
+        setpoints = repos.translator.translate_generic(rsp, repos.sp_three_keys, repos.etu_dictionary)
+        rsp = usb.communicate("read_setpoint_four_request")
         setpoints = repos.translator.translate_generic(rsp, repos.sp_four_keys, repos.etu_dictionary)
         rsp = usb.communicate("read_setpoint_five_request")
         setpoints = repos.translator.translate_generic(rsp, repos.sp_five_keys, repos.etu_dictionary)
@@ -542,8 +517,6 @@ def update_frame_and_rating(repos, usb, in_file, omicron):     #  updates the br
     usb.communicate("enter_into_manufactory_mode_request")
     usb.communicate_with_check("enter_into_manufactory_mode_check")
 
-
-    print(str(frame))
     if frame != -1: 
         usb.communicate("write_breaker_frame_request", frame)
         cor = usb.communicate_with_check("write_breaker_frame_check")

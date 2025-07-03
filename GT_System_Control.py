@@ -10,7 +10,7 @@ def power_cycle(omicron, usb):
 
         disconnected = False
 
-        print("BS")
+        print("Power Control")
         print(usb.connected_bs)
         if omicron.in_use == True:         
             omicron.aux_off()

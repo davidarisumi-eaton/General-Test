@@ -1,4 +1,6 @@
 import math
+import datetime
+from datetime import timedelta
 
 
 '''
@@ -307,6 +309,25 @@ def convert_to_date(msg, start):
     hour   = int(hex_hour, 0)
     minute = int(hex_min, 0)
     sec    = int(hex_sec, 0)
+
+    date = '{:0>2}/{:0>2}/{:0>4} {:0>2}:{:0>2}:{:0>2}'.format(month, day, year, hour, minute, sec)
+    return date
+
+def convert_to_35date(msg, start):
+
+    print("START")
+    unit_s = uint_thirtytwo_to_dec(msg, start)
+    print("END")
+    delta_s = timedelta(seconds = unit_s)
+    base = datetime.datetime(2000, 1, 1, 0, 0)
+    date = base + delta_s
+
+    year = date.year
+    month = date.month
+    day = date.day
+    hour = date.hour
+    minute = date.minute
+    sec = date.second
 
     date = '{:0>2}/{:0>2}/{:0>4} {:0>2}:{:0>2}:{:0>2}'.format(month, day, year, hour, minute, sec)
     return date
