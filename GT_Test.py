@@ -1196,17 +1196,17 @@ def review_secondary(repos, results):
     
     
     if I == repos.expected['I A (Amps)']:
-        repos.etu_dictionary['external_Ia'][0] = cur_val
-        repos.etu_dictionary['external_Ib'][0] = 0
-        repos.etu_dictionary['external_Ic'][0] = 0
+        repos.etu_dictionary['External Ia'][0] = cur_val
+        repos.etu_dictionary['External Ib'][0] = 0
+        repos.etu_dictionary['External Ic'][0] = 0
     elif I == repos.expected['I B (Amps)']:
-        repos.etu_dictionary['external_Ia'][0] = 0
-        repos.etu_dictionary['external_Ib'][0] = cur_val
-        repos.etu_dictionary['external_Ic'][0] = 0
+        repos.etu_dictionary['External Ia'][0] = 0
+        repos.etu_dictionary['External Ib'][0] = cur_val
+        repos.etu_dictionary['External Ic'][0] = 0
     else:
-        repos.etu_dictionary['external_Ia'][0] = 0
-        repos.etu_dictionary['external_Ib'][0] = 0
-        repos.etu_dictionary['external_Ic'][0] = cur_val
+        repos.etu_dictionary['External Ia'][0] = 0
+        repos.etu_dictionary['External Ib'][0] = 0
+        repos.etu_dictionary['External Ic'][0] = cur_val
 
     
 

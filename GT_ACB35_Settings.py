@@ -2977,6 +2977,7 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['Inst PU'][0] = 15
     repos.etu_dictionary['GF Mode'][0] = 2
     repos.etu_dictionary['GF Type'][0] = 0
+    repos.etu_dictionary['GF Thermal'][0] = 0
     repos.etu_dictionary['Etu LD Slope'][0] = 2
     repos.etu_dictionary['Etu LD PU' ][0] = 100
     repos.etu_dictionary['Etu LD Time'][0] = 2400
@@ -2989,6 +2990,8 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['Etu GF Type'][0] = 0
     repos.etu_dictionary['Etu GF ZSI'][0] = 0
     repos.etu_dictionary['Etu LD Thermal'][0] = 0
+    repos.etu_dictionary['Etu GF Thermal'][0] = 0
+
 
     #Group 4 Values                        
     repos.etu_dictionary['Frequency Protection Enable'][0] = 0

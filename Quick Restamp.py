@@ -132,8 +132,9 @@ class My_UI(object):
 
         if PXR == "35" or PXR == 35:
             print(35)
-            GT_ACB35_Settings.get_dictionary(my_repository)
+
             GT_ACB35_Settings.get_setpoint_keys(my_repository)
+            GT_ACB35_Settings.get_dictionary(my_repository)
             GT_ACB35_Settings.get_buffer_keys(my_repository)
             GT_ACB35_Settings.get_mapping_dictionary(my_repository)
         elif frame == "Standard" or frame == "Narrow" or frame == "Double Standard" or frame == "Double Narrow":

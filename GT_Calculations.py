@@ -262,8 +262,10 @@ def calc_max_min_time(repos):
     vb_ang = math.radians(int(setpoints["Vb_Phase_Angle"][0]))
     vc_ang = math.radians(int(setpoints["Vc_Phase_Angle"][0]))
 
-    pf = (ra_ang -va_ang)
-    unit_pf = math.cos(pf)
+
+    pf = (ra_ang -va_ang + math.radians(90))
+    unit_pf = math.cos(pf) *100
+
 
     a_real_power = I_test_A * Va * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
     b_real_power = I_test_B * Vb * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
@@ -767,8 +769,10 @@ def calc_short_delay(I, ldpu, sdpu, sds, t_sd):
         if short_delay_max < t_sd:
             if sdpu == 0:
                 short_delay_max = .05
+                short_delay = .05
             else:
                 short_delay_max = t_sd
+                short_delay = t_sd
 
         #Short Delay times might get a +% depending on what we see.
         if t_sd < .1 and sds == 0:
@@ -782,10 +786,14 @@ def calc_short_delay(I, ldpu, sdpu, sds, t_sd):
     #Short delay has a tolrance of +5%/-5%
     if I >= ldpu*sdpu*.95 and sdpu != 0: 
         if sds == 2 and (I/ldpu) < 8: #Tolerances for short delay i2t times
-            if t_sd <= .15:
-                short_delay_min = short_delay * .6
+            if t_sd < .1:
+                short_delay_min = short_delay *.5 
+            elif t_sd <= .15:
+                short_delay_min = short_delay *.6
+            elif t_sd <= .2:
+                short_delay_min = short_delay *.7                
             else:
-                short_delay_min = short_delay * .7
+                short_delay_min = short_delay *.8
         else:                           #Tolerances for short delay flat times
             if t_sd < .1:
                 short_delay_min = short_delay *.5 
@@ -992,7 +1000,8 @@ def calc_time_generic(input_level, action, pu_level, trip_time, pu_tol, time_tol
         else: 
             result_time = -1
 
-    elif calc_type == 5: #Under Percentage Tolerance, Addition Time Tolerance 
+    elif calc_type == 5: #Under Percentage Tolerance, Addition Time Tolerance
+        level = str(pu_level * pu_tol)
         if pu_level * pu_tol > input_level:
             result_time = trip_time + time_tol
         else: 
