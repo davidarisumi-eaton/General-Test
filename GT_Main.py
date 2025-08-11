@@ -380,14 +380,23 @@ def get_headings(repos, in_file):
             
             for key in repos.mapping_dictionary:
                 if val in repos.mapping_dictionary[key][0]:
-                    key_name = key
+                    print("Adding to " + key)
+                    if key != "Main": 
+                        key_name = key
                     
             if key_name in repos.excel_file_tab_names and key_name != "Not Found":
+                print("NOT FOUND I GUESS")
                 pass
             elif key_name == "Not Found":
+                print("KEY NOT FOUND!")
                 pass
             else:
+                print("Apppending  " + key_name)
                 repos.excel_file_tab_names.append(key_name)
+
+        print("KEY STUFF")
+        print(repos.excel_file_tab_names)
+        print(repos.custom_keys)
 
 
 def fix_string(val): #Update old formate word1_word2_word3 to Word1 Word2 Word3

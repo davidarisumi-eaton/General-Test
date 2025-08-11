@@ -52,7 +52,7 @@
                 get_message(self, def_name, *argv)
                     Function: Given a string command, it figures out what the byte message, adds in any additional info and creates a checksum. 
                     Input:
-                        def_name(string) - name of the commmand that needs to be sent
+                        def_name(string) - name of the command that needs to be sent
                         *argv(unkown) - Whatever data/info that needs to be added to the command, such as setpoints in a write command
                     Output:
                         tx(String)    - Byte array that will be sent to the trip unit
@@ -131,7 +131,7 @@ class usb_commands():
         self.add_setpoints()
         self.add_secondary_injection()
         self.add_commands()
-        self.add_mccb_commmands()
+        self.add_mccb_commands()
         
             
     def add_buffers(self):
@@ -209,7 +209,7 @@ class usb_commands():
         self.command_dictionary["read_alarm_event_request"]                              = [[128, 0, 2, 3], "No Input"]
 
         
-    def add_mccb_commmands(self):
+    def add_mccb_commands(self):
         
         self.command_dictionary["read_firmware_event_summary_request"]                   = [[128, 0, 2, 0],  "No Input"]
         
@@ -403,64 +403,64 @@ class usb_commands():
         self.command_dictionary[ "clear_secondary_injection_check"]                      = [[128, 8, 10, 73], "No Input"]
 
         '''========Breaker Manufactory Info=========='''
-        self.command_dictionary["write_etu_style_request"]                                : [[128, 2, 7, 176, 1, 1, 4, 0], "Uint16"]
-        self.command_dictionary["write_etu_style_check"]                                 : [[128, 8, 7, 176], "No Input"]                                                   
-        self.command_dictionary["read_etu_style_request"]                                : [[128, 0, 7, 176], "No Input"]
-        self.command_dictionary["write_etu_manufacture_location_request"]                : [[128, 2, 7, 177, 1, 1, 4, 0], "Char"]
-        self.command_dictionary["write_etu_manufacture_location_check"]                  : [[128, 8, 7, 177]," No Input"]
-        self.command_dictionary["read_etu_manufacture_location_request"]                 : [[128, 0, 7, 177], "No Input"]
-        self.command_dictionary["write_etu_manufacture_date_request"]                    : [[128, 2, 7, 178, 1, 1, 6, 0], "Char"]
-        self.command_dictionary["write_etu_manufacture_date_check"]                      : [[128, 8, 7, 178], "No Input"]
-        self.command_dictionary["read_etu_manufacture_date_request"]                     : [[128, 0, 7, 178], "No Input"]
-        self.command_dictionary["write_etu_serial_number_request"]                       : [[128, 2, 7, 179, 1, 1, 40, 0], "Char"]
-        self.command_dictionary["write_etu_serial_number_check"]                         : [[128, 8, 7, 179], "No Input"]
-        self.command_dictionary["read_etu_serial_number_request"]                        : [[128, 0, 7, 179], "No Input"]
-        self.command_dictionary["write_etu_catalog_number_request"]                      : [[128, 2, 7, 181, 1, 1, 40, 0], "Char"]
-        self.command_dictionary["write_etu_catalog_number_check"]                        : [[128, 8, 7, 181], "No Input"]
-        self.command_dictionary["read_etu_catalog_number_request"]                       : [[128, 0, 7, 181], "No Input"]
-        self.command_dictionary["write_etu_style_string_request"]                        : [[128, 2, 7, 182, 1, 1, 40, 0], "Char"]
-        self.command_dictionary["write_etu_style_string_check"]                          : [[128, 8, 7, 182], "no Input"]
-        self.command_dictionary["read_etu_style_string_request"]                         : [[128, 0, 7, 182], "No Input"]
-        self.command_dictionary["write_etu_status_request"]                              : [[128, 2, 7, 180, 1, 1, 2, 0], "Uint16"]
-        self.command_dictionary["write_etu_status_check"]                                : [[128, 8, 7, 180], "No Input"]      
-        self.command_dictionary["write_breaker_rating_request"]                          : [[128, 2, 7, 208, 1, 1, 2, 0], "Uint16"]
-        self.command_dictionary["write_breaker_rating_check"]                            : [[128, 8, 7, 208], "No Input"]
-        self.command_dictionary["read_breaker_rating_request"]                           : [[128, 0, 7, 208], "No Input"]
-        self.command_dictionary["write_breaker_frame_request"]                           : [[128, 2, 7, 209, 1, 1, 2, 0], "Uint16"]
-        self.command_dictionary["write_breaker_frame_check"]                             : [[128, 8, 7, 209], "No Input"]
-        self.command_dictionary["read_breaker_frame_request"]                            : [[128, 0, 7, 209], "No Input"]
-        self.command_dictionary["write_breaker_protection_request"]                      : [[128, 2, 7, 210, 1, 1, 16, 1], "dictionary and Keys"]
-        self.command_dictionary["write_breaker_protection_check"]                        : [[128, 8, 7, 210], "No Input"] 
-        self.command_dictionary["read_breaker_protection_request"]                       : [[128, 0, 7, 210], "No Input"]
-        self.command_dictionary["write_breaker_manufacture_location_request"]            : [[128, 2, 7, 211, 1, 1, 4, 0], "Char"]
-        self.command_dictionary["write_breaker_manufacture_location_check"]              : [[128, 8, 7, 211], "No Input"] 
-        self.command_dictionary["read_breaker_manufacture_location_request"]             : [[128, 0, 7, 211], "No Input"]
-        self.command_dictionary["write_breaker_manufacture_date_request"]                : [[128, 2, 7, 212, 1, 1, 6, 0,], "Char"]
-        self.command_dictionary["write_breaker_manufacture_date_check"]                  : [[128, 8, 7, 212], "No Input"]
-        self.command_dictionary["read_breaker_manufacture_date_request"]                 : [[128, 0, 7, 212], "No Input"]
-        self.command_dictionary["write_breaker_test_status_request"]                     : [[128, 2, 7, 213, 1,1, 2, 0], "Unit16"]
-        self.command_dictionary["write_breaker_test_status_check"]                       : [[128, 8, 7, 213], "No Input"]
-        self.command_dictionary["read_breaker_test_status_request"]                      : [[128, 0, 7, 213], "No Input"]
-        self.command_dictionary["write_breaker_serial_number_request"]                   : [[128, 2, 7, 214, 1, 1, 40, 0], "Char"]
-        self.command_dictionary["write_breaker_serial-number_check"]                     : [[128, 8, 7, 214], "No Input"]
-        self.command_dictionary["read_breaker_serial_number_request"]                    : [[128, 0, 7, 214], "No Input"]
-        self.command_dictionary["write_breaker_catalog_number_request"]                  : [[128, 2, 7, 215, 1, 1, 40, 0], "Char"]
-        self.command_dictionary["write_breaker_catalog_number_check"]                    : [[128, 8, 7, 215], "No Input"]
-        self.command_dictionary["read_breaker_catalog_number_request"]                   : [[128, 0, 7, 215], "No Input"]
-        self.command_dictionary["write_pcba_manufacture_location_request"]               : [[128, 2, 7, 192, 1, 1, 4, 0], "Char"]
-        self.command_dictionary["write_pcba_manufacture_location_check"]                 : [[128, 8, 7, 192], "No Input"]
-        self.command_dictionary["read_pcba_manufacture_location_request"]                : [[128, 0, 7, 192], "No Input"]
-        self.command_dictionary["write_pcba_manufacture_date_request"]                   : [[128, 2, 7, 193, 1, 1, 6, 0], "Char"]
-        self.command_dictionary["write_pcba_manufacture_date_check"]                     : [[128, 8, 7, 193], "No Input"]
-        self.command_dictionary["read_pcba_manufacture_date_request"]                    : [[128, 0, 7, 193], "No Input"]
-        self.command_dictionary["write_pcab_serial_number_request"]                      : [[128, 2, 7, 194, 1, 1, 4, 0], "Uint32"]
-        self.command_dictionary["read_pcba_serial_number_request"]                       : [[128, 0, 7, 194], "No Input"]  
+        self.command_dictionary["write_etu_style_request"]                                = [[128, 2, 7, 176, 1, 1, 4, 0], "Uint16"]
+        self.command_dictionary["write_etu_style_check"]                                 = [[128, 8, 7, 176], "No Input"]                                                   
+        self.command_dictionary["read_etu_style_request"]                                = [[128, 0, 7, 176], "No Input"]
+        self.command_dictionary["write_etu_manufacture_location_request"]                = [[128, 2, 7, 177, 1, 1, 4, 0], "Char"]
+        self.command_dictionary["write_etu_manufacture_location_check"]                  = [[128, 8, 7, 177]," No Input"]
+        self.command_dictionary["read_etu_manufacture_location_request"]                 = [[128, 0, 7, 177], "No Input"]
+        self.command_dictionary["write_etu_manufacture_date_request"]                    = [[128, 2, 7, 178, 1, 1, 6, 0], "Char"]
+        self.command_dictionary["write_etu_manufacture_date_check"]                      = [[128, 8, 7, 178], "No Input"]
+        self.command_dictionary["read_etu_manufacture_date_request"]                     = [[128, 0, 7, 178], "No Input"]
+        self.command_dictionary["write_etu_serial_number_request"]                       = [[128, 2, 7, 179, 1, 1, 40, 0], "Char"]
+        self.command_dictionary["write_etu_serial_number_check"]                         = [[128, 8, 7, 179], "No Input"]
+        self.command_dictionary["read_etu_serial_number_request"]                        = [[128, 0, 7, 179], "No Input"]
+        self.command_dictionary["write_etu_catalog_number_request"]                      = [[128, 2, 7, 181, 1, 1, 40, 0], "Char"]
+        self.command_dictionary["write_etu_catalog_number_check"]                        = [[128, 8, 7, 181], "No Input"]
+        self.command_dictionary["read_etu_catalog_number_request"]                       = [[128, 0, 7, 181], "No Input"]
+        self.command_dictionary["write_etu_style_string_request"]                        = [[128, 2, 7, 182, 1, 1, 40, 0], "Char"]
+        self.command_dictionary["write_etu_style_string_check"]                          = [[128, 8, 7, 182], "no Input"]
+        self.command_dictionary["read_etu_style_string_request"]                         = [[128, 0, 7, 182], "No Input"]
+        self.command_dictionary["write_etu_status_request"]                              = [[128, 2, 7, 180, 1, 1, 2, 0], "Uint16"]
+        self.command_dictionary["write_etu_status_check"]                                = [[128, 8, 7, 180], "No Input"]      
+        self.command_dictionary["write_breaker_rating_request"]                          = [[128, 2, 7, 208, 1, 1, 2, 0], "Uint16"]
+        self.command_dictionary["write_breaker_rating_check"]                            = [[128, 8, 7, 208], "No Input"]
+        self.command_dictionary["read_breaker_rating_request"]                           = [[128, 0, 7, 208], "No Input"]
+        self.command_dictionary["write_breaker_frame_request"]                           = [[128, 2, 7, 209, 1, 1, 2, 0], "Uint16"]
+        self.command_dictionary["write_breaker_frame_check"]                             = [[128, 8, 7, 209], "No Input"]
+        self.command_dictionary["read_breaker_frame_request"]                            = [[128, 0, 7, 209], "No Input"]
+        self.command_dictionary["write_breaker_protection_request"]                      = [[128, 2, 7, 210, 1, 1, 16, 1], "dictionary and Keys"]
+        self.command_dictionary["write_breaker_protection_check"]                        = [[128, 8, 7, 210], "No Input"] 
+        self.command_dictionary["read_breaker_protection_request"]                       = [[128, 0, 7, 210], "No Input"]
+        self.command_dictionary["write_breaker_manufacture_location_request"]            = [[128, 2, 7, 211, 1, 1, 4, 0], "Char"]
+        self.command_dictionary["write_breaker_manufacture_location_check"]              = [[128, 8, 7, 211], "No Input"] 
+        self.command_dictionary["read_breaker_manufacture_location_request"]             = [[128, 0, 7, 211], "No Input"]
+        self.command_dictionary["write_breaker_manufacture_date_request"]                = [[128, 2, 7, 212, 1, 1, 6, 0,], "Char"]
+        self.command_dictionary["write_breaker_manufacture_date_check"]                  = [[128, 8, 7, 212], "No Input"]
+        self.command_dictionary["read_breaker_manufacture_date_request"]                 = [[128, 0, 7, 212], "No Input"]
+        self.command_dictionary["write_breaker_test_status_request"]                     = [[128, 2, 7, 213, 1,1, 2, 0], "Unit16"]
+        self.command_dictionary["write_breaker_test_status_check"]                       = [[128, 8, 7, 213], "No Input"]
+        self.command_dictionary["read_breaker_test_status_request"]                      = [[128, 0, 7, 213], "No Input"]
+        self.command_dictionary["write_breaker_serial_number_request"]                   = [[128, 2, 7, 214, 1, 1, 40, 0], "Char"]
+        self.command_dictionary["write_breaker_serial-number_check"]                     = [[128, 8, 7, 214], "No Input"]
+        self.command_dictionary["read_breaker_serial_number_request"]                    = [[128, 0, 7, 214], "No Input"]
+        self.command_dictionary["write_breaker_catalog_number_request"]                  = [[128, 2, 7, 215, 1, 1, 40, 0], "Char"]
+        self.command_dictionary["write_breaker_catalog_number_check"]                    = [[128, 8, 7, 215], "No Input"]
+        self.command_dictionary["read_breaker_catalog_number_request"]                   = [[128, 0, 7, 215], "No Input"]
+        self.command_dictionary["write_pcba_manufacture_location_request"]               = [[128, 2, 7, 192, 1, 1, 4, 0], "Char"]
+        self.command_dictionary["write_pcba_manufacture_location_check"]                 = [[128, 8, 7, 192], "No Input"]
+        self.command_dictionary["read_pcba_manufacture_location_request"]                = [[128, 0, 7, 192], "No Input"]
+        self.command_dictionary["write_pcba_manufacture_date_request"]                   = [[128, 2, 7, 193, 1, 1, 6, 0], "Char"]
+        self.command_dictionary["write_pcba_manufacture_date_check"]                     = [[128, 8, 7, 193], "No Input"]
+        self.command_dictionary["read_pcba_manufacture_date_request"]                    = [[128, 0, 7, 193], "No Input"]
+        self.command_dictionary["write_pcab_serial_number_request"]                      = [[128, 2, 7, 194, 1, 1, 4, 0], "Uint32"]
+        self.command_dictionary["read_pcba_serial_number_request"]                       = [[128, 0, 7, 194], "No Input"]  
                                 
     def add_acb_commands(self):
-        self.command_dictionary["read_real_time_current_crest_factor"]                   : [[128, 0, 1, 20], "No Input"]
-        self.command_dictionary["read_real_power_factor_freqeuncy_min_max"]              : [[128, 0, 1, 22], "No Input"]
-        self.command_dictionary["read_real_time_data_buffer_power"]                      : [[128, 0, 1, 23], "No Input"]  
-        self.command_dictionary["read_real_time_harmonics"]                              : [[128, 0, 1], "Uint08"]
+        self.command_dictionary["read_real_time_current_crest_factor"]                   = [[128, 0, 1, 20], "No Input"]
+        self.command_dictionary["read_real_power_factor_freqeuncy_min_max"]              = [[128, 0, 1, 22], "No Input"]
+        self.command_dictionary["read_real_time_data_buffer_power"]                      = [[128, 0, 1, 23], "No Input"]  
+        self.command_dictionary["read_real_time_harmonics"]                              = [[128, 0, 1], "Uint08"]
         '''32 = Ia, 33 = Ib, 34 = Ic, 35 = In, 36 = Van, 37 = Vbn, 38 = Vcn, 39 = Vab, Vbc = 40, Vca = 41'''
 
         self.command_dictionary["enter_into_auto_test_mode_request"]                     = [[128, 4, 4, 0], "No Input"]
@@ -632,8 +632,11 @@ class usb_commands():
     def set_family(self, family):
         self.family = family
         if family == "MCCB":
+
             self.command_dictionary["clear_secondary_injection_request"]    = [[128, 4, 11, 3], "No Input"]
             self.command_dictionary["clear_secondary_injection_check"]      = [[128, 8, 11, 3], "No Input"]
+            #self.add_mccb_commands()
+
         if family != "MCCB":
             print("pass")
         if family == "35":
@@ -745,7 +748,8 @@ class usb_commands():
    
             
     def get_message(self, def_name, *argv):
-  
+
+        print(def_name)
         info_array = self.command_dictionary[def_name]
 ##        try: 
 ##            info_array = self.command_dictionary[def_name]

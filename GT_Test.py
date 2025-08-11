@@ -279,6 +279,8 @@ def read_setpoints_from_excel(in_file, repos, active_row):
                 key = in_file.read_string_from_cell(k,4,i)
                 sp_val = in_file.read_cell(k, active_row, i)
 
+                
+
 
                 if sp_val != None and sp_val != '' and sp_val != "None":
                     if key in repos.etu_dictionary:
@@ -342,7 +344,6 @@ def write_setpoints_from_excel(usb, repos, test_type):
             else:
                 rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
                 
-            
         if key == "Setpoint 1":
             GT_Conversions.convert_standard_to_etu(repos)
             request = repos.mapping_dictionary[key][1]
@@ -404,7 +405,7 @@ def setup_for_file_write(repos):
                 repos.main_keys.append(key)      
     
     for key in repos.main_keys:
-        print(key)
+
         if key in repos.expected:
             repos.main_dict[key] = repos.expected[key]
         elif key in repos.results:
@@ -460,14 +461,13 @@ def fix_string(val): #Update old formate word1_word2_word3 to Word1 Word2 Word3
     while more: 
         
         space_location = new_string.find(" ", space_location + 1) 
-        print(space_location)
+
 
         if space_location == -1:
             break
         else:
             new_string = new_string[:space_location+1] + new_string[space_location+1].swapcase() + new_string[space_location+2:]
-
-    print(new_string)   
+  
     return new_string
     
 def write_results(output_file, in_file, repos):
@@ -486,7 +486,6 @@ def write_results(output_file, in_file, repos):
             
         if i == 0:
             output_file.write_cell(1, index, i, index-5)
-            print(repos.main_keys)
             output_file.write_row_with_dictionary(2, index, j, repos.main_keys, repos.main_dict)
             output_file.write_row_with_dictionary(len(repos.main_keys)+2, index, j, repos.results_keys, repos.results)
             j = j + 1

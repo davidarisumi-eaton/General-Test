@@ -122,7 +122,9 @@ class My_UI(object):
         my_repository.main_keys = []
         my_repository.expected_keys = []
         my_repository.custom_setpoints = []
+        my_repository.angle_keys = [] 
         #my_repository.main_keys = []
+        my_repository.pf_and_freq_keys = []
         
         frame = config_file.read_string_from_cell(3, active_row, 0)
         PXR   = config_file.read_cell(2, active_row, 0)

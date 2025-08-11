@@ -316,7 +316,6 @@ def get_dictionary(repos):
 
     #Setpoint {Name: [Value, Data_Type]}
 
-   
 
     repos.etu_dictionary =  {'MCU1 Version'             : [0, "Uint16"],
                             'MCU1 Revision'            : [0, "Uint16"],
@@ -697,8 +696,35 @@ def get_dictionary(repos):
     add_buffer_one(repos)
     add_buffer_ten(repos)
     add_configuration(repos)
+    get_buffer_keys(repos)
 
-
+    add_blank_keys(repos) 
+    repos.mapping_dictionary = {'Setpoint 0'      : [repos.sp_zero_keys,   "write_setpoint_zero_request", "read_setpoint_zero_request"],
+                                'Setpoint 1'      : [repos.sp_one_keys,    "write_setpoint_one_request", "read_setpoint_one_request"],
+                                'Setpoint etu'    : [repos.sp_etu_keys,   "write_setpoint_one_request", "read_setpoint_one_request"],
+                                'Setpoint 2'      : [repos.sp_two_keys,          "write_setpoint_two_request", "read_setpoint_two_request"],
+                                'Setpoint 3'      : [repos.sp_three_keys,        "write_setpoint_three_request", "read_setpoint_three_request"],
+                                'Setpoint 5'      : [repos.sp_five_keys,      "write_setpoint_five_request", "read_setpoint_five_request"],
+                                'Setpoint 6'      : [repos.sp_six_keys,      "write_setpoint_six_request", "read_setpoint_six_request"],
+                                'Setpoint 7'      : [repos.sp_seven_keys,      "write_setpoint_seven_request", "read_setpoint_seven_request"],
+                                'Buffer 0'        : [repos.buffer_zero_keys,     "N/A" , "read_real_time_data_buffer_zero_request"],
+                                'Buffer 1'        : [repos.buffer_one_keys,      "N/A" , "read_real_time_data_buffer_one_request"],
+                                'Buffer 2'        : [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_two_request"],
+                                'Buffer 3'        : [repos.buffer_three_keys,      "N/A" , "read_real_time_data_buffer_three_request"],
+                                'Buffer 4'        : [repos.buffer_four_keys,     "N/A" , "read_real_time_data_buffer_four_request"],
+                                'Buffer 5'        : [repos.buffer_five_keys,      "N/A" , "read_real_time_data_buffer_five_request"],
+                                'Buffer 6'        : [repos.buffer_six_keys,  "N/A" , "read_real_time_data_buffer_six_request"],
+                                'Buffer 7'        : [repos.buffer_seven_keys,    "N/A" , "read_real_time_data_buffer_seven_request"],
+                                'Buffer 8'        : [repos.buffer_eight_keys,     "N/A" , "read_real_time_data_buffer_eight_request"],
+                                'Buffer 10'       : [repos.buffer_ten_keys,   "N/A" , "read_real_time_data_buffer_ten_request"],
+                                'Buffer 11'       : [repos.buffer_eleven_keys,  "N/A" , "read_real_time_data_buffer_eleven_request"],
+                                'Configuration'   : [repos.breaker_protection_capacity_keys,  "N/A" , "read_real_time_data_buffer_zero_request"],
+                                'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
+                                'Main'            : [repos.main_keys, "N/A", "N/A"],
+                                'Inputs'          : [repos.expected_keys, "N/A", "N/A"],
+                                'pf_and_freq'     : [repos.pf_and_freq_keys, "N/A", "N/A"]}
+    mapping_keys = []
+    repos.mapping_keys = list(repos.mapping_dictionary.keys())
 
 
                             
@@ -708,6 +734,13 @@ def get_dictionary(repos):
     =================
 '''
 
+def add_blank_keys(repos):
+    repos.sp_four_keys = []                       
+    repos.sp_six_keys = []
+    repos.sp_seven_keys = []
+
+    
+    
 def get_setpoint_keys(repos):
 
     repos.mech_time = .008
@@ -715,9 +748,7 @@ def get_setpoint_keys(repos):
                             
 
 
-    repos.sp_four_keys = []                       
-    repos.sp_six_keys = []
-    repos.sp_seven_keys = []
+
     repos.angle_keys          =   ["Ra_Phase_Angle",
                                     "Rb_Phase_Angle",
                                     "Rc_Phase_Angle",
@@ -1075,7 +1106,7 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['Sign'][0] = 0
     repos.etu_dictionary['Power Window'][0] = 0
     repos.etu_dictionary['Power Interval'][0] = 5
-    repos.etu_dictionary['Language'][0] = 0
+    repos.etu_dictionary['Language'][0] = 1
     repos.etu_dictionary['I Window'][0] = 0
     repos.etu_dictionary['I Interval'][0] = 5
     repos.etu_dictionary['Health Level'][0] = 100

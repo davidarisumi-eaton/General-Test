@@ -456,8 +456,8 @@ def calc_max_min_time(repos):
         max_rr_power                 = calc_time_generic(rev_reactive_power, rr_action, rr_pu, rr_t, 1.02, +.3, 5)
         all_max_times, all_min_times = append_max_and_mins(max_rr_power, min_rr_power, "Reverse Reactive Power", all_max_times, all_min_times)
 
-        min_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, .98, -.3, 5)
-        max_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, 1.02, +.3, 5)
+        min_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, 1.02, -.3, 5)
+        max_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, .98, +.3, 5)
         all_max_times, all_min_times = append_max_and_mins(max_upf_power, min_upf_power, "Under Power Factor", all_max_times, all_min_times)
 
         min_r_demand_power                 = calc_time_generic(real_power, rpd_action, rpd_pu, rpd_t, .95, .95, 0)
