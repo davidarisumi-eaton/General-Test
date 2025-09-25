@@ -338,11 +338,11 @@ def write_setpoints_from_excel(usb, repos, test_type):
         p5 = repos.password[5]
 
         
-        for val in repos.default_array:
-            if repos.family == "35":
-                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
-            else:
-                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+        #for val in repos.default_array:
+        if repos.family == "35":
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
+        else:
+            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
                 
         if key == "Setpoint 1":
             GT_Conversions.convert_standard_to_etu(repos)

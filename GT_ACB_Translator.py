@@ -360,6 +360,40 @@ def translate_configuration(msg, *argv):
 
     return [pol, std, dtp, rat, vol, iec, ul, ans, frm, mn, wit, ovr, mcr, gf, phy, irp, ins]    
 
+def read_digitization_bits(msg, *argv):
+
+
+        print(msg)
+        hex_dat_one        = (msg[24])+(msg[25])
+        hex_dat_two        = (msg[27])+(msg[28])
+        prep_dat       = '0x' + hex_dat_two + hex_dat_one
+        temp_dat       = (int(prep_dat, 0))
+
+        temp_bin = [int(x) for x in list('{0:0b}'.format(temp_dat))]
+
+
+        
+        tu_bin = []
+        temp_tu_bin = []
+        for y in range(0, 15 - len(temp_bin)):
+            temp_tu_bin.append(0)
+        
+        my_len = len(temp_bin)
+        for val in temp_bin:
+            temp_tu_bin.append(val)
+
+        for k in range(0, len(temp_tu_bin)):
+            rev_index = len(temp_tu_bin)-k-1
+            val = temp_tu_bin[rev_index]
+            tu_bin.append(val)
+            
+        print(tu_bin)
+        gf_on  = tu_bin[0]
+        bypass = tu_bin[1]
+
+
+        return gf_on, bypass
+        
 def translate_buffer_zero(msg, *argv):
 
         stat_hex_one     =  (msg[24])+(msg[25])

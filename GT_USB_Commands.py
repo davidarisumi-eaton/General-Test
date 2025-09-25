@@ -131,7 +131,7 @@ class usb_commands():
         self.add_setpoints()
         self.add_secondary_injection()
         self.add_commands()
-        self.add_mccb_commands()
+        #self.add_mccb_commands()
         
             
     def add_buffers(self):
@@ -224,10 +224,10 @@ class usb_commands():
         
 
         
-        self.command_dictionary["enter_into_manufactory_mode_request"]  = [[128, 4, 4, 2], "No Input"]
-        self.command_dictionary["enter_into_manufactory_mode_check"]    = [[128, 0, 4, 2], "No Input"]
-        self.command_dictionary["exit_out_of_manufactory_mode_request"] = [[128, 4, 4, 3], "No Input"]
-        self.command_dictionary["exit_out_of_manufactory_mode_check"]   = [[128, 0, 4, 3], "No Input"]
+        self.command_dictionary["enter_into_manufactory_mode_request"]  = [[128, 4, 11, 2], "No Input"]
+        self.command_dictionary["enter_into_manufactory_mode_check"]    = [[128, 0, 11, 2], "No Input"]
+        self.command_dictionary["exit_out_of_manufactory_mode_request"] = [[128, 4, 11, 3], "No Input"]
+        self.command_dictionary["exit_out_of_manufactory_mode_check"]   = [[128, 0, 11, 3], "No Input"]
         self.command_dictionary["write_setpoint_zero_request"]          = [[128, 2, 0, 0, 1, 1, 49], "dictionary and Keys"]
         self.command_dictionary["write_breaker_frame_request"]          = [[128, 2, 4, 29, 1, 1, 2, 0], "Uint16"]
         self.command_dictionary["write_breaker_frame_check"]            = [[128, 0, 4, 29], "No Input"]
@@ -635,7 +635,7 @@ class usb_commands():
 
             self.command_dictionary["clear_secondary_injection_request"]    = [[128, 4, 11, 3], "No Input"]
             self.command_dictionary["clear_secondary_injection_check"]      = [[128, 8, 11, 3], "No Input"]
-            #self.add_mccb_commands()
+            self.add_mccb_commands()
 
         if family != "MCCB":
             print("pass")
@@ -680,7 +680,12 @@ class usb_commands():
         self.command_dictionary["write_setpoint_nine_request"]          = [[128, 2, 0, 80, 1, 1, 33], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_nine_request"]          = [[128, 2, 0, 88, 1, 1, 182, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255], "dictionary and Keys"]
 
-
+        self.command_dictionary["exit_out_of_manufactory_mode_request"]                  = [[128, 4, 4, 3], "No Input"]
+        self.command_dictionary["exit_out_of_manufactory_mode_check"]                    = [[128, 8, 4, 3], "No Input"]
+        self.command_dictionary["exit_out_of_auto_test_mode_request"]                    = [[128, 4, 4, 1], "No Input"]
+        self.command_dictionary["exit_out_of_auto_test_mode_check"]                      = [[128, 8, 4, 1], "No Input"]
+        self.command_dictionary["enter_into_manufactory_mode_request"]                   = [[128, 4, 4, 2], "No Input"]
+        self.command_dictionary["enter_into_manufactory_mode_check"]                     = [[128, 8, 4, 2], "No Input"]
 
         self.command_dictionary["read_real_time_data_buffer_fifteen_request"]           = [[128, 0, 1, 15], "No Input"]
         self.command_dictionary["read_real_time_data_buffer_eighteen_request"]          = [[128, 0, 1, 18], "No Input"]
@@ -744,6 +749,10 @@ class usb_commands():
         self.command_dictionary["read_breaker_configuraiton_request"]                    = [[128, 0, 4, 111], "No Input"]
         self.command_dictionary["enter_password_request"]                                = [[128, 4, 3, 14, 1, 1, 6, 0], "Uint08"]
 
+        self.command_dictionary["read_digitalization_features_request"]                  = [[128, 4, 4, 180], "No Input"]
+        self.command_dictionary["read_digitalization_features_check"]                    = [[128, 0, 4, 180], "No Input"]
+        self.command_dictionary["write_digitalization_features_request"]                 = [[128, 0, 4, 180], "bin"]
+
 
    
             
@@ -782,7 +791,8 @@ class usb_commands():
             tx, packet = self.add_uint_eight_array(packet_start, argv[0])
         elif add_data == "write_breaker_protection_capacity":
             tx, packet = self.write_breaker_protection_capacity(packet_start, argv[0], argv[1])
-
+        elif add_data == "bin":
+            tx, packet = self.add_bin(packet_start, argv[0], argv[1])
             
         else:
             print(def_name, " is not a known command")
@@ -1031,6 +1041,28 @@ class usb_commands():
 
         return tx, packet       
 
+    def add_bin(packet_start, keys, dictionary):
+
+        data_packet = []
+
+        val = 0
+        i = 0
+        for key in keys:
+
+            exp = val(2, i)
+            val = val + (dictionary[key][0] * exp)
+            i = i + 1
+
+        data_packet.append(val)
+        
+        packet_end = [0, 0, 253]
+
+        packet = packet_start + data_packet + packet_end
+      
+        packet = self.calc_checksum(packet)
+        tx = self.format_packet(packet)
+
+        return tx, packet                   
     def dictionary_and_keys(self, packet_start, keys, dictionary):
 
 
@@ -1318,6 +1350,8 @@ class usb_commands():
 
 
 
+
+        
 
 
 

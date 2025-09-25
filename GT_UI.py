@@ -3247,6 +3247,13 @@ class General_Test_UI(object):
 
                 print(repos.pxr)
 
+            elif repos.family == "35":
+                rsp = usb.communicate("read_digitalization_features_request")
+                rsp = usb.communicate("read_digitalization_features_check")
+                gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
+                print(gf_en)
+                print(gf_by)
+
             repos.set_mapping_dictionary()
 
             self.ui_buffer_keys = []

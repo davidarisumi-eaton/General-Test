@@ -2756,10 +2756,35 @@ def add_configuration(repos):
                                     "Config Inst"]
 
     add_dictionary_values(repos, repos.configuration_keys)
-    repos.etu_dictionary["Override"][0] = 36
+    repos.etu_dictionary["Override"][0] = 150
     repos.mapping_dictionary['Configuration']   = [repos.configuration_keys,  "write_breaker_configuraiton", "read_breaker_configuraiton_request"]
 
+
+def add_digitization(repos):
+
+    repos.digitization_keys =      ["GF Style Enable",
+                                     "1200 GF Bypas",
+                                    "Digi Reserved 1",
+                                    "Digi Reserved 2",
+                                    "Digi Reserved 3",
+                                    "Digi Reserved 4",
+                                    "Digi Reserved 5",
+                                    "Digi Reserved 6"
+                                    ]
+
+    repos.etu_dictionary["GF Style Enable"]   = [1,"None"]
+    repos.etu_dictionary["1200 GF Bypas"]     = [1,"None"]
+    repos.etu_dictionary["Digi Reserved 1"]   = [0,"None"]
+    repos.etu_dictionary["Digi Reserved 2"]   = [0,"None"]
     
+    repos.etu_dictionary["Digi Reserved 3"]   = [0,"None"]
+    repos.etu_dictionary["Digi Reserved 4"]   = [0,"None"]
+    repos.etu_dictionary["Digi Reserved 5"]   = [0,"None"]
+    repos.etu_dictionary["Digi Reserved 6"]   = [0,"None"]
+
+    repos.mapping_dictionary['Digitization']    = [repos.digitization_keys, "write_digitalization_features_request" , "read_digitalization_features_request"]
+
+        
 def get_dictionary(repos):
  
     repos.mapping_dictionary = {'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
@@ -2842,6 +2867,7 @@ def get_dictionary(repos):
     add_buffer_seventy_four(repos)
     add_buffer_seventy_seven(repos)
     add_configuration(repos)
+    add_digitization(repos)
 
     mapping_keys = []
 ##    for val in repos.mapping_dictionary:

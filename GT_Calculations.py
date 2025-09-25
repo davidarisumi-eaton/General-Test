@@ -155,7 +155,11 @@ def calc_max_min_time(repos):
         apd_action = setpoints['Apparent Demand Power Action'][0]
         apd_pu = setpoints['Apparent Demand Power Pickup'][0] * 1000
         apd_t = setpoints['Apparent Demand Power Time'][0] * pow_int 
-        rpd_action = 2
+
+
+        #Digitization
+        gf_on = setpoints["GF Style Enable"]
+        gf_bp = setpoints["1200 GF Bypas"] #1200 amp bypass
 
         ov_pu = (ov_pu/1000)*sys_volt
         ov_t = ov_t/100
@@ -178,7 +182,7 @@ def calc_max_min_time(repos):
             uv_action= 1
         else:
             uv_action = 0
-        uv_action= 1
+
             
         if vu_action == 0:
             vu_action = 1
@@ -209,6 +213,8 @@ def calc_max_min_time(repos):
         ufreq_action = 2
         ufreq_pu = 60
         ufreq_t = 300
+        gf_on = 1
+        gf_bp = 0
 
     if pwr_en != 0:
         
@@ -263,23 +269,33 @@ def calc_max_min_time(repos):
     vc_ang = math.radians(int(setpoints["Vc_Phase_Angle"][0]))
 
 
-    pf = (ra_ang -va_ang + math.radians(90))
+    pf = (va_ang -ra_ang - math.radians(90))
+    #pf = (ra_ang -va_ang)
     unit_pf = math.cos(pf) *100
 
 
-    a_real_power = I_test_A * Va * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
-    b_real_power = I_test_B * Vb * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
-    c_real_power = I_test_C * Vc * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
+    #a_real_power = I_test_A * Va * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
+    #b_real_power = I_test_B * Vb * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
+    #c_real_power = I_test_C * Vc * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
     
-    a_reactive_power = I_test_A * Va * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
-    b_reactive_power = I_test_B * Vb * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
-    c_reactive_power = I_test_C * Vc * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
+    #a_reactive_power = I_test_A * Va * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
+    #b_reactive_power = I_test_B * Vb * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
+    #c_reactive_power = I_test_C * Vc * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
+
+    a_real_power = I_test_A * Va * math.cos(pf)
+    b_real_power = I_test_B * Vb * math.cos(pf) 
+    c_real_power = I_test_C * Vc * math.cos(pf)
+    
+    a_reactive_power = I_test_A * Va * math.sin(pf)
+    b_reactive_power = I_test_B * Vb * math.sin(pf)
+    c_reactive_power = I_test_C * Vc * math.sin(pf)
     
     a_apparent_power = I_test_A * Va
     b_apparent_power = I_test_B * Vb 
     c_apparent_power = I_test_C * Vc
     
     real_power     = max(a_real_power, b_real_power, c_real_power)
+    print("REAL POWER = " + str(real_power))
     reactive_power = max(a_reactive_power, b_reactive_power, c_reactive_power)
     apparent_power = max(a_apparent_power, b_apparent_power, c_apparent_power)
     
@@ -382,7 +398,7 @@ def calc_max_min_time(repos):
     max_ld, min_ld                = calc_long_delay_special_rules(max_I, max_ld, min_ld, short_delay, sdpu, t_sd, frame) #Adjusts Long Delay Times Based On Special Rules
 
     #Calculates Max Ground Fault Time and Min Ground Fault Time
-    max_gf, min_gf                = calc_gf_delay(max_I, rating, gf_type, gf_sensor, gfpu, t_gf, gfs, gf_mode, frame, style_2)
+    max_gf, min_gf                = calc_gf_delay(max_I, rating, gf_type, gf_sensor, gfpu, t_gf, gfs, gf_mode, frame, style_2, gf_on, gf_bp)
 
     #Calculates Max Instaneous Time and Min Instantaneous Time
     max_inst, min_inst            = calc_inst(max_I, rating, ipu)
@@ -422,8 +438,8 @@ def calc_max_min_time(repos):
         min_ov                       = calc_time_generic(max_V, ov_action, ov_pu, ov_t,  .98, -.3, 1)
 
         #Calculates Max and Min Current Under Voltage Trip Times
-        max_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, 1.02, .3, 5)
-        min_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, .98, -.3, 5)
+        max_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, .98, .3, 5)
+        min_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, 1.02, -.3, 5)
 
         #Appends Motor Protection Times To An Index Of All The MaxTimes And All The Min Times [Trip Time, Trip Name]
         all_max_times, all_min_times = append_max_and_mins(max_vu, min_vu, "Voltage Unbalanced", all_max_times, all_min_times)
@@ -548,8 +564,18 @@ def calc_max_min_time(repos):
         elif pl_action == 0:
             max_time = pl_t
         elif pwr_en != 0:
-            max_time = 600
+            if fw_action == 0:
+                max_time = fw_t #Forward Real
+            if fvar_action == 0:
+                max_time = fvar_t #Forward Reactive
+            if apd_action == 0:
+                max_time = apd_t #Apparent Power
+
         elif freq_proc != 0:
+            if ofreq_action == 0:
+                max_time = ofreq_t + 5
+            elif ufreq_action == 0:
+                max_time = ufreq_t + 5
             max_time = 300
         else:
             max_time = long_delay
@@ -809,9 +835,10 @@ def calc_short_delay(I, ldpu, sdpu, sds, t_sd):
     return short_delay_max, short_delay_min, short_delay
                     
 
-def calc_gf_delay(I, rating, gf_type, gf_sensor, gfpu, t_gf, gfs, gf_mode, frame, style_2):
+def calc_gf_delay(I, rating, gf_type, gf_sensor, gfpu, t_gf, gfs, gf_mode, frame, style_2, gf_on, gf_bp):
 
     
+
     if gf_mode == 0: 
 
         constant = 1
@@ -1002,6 +1029,7 @@ def calc_time_generic(input_level, action, pu_level, trip_time, pu_tol, time_tol
 
     elif calc_type == 5: #Under Percentage Tolerance, Addition Time Tolerance
         level = str(pu_level * pu_tol)
+        print("LEVEL " + level + "....   INPUT " + str(input_level))
         if pu_level * pu_tol > input_level:
             result_time = trip_time + time_tol
         else: 
