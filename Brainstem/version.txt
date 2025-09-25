@@ -1,0 +1,2 @@
+Acroname Software Version 2.6.6
+Build Number: 0x4f62502c
