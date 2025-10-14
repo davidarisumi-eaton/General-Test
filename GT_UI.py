@@ -1768,10 +1768,8 @@ class General_Test_UI(object):
     '''
 
     def check_for_new_ports(self, usb):
-        print(self.open_ports)
         self.USB_Menu['menu'].delete(0,'end')
         self.open_ports = usb.get_open_ports()
-        print(self.open_ports)
         self.USB_cbox.set(usb.portname)
         self.USB_Menu.set_menu(*self.open_ports)
 
@@ -1783,118 +1781,55 @@ class General_Test_UI(object):
             self.testing_thread = threading.Thread(target = self.start, daemon = True, kwargs={'repos':repos, 'usb':usb})
             self.q.put(self.testing_thread)
             self.testing_thread.start()
-            
-    def start(self, repos, usb):
+
+    def omicron_ready_check(self, repos, omicron):
 
         ready = True
-        bs = self.get_bs()
         
+        omi_config = self.get_omi_config()
+        my_config = self.omi_config_cbox.get()
+        llo = self.omi_llo_cbox.get()
+        repos.cmc_in_use = True
+
         try:
-            rsp = usb.communicate("read_setpoint_one_request")
-            repos.translator.translate_setpoint_one(rsp)
+            msg = omicron.connect_omicron()           #  sets up Omicron Engine.app along with Omicron Amplifiers
+            repos.append_output_msg(msg)
+            self.write_results(repos)
+            omicron.aux_on()
             
+            if omi_config == 'Output A and B':
+                print("ROUTING A AND B")
+                omicron.route_a_and_b()
+
+            if llo == '1-3':
+                omicron.route_llo(3)
+            elif llo == '4-6':
+                omicron.route_llo(4)
+
+        except:
+            ready = False 
+            msg = "Omicron can't Connect"
+            self.write_fail_status(repos, msg)
+
+        return ready
+
+    def brainstem_ready_check(self, repos, usb):
+
+        ready = True
+        
+        msg = "Connecting Brainstem"
+        repos.append_output_msg(msg)
+        try:
+            usb.connect_brain_stem()
+            msg = "Brainstem Connected"
+            repos.append_output_msg(msg)
+             
         except:
             ready = False
-            msg = "USB Connection Problem."
-            self.write_results(repos)
+            msg = "Brainstem can't Connect"
+            self.write_fail_status(repos, msg)
 
-        
-        omicron = GT_Omicron.Omicron()
-        use_omicron = self.get_omi_connect()
-
-
-        
-        if ready and use_omicron == True:
-            omi_config = self.get_omi_config()
-            my_config = self.omi_config_cbox.get()
-            llo = self.omi_llo_cbox.get()
-            repos.cmc_in_use = True
-
-            try:
-                msg = omicron.connect_omicron()           #  sets up Omicron Engine.app along with Omicron Amplifiers
-                repos.append_output_msg(msg)
-                self.write_results(repos)
-                omicron.aux_on()
-                
-                if omi_config == 'Output A and B':
-                    print("ROUTING A AND B")
-                    omicron.route_a_and_b()
-
-                print("THE LLO IS")
-                print(llo)
-                if llo == '1-3':
-                    omicron.route_llo(3)
-                elif llo == '4-6':
-                    omicron.route_llo(4)
-                    
-            except:
-                ready = False
-                
-                msg = "Omicron can't Connect"
-                repos.append_output_msg(msg)
-    
-                msg = sys.exc_info()[0]
-                repos.append_output_msg(msg)
-                
-                self.write_results(repos)
-
-                
-        elif use_omicron == False:
-            repos.cmc_in_use = False
-
-
-        if ready and bs == 'Brainstem':
-            msg = "Connecting Brainstem"
-            repos.append_output_msg(msg)
-            try:
-                usb.connect_brain_stem()
-                msg = "Brainstem Connected"
-                repos.append_output_msg(msg)
-                 
-            except:
-                ready = False
-                msg = "Brainstem can't Connect"
-                repos.append_output_msg(msg)
-                
-                msg = sys.exc_info()[0]
-                repos.append_output_msg(msg)
-                
-                self.write_results(repos)
-        elif ready and bs == 'No Brainstem':
-            pwr = self.get_power
-            if pwr == 'Cold Start Only' or pwr == 'Aux Only':
-                ready = Flase
-                msg = "Brainstem is needed for Cold Start or Aux Only power tests"
-                self.write_results(msg)
-
-        
-        if ready:
-
-            save_dir = self.save_dir_entry.get()
-            test_group = self.create_test_group()
-            GT_Main.run_from_ui(self, repos, save_dir, test_group, omicron, usb)
-            self.update_msgs(repos)
-            
-        else:
-            self.test_running = False
-            
-
-    def check_setup(self, repos, usb, omicron):
-        
-        self.check_thread = threading.Thread(target = self.check_inputs, daemon = True, kwargs={'repos':repos, 'usb':usb, 'omicron':omicron})
-        self.q.put(self.check_thread)
-        self.check_thread.start()
-            
-    def check_inputs(self, repos, usb, omicron):
-
-        ready = True
-        
-        if ready:
-
-            save_dir = self.save_dir_entry.get()
-            test_group = self.create_test_group()
-            GT_Main.run_check_inputs(self, repos, test_group, usb, omicron)
-
+        return ready 
 
 
     def check_queue(self):
@@ -1903,6 +1838,71 @@ class General_Test_UI(object):
             task = self.q.get(0)
         except Empty:
             self.my_tk.after(100, self.check_queue(repos))
+
+
+    def write_fail_status(self, repos, msg):
+        repos.append_output_msg(msg)
+        msg = sys.exc_info()[0]
+        repos.append_output_msg(msg)    
+        self.write_results(repos)
+    
+    def start(self, repos, usb):
+
+        ready = True
+        bs = self.get_bs()
+        omicron = GT_Omicron.Omicron()
+        use_omicron = self.get_omi_connect()
+
+        #Checks to see if the unit is communicating by read setpoint 1
+        try:
+            rsp = usb.communicate("read_setpoint_one_request")
+            repos.translator.translate_setpoint_one(rsp)        
+        except:
+            ready = False
+            msg = "USB Connection Problem."
+            self.write_results(repos)
+
+        #Checks to see if Omicron is communicating and can be setup
+        if ready and use_omicron == True:
+            ready = self.omicron_ready_check(repos, omicron)
+        elif use_omicron == False:
+            repos.cmc_in_use = False
+
+        #Checks to see if the Acronym(Brainstem) is communicating 
+        if ready and bs == 'Brainstem':
+             ready = self.brainstem_ready_check(repos, usb)
+        elif ready and bs == 'No Brainstem':
+            pwr = self.get_power
+            if pwr == 'Cold Start Only' or pwr == 'Aux Only':
+                ready = False
+                msg = "Brainstem is needed for Cold Start or Aux Only power tests"
+                self.write_results(msg)
+
+        #If everything is ready to turn, it moves to the main. 
+        if ready:
+            save_dir = self.save_dir_entry.get()
+            test_group = self.create_test_group()
+            GT_Main.run_from_ui(self, repos, save_dir, test_group, omicron, usb)
+            self.update_msgs(repos)
+
+        else:
+            self.test_running = False
+            
+
+##    Check function that is currently not in use. Readd when time allows. 
+##    def check_setup(self, repos, usb, omicron):
+##        
+##        self.check_thread = threading.Thread(target = self.check_inputs, daemon = True, kwargs={'repos':repos, 'usb':usb, 'omicron':omicron})
+##        self.q.put(self.check_thread)
+##        self.check_thread.start()
+##
+##            
+##    def check_inputs(self, repos, usb, omicron):
+##
+##        save_dir = self.save_dir_entry.get()
+##        test_group = self.create_test_group()
+##        GT_Main.run_check_inputs(self, repos, test_group, usb, omicron)
+
      
     def run_custom(self, repos, usb):
 
@@ -2530,28 +2530,6 @@ class General_Test_UI(object):
             msg = keys[i] + "  " + str(data)
             print(msg)
             repos.etu_dictionary[keys[i]][0] = float(data)
-
-##        if choice == "Setpoint 0":
-##            usb_com = "write_setpoint_zero_request"
-##            
-##        elif choice == "Setpoint 1":
-##            GT_Conversions.convert_standard_to_etu(repos)
-##            usb_com = "write_setpoint_one_request"
-##            
-##        elif choice == "Setpoint 2":
-##            usb_com = "write_setpoint_two_request"
-##
-##        elif choice == "Setpoint 3":
-##            usb_com = "write_setpoint_three_request"
-##
-##        elif choice == "Setpoint 4":
-##            usb_com = "write_setpoint_four_request"
-##            
-##        elif choice == "Setpoint 5":
-##            usb_com = "write_setpoint_five_request"
-##
-##        elif choice == "Setpoint 6":
-##            usb_com = "write_setpoint_six_request"
             
         GT_Conversions.convert_standard_to_etu(repos)
         
@@ -3138,16 +3116,95 @@ class General_Test_UI(object):
         return my_bs
     '''
     ============================================================================================================================================================================
-    USB Check 
+    USB Connection. Figures out unit family and frame on connection
     ============================================================================================================================================================================
+
+    check_if_MCCB(self, repos, usb) Checks to see if the connected unit is MCCB (PD2,3,4,5 or 6) by writing a MCCB USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(PD2, 3, 4, 5 or 6)
+        Outputs
+            True/False(Boolean) - If True, USB message was a success, False USB message failed.
+
+   check_if_ACB_20_25(self, repos, usb) Checks to see if the connected unit is ACB 20/25 unit by sending an 20/25 USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+        Outputs
+            True/False(Boolean) - If True, USB message was a success, False USB message failed.
+
+   check_if_ACB_35(self, repos, usb) Checks to see if the connected unit is ACB 35 unit by sending an 35 USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+        Outputs
+            N/A
+
+    ACB_20_25_reads(self, repos, usb) Reads ACB info, mainly to find if it is a PXR20/25
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+            repos.pxr - determines if the unit is a PXR25, PXR20 or PXR10
+            repos.setting_file = holds the setting for it the unit is a 2.0 or a 3.0 firmware
+        Outputs
+            N/A
+
+    MCCB_reads(self, repos, usb) Reads ACB info, mainly to find if it is a PXR20/25
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.pxr - determines if the unit is a PXR25, PXR20 or PXR10
+        Outputs
+            N/A
+            
+    ACB_35_reads(self, repos, usb) Reads ACCB 35 digitization.
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            N/A
+        Outputs
+            N/A
+
+    def setup_UI_buff_and_setpoints(self, repos):
+        Inputs
+            repos(object) - hold trip unit information
+        Changes
+            self.ui_buffer_keys(Array) = Array used by the combobox (zero_cbox) for the valid Real Time Data Buffer Groups that can be read
+            self.ui_setpoint_keys(Array) = Array used by the combobox (s_zero_cbox) for the valid Setpoint Groups that can be read
+        Outputs
+            N/A
+            
+    get_unit_info(self, repos, usb) Sends USB Info to figure out what type of unit this is (MCCB/ACB) other info (Frame/PXR Type)
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages
+        Uses
+            ACB_35_reads
+            ACB_20_25_reads
+            MCCB_reads
+            check_if_ACB_35
+            check_if_ACB_20_25
+            check_if_MCCB
+        Changes
+            N/A
+        Outputs
+            N/A
+
+
     '''
 
-    def get_unit_info(self, repos, usb):
 
-        remove_var = 0
-        connected = True
-
-                
+    def check_if_MCCB(self, repos, usb):
 
         try:
             tx = '80 00 07 d1 87 d1 fd'
@@ -3155,120 +3212,150 @@ class General_Test_UI(object):
 
             tag = "Read Breaker Frame Request"
             rsp = usb.communicate_manual(tx, tag)
-            print(tag)
-            print(rsp)
+
             repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
-            print("Frame is")
-            print(repos.frame)
+
         except:
-            print("ACB?")
-            msg = "MCCB Message Failed, Trying ACB"
+            return False
+
+        return True
+
+    
+    def check_if_ACB_20_25(self, repos, usb):
+
+        try:
+            tx = '80 04 04 1c 84 20 fd'
+            tx = bytes.fromhex(tx)
+            tag = "Read Breaker Frame Request"
+            rsp = usb.communicate_manual(tx, tag)
+
+            tx = '80 00 04 1c 84 1c fd'
+            tx = bytes.fromhex(tx)
+            tag = "Read Breaker Frame Response"
+            rsp = usb.communicate_manual(tx, tag)
+            
+            repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
+            print("ACB FRAME IS")
+            print(repos.frame)
+
+            repos.frame = 3 #Assumes Standard. Needs fixed. 
+        
+        except:
+            return False
+
+        return True
+
+    
+    def check_if_ACB_35(self, repos, usb):
+
+        try:
+            tx = '80 0 0 38 80 38 fd' #Read Group 6. PXR35 can do it. ACB20/25 and MCCB cant. 
+            msg = "ACB Message Failed."
             repos.append_output_msg(msg)
-            
-            try:
-                tx = '80 04 04 1c 84 20 fd'
-                tx = bytes.fromhex(tx)
-                tag = "Read Breaker Frame Request"
-                rsp = usb.communicate_manual(tx, tag)
+            msg = "PXR35"
+            repos.frame = 3 #Assumes Standard. Needs fixed. 
+        
+        except:
+            return False        
 
-                tx = '80 00 04 1c 84 1c fd'
-                tx = bytes.fromhex(tx)
-                tag = "Read Breaker Frame Response"
-                rsp = usb.communicate_manual(tx, tag)
-                
-                repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
-                print("ACB FRAME IS")
-                print(repos.frame)
-                if repos.frame>20:
-                    repos.frame = 3
-                    remove_var = 35
+        return True
 
-                repos.frame = 3
-                remove_var = 35      
-            except:
-                msg = "ACB Message Failed."
-                repos.append_output_msg(msg)
-                #connected = False
-                print("35?")
-                msg = "PXR35?????"
-                repos.frame = 3
-                remove_var = 35
+    def ACB_20_25_reads(self, repos, usb):
 
-        if connected:
-            if repos.frame > 20:
-                print("Family is MCCB?")
-                repos.setup("MCCB")
-                usb.set_command_list("MCCB")
-            elif remove_var == 35:
-                print("Family is 35?")
-                repos.setup("35")
-                usb.set_command_list("35")
+        rsp = usb.communicate("read_trip_unit_style_request")
+        rsp = usb.communicate("read_trip_unit_style_check")
+        style_array = repos.translator.translate("translate_style", rsp)
+
+        if style_array[0] == 25:
+            repos.pxr = "PXR25"
+        else:
+            repos.pxr = "PXR20"
+
+        rsp = usb.communicate("read_firmware_version_request")
+        firmware_array = repos.translator.translate(rsp, repos.firmware_keys, repos.etu_dictionary)
+        if repos.etu_dictionary['MCU1 Version'][0] == 2: #Checks to see if this is a 2.0 Unit. 
+            repos.setting_file.version_two_keys(repos)
+
+    def MCCB_reads(self, repos, usb):
+
+        rsp = usb.communicate("read_etu_style_request")
+        print(rsp)
+        style_array = repos.translator.translate("translate_style", rsp)
+
+        style_one_array = style_array[0]
+        style_two_array = style_array[1]
+        print(style_two_array)
+        
+
+        if style_two_array[0] == 1: #Style 2 array 0 should be Modbus
+            repos.pxr = "PXR25"
+        else:
+            if style_two_array[4] == 0: #b4 is ZSI. PXR10 Shouldn't have it
+                repos.pxr = "PXR10"
+                repos.set_pxr10()
             else:
-                print("Family is ACB?")
-                repos.setup("ACB")
-                usb.set_command_list("ACB")
-            
+                repos.pxr = "PXR20"
+                repos.set_pxr20()
 
-            if repos.family == "ACB":
-                rsp = usb.communicate("read_trip_unit_style_request")
-                rsp = usb.communicate("read_trip_unit_style_check")
-                style_array = repos.translator.translate("translate_style", rsp)
+        print(repos.pxr)
 
-                if style_array[0] == 25:
-                    repos.pxr = "PXR25"
-                else:
-                    repos.pxr = "PXR20"
 
-                rsp = usb.communicate("read_firmware_version_request")
-                firmware_array = repos.translator.translate(rsp, repos.firmware_keys, repos.etu_dictionary)
-                if repos.etu_dictionary['MCU1 Version'][0] == 2:
-                    repos.setting_file.version_two_keys(repos)
-                    
-                    
-            elif repos.family == "MCCB":
-                rsp = usb.communicate("read_etu_style_request")
-                print(rsp)
-                style_array = repos.translator.translate("translate_style", rsp)
+    def ACB_35_reads(self, repos, usb):    
 
-                style_one_array = style_array[0]
-                style_two_array = style_array[1]
-                print(style_two_array)
+        rsp = usb.communicate("read_digitalization_features_request")
+        rsp = usb.communicate("read_digitalization_features_check")
+        gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
+
+
+
+    def setup_UI_buff_and_setpoints(self, repos):
+        self.ui_buffer_keys = []
+        self.ui_setpoint_keys = []
+        for val in repos.mapping_keys:
+            if "Buffer" in val:
+                self.ui_buffer_keys.append(val)
                 
+        for val in repos.mapping_keys:
+            if "Setpoint" in val:
+                self.ui_setpoint_keys.append(val)
+                
+        
+        self.zero_cbox['values'] = self.ui_buffer_keys
+        self.s_zero_cbox['values'] = self.ui_setpoint_keys
 
-                if style_two_array[0] == 1:
-                    repos.pxr = "PXR25"
-                else:
-                    if style_two_array[4] == 0: #b4 is ZSI. PXR10 Shouldn't have it
-                        repos.pxr = "PXR10"
-                        repos.set_pxr10()
-                    else:
-                        repos.pxr = "PXR20"
-                        repos.set_pxr20()
+        
+    def get_unit_info(self, repos, usb):
 
-                print(repos.pxr)
+        remove_var = 0
+        connected = True
 
-            elif repos.family == "35":
-                rsp = usb.communicate("read_digitalization_features_request")
-                rsp = usb.communicate("read_digitalization_features_check")
-                gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
-                print(gf_en)
-                print(gf_by)
+        is_mccb = self.check_if_MCCB(repos, usb)
+        is_20_or_25 = self.check_if_ACB_20_25(repos, usb)
+        is_35 = self.check_if_ACB_35(repos, usb)
+             
+        if is_mccb: 
+            print("Family is MCCB?")
+            repos.setup("MCCB")
+            usb.set_command_list("MCCB")
+            self.MCCB_reads(repos, usb)
+        elif is_35:
+            print("Family is 35?")
+            repos.setup("35")
+            usb.set_command_list("35")
+            self.ACB_35_reads(repos, usb) 
+        elif is_20_or_25:
+            print("Family is ACB?")
+            repos.setup("ACB")
+            usb.set_command_list("ACB")
+            self.ACB_20_25_reads(repos, usb)
+        else:
+            connected = False
 
-            repos.set_mapping_dictionary()
 
-            self.ui_buffer_keys = []
-            self.ui_setpoint_keys = []
-            for val in repos.mapping_keys:
-                if "Buffer" in val:
-                    self.ui_buffer_keys.append(val)
-                    
-            for val in repos.mapping_keys:
-                if "Setpoint" in val:
-                    self.ui_setpoint_keys.append(val)
-                    
-            
-            self.zero_cbox['values'] = self.ui_buffer_keys
-            self.s_zero_cbox['values'] = self.ui_setpoint_keys
+
+        repos.set_mapping_dictionary()
+
+        self.setup_UI_buff_and_setpoints(repos)
             
         return connected
 
