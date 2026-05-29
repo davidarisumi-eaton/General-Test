@@ -63,7 +63,7 @@ def main(repos, in_file, output_file, usb, omicron):             #  test type se
 
     
     for val in repos.default_array:
-        if repos.family == "35":
+        if repos.pass_len == 6:
             rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
         else:
             rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
@@ -95,7 +95,9 @@ def main(repos, in_file, output_file, usb, omicron):             #  test type se
                             
         test_type = check_setting_correctness(repos, test_type, usb)
         test_type = enter_into_auto_test_mode(repos, usb, test_type)
-        test_type = write_setpoints_from_excel(usb, repos, test_type)
+        if repos.frame != 0: #Temporary workaround for NRX issue. 
+            test_type = write_setpoints_from_excel(usb, repos, test_type)
+            
         if test_type == 'No Test':
             time.sleep(5)
             print("Second Attempt")
@@ -142,6 +144,12 @@ def main(repos, in_file, output_file, usb, omicron):             #  test type se
             run_custom_test(repos, usb, omicron)
         elif test_type == 'ZSI':
             run_zsi(repos, usb, omicron, active_row)
+        elif test_type == 'Write Check':
+            write_check(repos, usb)
+        elif test_type == 'Cold Start':
+            run_cold_start_test(repos, usb, omicron, output_file)
+        elif test_type == 'Override':
+            run_override_test(repos, usb, omicron)
         elif test_type == 'No Test':
             run_no_test(repos)
         elif test_type == 'No Test':
@@ -164,8 +172,10 @@ def main(repos, in_file, output_file, usb, omicron):             #  test type se
         repos.expected['Test Type'] = test_type
 
 
-        rsp = usb.communicate("read_real_time_data_buffer_zero_request")
-        cor = usb.get_correctness(rsp)
+        cor = "unread" 
+        while cor != "successful":
+            rsp = usb.communicate("read_real_time_data_buffer_zero_request")
+            cor = usb.get_correctness(rsp)
 
         if repos.pxr == "PXR10":
             time.sleep(10)
@@ -223,7 +233,7 @@ def check_setting_correctness(repos, test_type, usb):
             repos.append_output_msg(msg)
 
             
-    if test_type != 'Trip' and test_type != 'Custom' and test_type != 'Trip With Measure':
+    if test_type != 'Trip' and test_type != 'Custom' and test_type != 'Trip With Measure' and test_type != 'Override':
 
         if repos.power == 'Cold Start' or repos.power == 'Aux Only':
             repos.ready_for_test = False
@@ -237,7 +247,7 @@ def check_setting_correctness(repos, test_type, usb):
 def enter_into_auto_test_mode(repos, usb, test_type):
 
     
-    if repos.pxr == "PXR10" or repos.pxr == "PXR20" or repos.etu_dictionary['MCU1 Version'] == 2:
+    if repos.pxr == "PXR10" or repos.pxr == "PXR20" or repos.etu_dictionary['MCU1 Version'] == 2 or repos.frame == 0 or repos.frame == 1:
             
             usb.communicate("exit_out_of_manufactory_mode_request")
             usb.communicate_with_check("exit_out_of_manufactory_mode_check")
@@ -308,8 +318,27 @@ def read_setpoints_from_excel(in_file, repos, active_row):
 
 
 def write_setpoints_from_excel(usb, repos, test_type):
+
+
+    if repos.frame == 0 or repos.frame == 1: #NRX needs special write where groups 0 - 3 are all written within 100ms. 
+        write_setpoints_from_excel_nrx(usb, repos, test_type)
+        return 
+        
     keys = repos.excel_file_tab_names
 
+    #Writes the password so setpoints can be written to.          
+    p0 = repos.password[0]
+    p1 = repos.password[1]
+    p2 = repos.password[2]
+    p3 = repos.password[3]
+    p4 = repos.password[4]
+    p5 = repos.password[5]
+
+    if repos.pass_len == 6:
+        rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
+    else:
+        rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+            
 
     #Configuration must be written first since it requires manufactury mode, which cant be done in auto test mode
     if 'Configuration' in keys and repos.more_config != False:
@@ -329,20 +358,6 @@ def write_setpoints_from_excel(usb, repos, test_type):
     for key in keys:
         #Setpoint 1 needs to write the scaled etu_values instead of the actual Setpoint 1 Values
 
-        
-        p0 = repos.password[0]
-        p1 = repos.password[1]
-        p2 = repos.password[2]
-        p3 = repos.password[3]
-        p4 = repos.password[4]
-        p5 = repos.password[5]
-
-        
-        #for val in repos.default_array:
-        if repos.family == "35":
-            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
-        else:
-            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
                 
         if key == "Setpoint 1":
             GT_Conversions.convert_standard_to_etu(repos)
@@ -364,7 +379,12 @@ def write_setpoints_from_excel(usb, repos, test_type):
                         return 'No Test'
 
     return test_type
-        
+
+def write_setpoints_from_excel_nrx(usb, repos, test_type):
+        rsp = usb.communicate("write_setpoint_zero_request", repos.sp_zero_keys,  repos.etu_dictionary)
+        rsp = usb.communicate("write_setpoint_one_request",  repos.sp_one_keys, repos.etu_dictionary)
+        rsp = usb.communicate("write_setpoint_two_request", repos.sp_two_keys,  repos.etu_dictionary)
+        rsp = usb.communicate("write_setpoint_three_request", repos.sp_three_keys,  repos.etu_dictionary)
 
 def write_setpoints_to_trip_unit(usb, request, key, dictionary, repos):
 
@@ -444,6 +464,7 @@ def setup_for_file_write(repos):
         per_unit = (repos.etu_dictionary['Source Ground Sensor'][0]-1)/2
     else:
         per_unit = repos.etu_dictionary['Rating'][0]
+
         
     repos.main_dict['I A (PU)'] = repos.expected['I A (Amps)']/per_unit
 
@@ -524,7 +545,8 @@ def run_trip_test(repos, usb, omicron):              #   run test
         GT_System_Control.all_off(omicron, usb)
         time.sleep(5)
         
-
+    current_read = True
+    
     int_time = time.time()
     t = time.time() - int_time
     
@@ -532,9 +554,8 @@ def run_trip_test(repos, usb, omicron):              #   run test
     omicron.setup_omicron(repos)
     omicron.omicron_on()
 
-
-        
-        
+    
+ 
     while (trip == False and t <= t_wd and t_wd >= 0):    #  trip test loop                                  
         if t>(t_wd/2) and repos.power != 'Cold Start' and current_read == False: 
             read_currents(repos, usb)
@@ -560,6 +581,131 @@ def run_trip_test(repos, usb, omicron):              #   run test
     repos.append_output_msg(msg)
     
 
+def run_override_test(repos, usb, omicron):
+
+    t_wd = setup_trip_times(repos)
+
+    t_wd = .010
+    trip = False
+    current_read = False
+
+    if repos.power == 'Cold Start':
+        GT_System_Control.all_off(omicron, usb)
+        time.sleep(5)
+        
+    current_read = False
+    ph_a = repos.etu_dictionary['Power Harvester A'][0]
+    ph_b = repos.etu_dictionary['Power Harvester B'][0]
+    ph_c = repos.etu_dictionary['Power Harvester C'][0]
+
+    print(ph_a)
+    print(ph_b)
+    print(ph_c)
+  
+    int_time = time.time()
+    t = time.time() - int_time
+    
+    omicron.setup_for_trip()
+    omicron.setup_omicron(repos)
+               
+    omicron.write_omicron_current(ph_a, 0, 60, 1)
+    omicron.write_omicron_current(ph_b, 120, 60, 2)
+    omicron.write_omicron_current(ph_c, -120, 60, 3)      
+    omicron.omicron_on()
+
+    
+ 
+    while (trip == False and t <= t_wd and t_wd >= 0):    #  trip test loop                                  
+        if t>(t_wd/2) and repos.power != 'Cold Start' and current_read == False: 
+            read_currents(repos, usb)
+            current_read = True
+
+        t = time.time() - int_time
+        trip = omicron.check_for_trip()
+
+
+    omicron.end_trip()
+    trip_time =  overflow_calc(t, omicron)
+    
+    if repos.power == 'Cold Start':
+        usb.turn_on_port()
+        #GT_System_Control.all_on(omicron, usb)
+        time.sleep(1)
+
+
+    
+    store_trip_results(repos, trip_time)
+
+    msg = "Trip Time " + str(trip_time)
+    repos.append_output_msg(msg)
+
+    
+def run_cold_start_test(repos, usb, omicron, output_file):
+
+    time_delay = repos.index * .05 +.05
+    repos.override_ct = True
+
+    
+    GT_System_Control.all_off(omicron, usb)
+    time.sleep(5)
+##
+##    omicron.write_omicron_current(5, 0, 60, 1)
+##    omicron.write_omicron_current(5, 120, 60, 2)
+##    omicron.write_omicron_current(5, -120, 60, 3)          
+##
+##    omicron.write_omicron_rowgowski(.504, 90, 60, 1)
+##    omicron.write_omicron_rowgowski(.504, 90, 60, 2)
+##    omicron.write_omicron_rowgowski(.504, 90, 60, 3)
+##
+##    omicron.omicron_on()
+
+    print("Time Delay is " + str(time_delay))
+    time.sleep(15)
+
+    run_trip_test(repos, usb, omicron) 
+
+    time.sleep(15)
+    
+    GT_System_Control.all_on(omicron, usb)
+
+    time.sleep(5)
+
+##    rsp = usb.communicate("read_waveform_id_request")
+##    id_choice = repos.translator.translate_event_id(rsp)
+##    name = "Array " + str(repos.index)
+##    output_file.create_tab(name)
+##    
+##    chart_locations = ["F1", "F16", "F32"]
+##    chart_titles = ["iA", "iB", "iC"]
+##    for j in range(0,3):
+##
+##        waveform_request = [64, id_choice, 0]
+##        waveform_request[0] = 64 + j
+##        final_waveform = []
+##        for k in range(0, 7):
+##        
+##            waveform_request[2] = k
+##            rsp = usb.communicate("read_waveform_sample_request", waveform_request[0], waveform_request[1], waveform_request[2])
+##
+##            if len(rsp) < 50:
+##                rsp = usb.communicate("read_waveform_sample_request", waveform_request[0], waveform_request[1], waveform_request[2])
+##                
+##            waveform = repos.translator.translate_waveform(rsp)
+##            print(waveform)
+##            time.sleep(2)
+##
+##            for val in waveform:
+##                final_waveform.append(val)
+##                
+##        tab = len(output_file.sheet_array)-1
+##        output_file.write_column_with_array(1+j, 1, tab, final_waveform)
+##        output_file.create_chart(1+j, 1, tab, chart_locations[j], chart_titles[j])
+##
+##
+##    output_file.write_cell(4, 1, tab, "Trip Time")
+##    trip_time = repos.results['Trip Time'] 
+##    output_file.write_cell(5, 1, tab, trip_time)
+    
 def run_with_measurment(repos, usb, omicron):
 
 
@@ -609,8 +755,7 @@ def run_undervolt_trip_test(repos, usb, omicron):              #   run test
     
     test_type = "U_Voltage"
 
-    repos.etu_dictionary['Under V Type'][0] = 0
-    t_wd = omicron.setup_omicron(repos)
+    repos.etu_dictionary['Under V Action'][0] = 0
         
     omicron.write_omicron_voltage(200, 0, 60, 1)
     omicron.write_omicron_voltage(200, 120, 60, 2)
@@ -619,11 +764,14 @@ def run_undervolt_trip_test(repos, usb, omicron):              #   run test
     omicron.omicron_on()
 
 
+    
     rsp = usb.communicate("write_setpoint_five_request", repos.sp_five_keys, repos.etu_dictionary)
+    time.sleep(2)
     run_trip_test(repos, usb, omicron)
     
-    repos.etu_dictionary['Under V Type'][0] = 2
+    repos.etu_dictionary['Under V Action'][0] = 2
     rsp = usb.communicate("write_setpoint_five_request", repos.sp_five_keys, repos.etu_dictionary)
+
 
     
 def run_meter_test(repos, omicron):
@@ -730,6 +878,16 @@ def run_zsi(repos, usb, omicron, i):
     run_trip_test(repos, usb, omicron)
     
 
+def write_check(repos, usb):              #   Check Writes
+
+    t_wd = setup_trip_times(repos)
+
+    trip_time = 0 
+    store_trip_results(repos, trip_time)
+
+    msg = "Trip Time " + str(trip_time)
+    repos.append_output_msg(msg)
+    
 '''
 =========================================================================================================================================================================================
 Test Functions Secondary Injection
@@ -1270,6 +1428,8 @@ def read_currents(repos, usb):
         #repos.update_buffers(array, 48)
         rsp = usb.communicate("read_real_time_data_buffer_fifty_five_request")
         array = repos.translator.translate_generic(rsp, repos.buffer_fifty_five_keys, repos.etu_dictionary)
+        rsp = usb.communicate("read_real_time_data_buffer_fifty_one_request")
+        array = repos.translator.translate_generic(rsp, repos.buffer_fifty_one_keys, repos.etu_dictionary)
         #repos.update_buffers(array, 55)
         
     else: 

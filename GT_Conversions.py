@@ -261,8 +261,8 @@ def hex_to_float(msg, start):
     exponent = 0
     significand = 1.0
     addition = 0.00
-    
-    if bin_array[0] == '1':
+
+    if int(bin_array[0]) == 1:
         sign = -1
     for val in range(1,9):
         exponent = exponent + bin_array[val] * (2 ** (8 - val))
@@ -277,7 +277,7 @@ def hex_to_float(msg, start):
 
     float_val = round(float_val,4)
     
-    if float_val < .01:
+    if float_val < .01 and float_val > -.01:
         float_val = 0
 
 

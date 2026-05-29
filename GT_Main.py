@@ -280,9 +280,11 @@ def get_UI_inputs(repos, UI, omicron):    	    #  Gets values from the user inte
     repos.etu_dictionary["Va_Phase_Angle"][0]     = UI.get_ia_ang()
     repos.etu_dictionary["Vb_Phase_Angle"][0]     = UI.get_ib_ang()
     repos.etu_dictionary["Vc_Phase_Angle"][0]     = UI.get_ic_ang()
-    repos.neutral    = UI.get_neutral()  
+    repos.neutral    = UI.get_neutral()
+    repos.override_ct = UI.get_CT_Ov()
     repos.UI_test_type    = UI.get_test_type()
-
+    box_ct = UI.get_boxct()
+    omicron.set_tf_ratio(box_ct)
 
     'Sets the number of runs based on the UI.'
     'If the value is invalid, it sets it to a default 1'    
@@ -306,15 +308,18 @@ def get_UI_inputs(repos, UI, omicron):    	    #  Gets values from the user inte
 
 def create_report_file(part_file, save_dir, j):
 
-        
+            
+        print("Report")
         report = GT_Excel_Interface.Test_File("Write")
+        print("writing test")
         try: 
             report.name_file_std_method(part_file, save_dir, j)
-            report.write_cell(1, 4, i, "Index") #If this file is open somewhere else it will create exception
+            report.write_cell(1, 4, 1, "Index") #If this file is open somewhere else it will create exception
             
         except:
             j = j + 1
             report.name_file_std_method(part_file, save_dir, j)
+            print("UH OH FAILURE")
 
 
         return report
@@ -497,6 +502,14 @@ def get_breaker_inputs(repos, usb):
         for val in repos.breaker_protection_capacity_keys:
             print(val)
             print(repos.etu_dictionary[val])
+    else:
+        rsp = usb.communicate("read_setpoint_two_request")
+        setpoints = repos.translator.translate_generic(rsp, repos.sp_two_keys, repos.etu_dictionary)
+        rsp = usb.communicate("read_setpoint_three_request")
+        setpoints = repos.translator.translate_generic(rsp, repos.sp_three_keys, repos.etu_dictionary)
+
+    print("STYLE 2")
+    print(repos.etu_dictionary['Style2'][0] )
     
     repos.static_style_1 = repos.etu_dictionary['Style1'][0]  
     repos.static_style_2 = repos.etu_dictionary['Style2'][0] 
@@ -608,11 +621,11 @@ def update_config(repos, in_file, usb):
 
         if "Setpoint 5" in in_file.sheet_array:
             print("Writing_Motor")
-            usb.communicate("write_etu_style_request", 14255, 59)
+            usb.communicate("write_etu_style_request", 14255, 50)
             usb.communicate("write_etu_style_check")
         else:
             print("No Motor")
-            usb.communicate("write_etu_style_request", 14143, 59)
+            usb.communicate("write_etu_style_request", 14143, 50)
             usb.communicate("write_etu_style_check")
         get_breaker_inputs(repos, usb)
 

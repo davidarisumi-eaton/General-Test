@@ -267,9 +267,9 @@ def add_setpoint_group_five(repos):
                             'I Unbalance Action',
                             'I Unbalance PU',
                             'I Unbalance Time',
-                            'Reverse Forward Power Action',
-                            'Reverse Forward Power Pickup',
-                            'Reverse Forward Power Time',
+                            'Reverse Real Power Action',
+                            'Reverse Real Power Pickup',
+                            'Reverse Real Power Time',
                             'Power Rev Sense',
                             'Power Rev Action',
                             'Phase Loss Action',
@@ -3047,9 +3047,9 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['V Unbalance Time'][0] = 30000
     repos.etu_dictionary['I Unbalance Action'][0] = 0
     repos.etu_dictionary['I Unbalance PU'][0]   = 90
-    repos.etu_dictionary['Reverse Forward Power Action'][0]   = 2
-    repos.etu_dictionary['Reverse Forward Power Pickup'][0]     = 1
-    repos.etu_dictionary['Reverse Forward Power Time'][0]   = 30000
+    repos.etu_dictionary['Reverse Real Power Action'][0]   = 2
+    repos.etu_dictionary['Reverse Real Power Pickup'][0]     = 1
+    repos.etu_dictionary['Reverse Real Power Time'][0]   = 30000
     repos.etu_dictionary['Power Rev Sense'][0]  = 0
     repos.etu_dictionary['Power Rev Action'][0]   = 2
     repos.etu_dictionary['Phase Loss Action'][0]  = 2

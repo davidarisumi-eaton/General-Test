@@ -106,7 +106,7 @@ class Omicron():
         self.ph = ph
         self.ph_type = ph_type
 
-    def set_tf_ratio(tf_ratio):
+    def set_tf_ratio(self, tf_ratio):
         self.tf_ratio = tf_ratio
 
 
@@ -119,6 +119,9 @@ class Omicron():
         self.engine_app.Exec(self.dev_num, "amp:def(2, clr)")
         self.engine_app.Exec(self.dev_num, "amp:route(i(1), 17)")
 
+    def route_b(self):
+        self.engine_app.Exec(self.dev_num, "amp:route(i(2), 15)")
+
     def route_llo(self, ext):
 
         self.external_amp = ext
@@ -130,7 +133,10 @@ class Omicron():
         self.engine_app.Exec(self.dev_num, setupString)
         self.engine_app.Exec(self.dev_num, route_string)       #  Route llo amps to v(3)
 
-                
+    def set_aux_level(self, level):
+
+        str_set = "out:aux:def(" + str(level) + ")"
+        self.engine_app.Exec(self.dev_num,str_set)          #  Set Aux default voltage to 24Vdc
 
     '''
     =========================================================================================================================================================================================
@@ -170,6 +176,10 @@ class Omicron():
 
     def write_omicron_current(self, amplitude, phase_angle, frequency, phase):     
         om_message = "out:ana:i(1:"+str(phase)+"):a("+str(amplitude)+");f("+str(frequency)+");p("+str(phase_angle)+")"
+        self.engine_app.Exec(self.dev_num, om_message)
+
+    def write_omicron_current_two(self, amplitude, phase_angle, frequency, phase):     
+        om_message = "out:ana:i(2:"+str(phase)+"):a("+str(amplitude)+");f("+str(frequency)+");p("+str(phase_angle)+")"
         self.engine_app.Exec(self.dev_num, om_message)
         
     def write_omicron_output(self, amplitude, phase_angle, frequency, phase, amplifier, out_type):
@@ -298,6 +308,9 @@ class Omicron():
         
     def config_current(self, I):
 
+        print("Current = " + str(I))
+        print("ct_ratio= " + str(self.ct_ratio))
+        print("tf_ratio = " + str(self.tf_ratio))
         if self.ph == True: #If the current source is being used a power harvester
             if I == 0:
                 I = 1
@@ -313,8 +326,8 @@ class Omicron():
 
         if output_current > .3 and self.ph == True: #Saftey method to make sure current doesn't get to high for power harvester
             output_current = .3
-        elif output_current > 24 and self.ph == False:
-            output_current = 24
+        elif output_current > 18 and self.ph == False:
+            output_current = 18
         if output_current < 0:
             output_current = 0
 
@@ -354,13 +367,18 @@ class Omicron():
         ib = self.config_current(b)
         ic = self.config_current(c)
 
+        if repos.override_ct == True: #For cold start. Need to fix. 
+            ia = 4
+            ib = 4
+            ic = 4
+            
         ra = self.config_rowgowski(a, freq)
         rb = self.config_rowgowski(b, freq)
         rc = self.config_rowgowski(c, freq)
 
         self.write_omicron_current(ia, ia_ang, freq, 1)
         self.write_omicron_current(ib, ib_ang, freq, 2)
-        self.write_omicron_current(ib, ib_ang, freq, 3)
+        self.write_omicron_current(ic, ic_ang, freq, 3)          
 
         self.write_omicron_rowgowski(ra, ra_ang, freq, 1)
         self.write_omicron_rowgowski(rb, rb_ang, freq, 2)
@@ -370,6 +388,7 @@ class Omicron():
         self.write_omicron_voltage(vb, vb_ang, freq, 2)
         self.write_omicron_voltage(vc, vc_ang, freq, 3)
   
+
         msg = "ia " + str(ia) + " " + str(ia_ang) + " " + str(freq)
         repos.append_output_msg(msg)
         msg = "ib " + str(ib) + " " + str(ib_ang) + " " + str(freq)

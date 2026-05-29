@@ -35,7 +35,620 @@
                  contents look as so
 
 '''
+
+def add_dictionary_values(repos, keys):
+
+    for val in keys:
+        repos.etu_dictionary.update({val:[0, "Uint16"]})
+
+    
+def add_setpoint_group_zero(repos):
+
+    if repos.frame != 0 and repos.frame != 1:
+        repos.sp_zero_keys =   ['Rating',
+                                'Frame',
+                                'Style1',
+                                'Style2',
+                                'MM Mode',
+                                'MM Level',
+                                'Line Frequency',
+                                'Reverse Feed',
+                                'Sign',
+                                'Power Window',
+                                'Power Interval',
+                                'Language',
+                                'LCD Rotatation',
+                                'Relay 1',
+                                'Relay 2',
+                                'Relay 3',
+                                'Pole Location',
+                                'I Window',
+                                'I Interval',
+                                'Health Level',
+                                'System Voltage',
+                                'Neutral Sensor',
+                                'Source Ground Sensor']
+    else: 
+        repos.sp_zero_keys =   ['Rating',
+                                'Frame',
+                                'Style1',
+                                'MM Mode',
+                                'MM Level',
+                                'Line Frequency',
+                                'Reverse Feed',
+                                'Language']
+
+        
+    add_dictionary_values(repos, repos.sp_zero_keys)
+    repos.mapping_dictionary['Setpoint 0']  = [repos.sp_zero_keys,   "write_setpoint_zero_request", "read_setpoint_zero_request"]
+        
+
+def add_setpoint_group_one(repos):
+
+    print("THE FRAME IS " + str(repos.frame))
+    if repos.frame == 0 or repos.frame == 1:
+        repos.sp_one_keys =     ['Rating',
+                                'Frame',
+                                'Style1',
+                                'LD Thermal',
+                                'ZSI',
+                                'LD Slope',
+                                'LD PU',
+                                'LD Time',
+                                'HL Alarm 1', 
+                                'SD Slope',
+                                'SD PU',
+                                'SD Time',
+                                'Inst PU',
+                                'GF Type',
+                                'GF Mode',
+                                'GF Slope',
+                                'GF PU',
+                                'GF Time',
+                                'Neutral Ratio'
+                                ]
+
+                                #'Style2',
+                                #'GF Thermal',
+                                #'Neutral Ratio',
+                                #'HL Alarm 2',
+                                #'GF Alarm', 
+                                #'Thermal Alarm'
+                                        
+        repos.sp_etu_keys =     ['Etu Rating',
+                                'Etu Frame',
+                                'Etu Style1',
+                                'Etu Style2',
+                                'Etu LD Thermal',
+                                'Etu ZSI',
+                                'Etu LD Slope',
+                                'Etu LD PU',
+                                'Etu LD Time',
+                                'Etu HL Alarm 1', 
+                                'Etu SD Slope',
+                                'Etu SD PU',
+                                'Etu SD Time',
+                                'Etu Inst PU',
+                                'Etu GF Type',
+                                'Etu GF Mode',
+                                'Etu GF Slope',
+                                'Etu GF PU',
+                                'Etu GF Time',
+                                'Etu GF Thermal',
+                                'Etu Neutral Ratio',
+                                'Etu HL Alarm 2',
+                                'Etu GF Alarm', 
+                                'Etu Thermal Alarm'
+                            ]
+    else: 
+
+        repos.sp_one_keys =     ['Rating',
+                                'Frame',
+                                'Style1',
+                                 'Style2',
+                                'LD Thermal',
+                                'ZSI',
+                                'LD Slope',
+                                'LD PU',
+                                'LD Time',
+                                'HL Alarm 1', 
+                                'SD Slope',
+                                'SD PU',
+                                'SD Time',
+                                'Inst PU',
+                                'GF Type',
+                                'GF Mode',
+                                'GF Slope',
+                                'GF PU',
+                                'GF Time',
+                                 'GF Thermal',
+                                 'Neutral Ratio',
+                                'HL Alarm 2',
+                                'GF Alarm', 
+                                'Thermal Alarm'
+                                ]
+                                        
+        repos.sp_etu_keys =     ['Etu Rating',
+                                'Etu Frame',
+                                'Etu Style1',
+                                 'Etu Style2',
+                                'Etu LD Thermal',
+                                'Etu ZSI',
+                                'Etu LD Slope',
+                                'Etu LD PU',
+                                'Etu LD Time',
+                                'Etu HL Alarm 1', 
+                                'Etu SD Slope',
+                                'Etu SD PU',
+                                'Etu SD Time',
+                                'Etu Inst PU',
+                                'Etu GF Type',
+                                'Etu GF Mode',
+                                'Etu GF Slope',
+                                'Etu GF PU',
+                                'Etu GF Time',
+                                 'Etu GF Thermal',
+                                'Etu Neutral Ratio',
+                                'Etu HL Alarm 2',
+                                'Etu GF Alarm', 
+                                'Etu Thermal Alarm'
+                                ]
+    add_dictionary_values(repos, repos.sp_one_keys)
+    add_dictionary_values(repos, repos.sp_etu_keys)
+    repos.mapping_dictionary['Setpoint 1']    = [repos.sp_one_keys,   "write_setpoint_one_request", "read_setpoint_one_request"]
+    repos.mapping_dictionary['Setpoint etu']  = [repos.sp_etu_keys,   "write_setpoint_one_request", "read_setpoint_one_request"]
+
+def add_setpoint_group_two(repos):
+
+    if repos.frame == 0 or repos.frame == 1:
+        repos.sp_two_keys   =   ['MBus Address',
+                                 'MBus Baud',
+                                 'MBus Parity',
+                                 'MBus Stop Bit']
+        
+    else:
+
+        repos.sp_two_keys   =   ['MBus Address',
+                                 'MBus Baud',
+                                 'MBus Parity',
+                                 'MBus Stop Bit'
+                                 'RTU Invalid Handeling']
+        
+        '''
+        repos.sp_two_keys   =   ['MBus Address',
+                                 'MBus Baud',
+                                 'MBus Parity',
+                                 'MBus Stop Bit'
+                                 'RTU Invalid Handeling',
+                                 'RTU Routing Word Order',
+                                 'RTU Fixed Word Order',
+                                 'RTU Permissions',
+                                 'TCP Invalid Handeling',
+                                 'TCP Routing Word Order',
+                                 'TCP Fixed Word Order',
+                                 'Timout',
+                                 'TCP IP Filter Enable',
+                                 'TCP Permissions']
+        '''
+    
+    add_dictionary_values(repos, repos.sp_two_keys)
+    repos.mapping_dictionary['Setpoint 2']  = [repos.sp_two_keys,   "write_setpoint_two_request", "read_setpoint_two_request"]
+
+def add_setpoint_group_three(repos):
+    
+    repos.sp_three_keys   =   [ 'MCam Address',
+                            'MCam Baud',
+                            'MCam Parity',
+                            'MCam Stop Bit', 
+                            'Incom Address',
+                            'Incom Baud',
+                            'ECam DHCP',
+                            'ECam IP 0',
+                            'ECam IP 1',
+                            'ECam IP 2',
+                            'ECam IP 3',
+                            'ECam IP 4',
+                            'ECam Subnet',
+                            'ECam Default 1',
+                            'EeCam Default 1',
+                            'eCam Reset',
+                            'pCam Address']
+
+
+    add_dictionary_values(repos, repos.sp_three_keys)
+    repos.mapping_dictionary['Setpoint 3']  = [repos.sp_three_keys,   "write_setpoint_three_request", "read_setpoint_three_request"]
+
+
+def add_setpoint_group_five(repos):
+
+        
+    repos.sp_five_keys =   ['Over V Action',
+                            'Over V PU',
+                            'Over V Time',
+                            'Under V Action',
+                            'Under V PU', 
+                            'Under V Time',
+                            'V Unbalance Action',
+                            'V Unbalance PU',
+                            'V Unbalance Time',
+                            'I Unbalance Action',
+                            'I Unbalance PU',
+                            'I Unbalance Time',
+                            'Reverse Real Power Action',
+                            'Reverse Real Power Pickup',
+                            'Reverse Real Power Time',
+                            'Power Rev Sense',
+                            'Power Rev Action',
+                            'Phase Loss Action',
+                            'Phase Loss Time',
+                            'Reserved16_5-1',
+                            'Reserved16_5-2',
+                            'Reserved16_5-3',
+                            'Reserved16_5-4',
+                            'Reserved16_5-5']
+    
+    add_dictionary_values(repos, repos.sp_five_keys)
+    repos.mapping_dictionary['Setpoint 5']  = [repos.sp_five_keys,   "write_setpoint_five_request", "read_setpoint_five_request"]
+                            
+'''
+================================================================================================================================
+Add Setpoint Groups
+
+add_buffer_zero(repos)
+add_buffer_two(repos)
+add_buffer_four(repos)
+add_buffer_five(repos)
+add_buffer_six(repos)
+add_buffer_eleven(repos)
+add_buffer_fourty_two(repos)
+add_buffer_fourty_three(repos)
+add_buffer_fourty_four(repos)
+add_buffer_fourty_five(repos)
+add_buffer_fourty_six(repos)
+add_buffer_fourty_seven(repos)
+add_buffer_fourty_eight(repos)
+add_buffer_fourty_nine(repos)
+add_buffer_fifty(repos)
+add_buffer_fifty_one(repos)
+add_buffer_fifty_two(repos)
+add_buffer_fifty_three(repos)
+add_buffer_fifty_four(repos)
+add_buffer_fifty_five(repos)
+add_buffer_sixty_nine(repos)
+
+
+===============================================================================================================================
+'''    
+def add_buffer_zero(repos):
+
+    repos.buffer_zero_keys = ['Primary Status',
+                            'Second Status',
+                            'Cause Of Status',
+                            'Breaker Status',
+                            'Trip Condition',
+                            'Alarm Condition',
+                            'MM Status',
+                            'Test Mode Status',
+                            'Testing Forbid',
+                            'LD Pickup Status',
+                            'ZIN Status',
+                            'Aux Power Connected',
+                            'Source Ground Active',
+                            'Spring_Charged']
+    
+    repos.etu_dictionary['Primary Status']       = ["Unkown", "Byte"]
+    repos.etu_dictionary['Second Status']        = ["Unkown", "Byte"]
+    repos.etu_dictionary['Cause Of Status']      = ["Unkown", "Byte"]
+    repos.etu_dictionary['Breaker Status']       = ["Unkown", "2Byte"]
+    repos.etu_dictionary['Trip Condition']       = ["Unkown", "Bin"]
+    repos.etu_dictionary['Alarm Condition']      = ["Unkown", "Bin"]
+    repos.etu_dictionary['MM Status']            = ["Unkown", "Bin"]
+    repos.etu_dictionary['Test Mode Status']     = ["Unkown", "Bin"]
+    repos.etu_dictionary['Testing Forbid']       = ["Unkown", "Bin"]
+    repos.etu_dictionary['LD Pickup Status']     = ["Unkown", "Bin"]
+    repos.etu_dictionary['ZIN Status']           = ["Unkown", "Bin"]
+    repos.etu_dictionary['Aux Power Connected']  = ["Uknown", "Bin"]
+    repos.etu_dictionary['Source Ground Active'] = ["Uknown", "Bin"]
+    repos.etu_dictionary['Spring_Charged']       = ["Uknown", "Bin"]
+
+    repos.mapping_dictionary['Buffer 0']    = [repos.buffer_zero_keys,     "N/A" , "read_real_time_data_buffer_zero_request"]
+
+def add_buffer_one(repos):
+
+    repos.buffer_one_keys = ['External Ia',
+                                    'External Ib',
+                                    'External Ic',
+                                    'External In',
+                                    'External Ig',
+                                    'I Average', 
+                                    'External Va',
+                                    'External Vb',
+                                    'External Vc',
+                                    'V LN Average',
+                                    'External Vab',
+                                    'External Vbc',
+                                    'External Vca',
+                                    'V LL Average',
+                                    'External Va Two',
+                                    'External Vb Two',
+                                    'External Vc Two',
+                                    'V LN Average Two',
+                                    'External Vab Two',
+                                    'External Vbc Two',
+                                    'External Vca Two',
+                                    'VLL Average Two',
+                                    'Freq',
+                                    'Freq Two',
+                                    'Real Power',
+                                    'React Power',
+                                    'App Power',
+                                    'PF',
+                                    'Temp',
+                                    'Humidity',
+                                    'Batt Val']
+
+    repos.etu_dictionary['External Ia']       = [0, "Q4"]
+    repos.etu_dictionary['External Ib']       = [0, "Q4"]
+    repos.etu_dictionary['External Ic']       = [0, "Q4"]
+    repos.etu_dictionary['External In']       = [0, "Q4"]
+    repos.etu_dictionary['External Ig']       = [0, "Q4"]
+    repos.etu_dictionary['External Va']       = [0, "Float"]
+    repos.etu_dictionary['External Vb']       = [0, "Q4Padded"]
+    repos.etu_dictionary['External Vc']       = [0, "Q4Padded"]
+    repos.etu_dictionary['External Vab']      = [0, "Q4Padded"]
+    repos.etu_dictionary['External Vbc']      = [0, "Q4Padded"]
+    repos.etu_dictionary['External Vca']      = [0, "Q4Padded"]
+    repos.etu_dictionary["Freq"]              =  [0,"Q4Padded"]
+    repos.etu_dictionary['Real Power']        = [0, "int32"]
+    repos.etu_dictionary['React Power']       = [0, "int32"]
+    repos.etu_dictionary['App Power']         = [0, "Uint32"]
+    repos.etu_dictionary['PF']                = [0, "Q10Padded"]
+    repos.etu_dictionary['Temp']              = [0, "Q4Padded"]
+    repos.etu_dictionary['Batt Val']          = [0, "Q8Padded"]
+    
+    repos.mapping_dictionary['Buffer 1']    = [repos.buffer_one_keys,     "N/A" , "read_real_time_data_buffer_one"]
+
+
+def add_buffer_two(repos):
+
+    repos.buffer_two_keys = ['Forward Energy',
+                                     'Reverse Energy',
+                                     'Total Energy',
+                                     'Net Energy',
+                                     'Leading Reactive Energy',
+                                     'Lagging Reactive Energy',
+                                     'Total Reactive Energy',
+                                     'Net Reactive Energy',
+                                     'Apparent Energy',
+                                     'Last Energy Reset Time']
+    
+    repos.etu_dictionary['Forward Energy']          = [0, "Uint64"]
+    repos.etu_dictionary['Reverse Energy']          = [0, "Uint64"]
+    repos.etu_dictionary['Total Energy']            = [0, "int64"]
+    repos.etu_dictionary['Net Energy']              = [0, "int64"]
+    repos.etu_dictionary['Leading Reactive Energy'] = [0, "Uint64"]
+    repos.etu_dictionary['Lagging Reactive Energy'] = [0, "Uint64"]
+    repos.etu_dictionary['Total Reactive Energy']   = [0, "int64"]
+    repos.etu_dictionary['Net Reactive Energy']     = [0, "int64"]
+    repos.etu_dictionary['Apparent Energy']         = [0, "Uint64"]
+    repos.etu_dictionary['Last Energy Reset Time']  = [0, "Date"]
+
+    repos.mapping_dictionary['Buffer 2']    = [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_two_request"]
+
+def add_buffer_four(repos):
+
+    repos.buffer_four_keys =   ['Max Real Power Demand',
+                                 'Max Real Power Demand TS',
+                                 'Max Reactive Power Demand',
+                                 'Max Reactive Power Demand TS',
+                                 'Max Apparent Power Demand',
+                                 'Max Apparent Power Demand TS',
+                                 'Last PD Reset TS']
+    
+    repos.etu_dictionary['Max Real Power Demand']           = [0, "Uint32"]
+    repos.etu_dictionary['Max Real Power Demand TS']        = [0, "Date"],
+    repos.etu_dictionary['Max Reactive Power Demand']       = [0, "Uint32"]
+    repos.etu_dictionary['Max Reactive Power Demand TS']    = [0, "Date"]
+    repos.etu_dictionary['Max Apparent Power Demand']       = [0, "Uint32"]
+    repos.etu_dictionary['Max Apparent Power Demand TS']    = [0, "Date"]
+    repos.etu_dictionary['Last PD Reset TS']                = [0, "Date"]
+
+    repos.mapping_dictionary['Buffer 4']    = [repos.buffer_four_keys,     "N/A" , "read_real_time_data_buffer_four_request"]
+    
+def add_buffer_five(repos):
+
+    repos.buffer_five =        ['Max IA',
+                               'Max IA TS',
+                               'Max IB',
+                               'Max IB TS',
+                               'Max IC',
+                               'Max IC TS',
+                               'Max IN',
+                               'Max IN TS',
+                               'Max IG',
+                               'Max IG TS',
+                               'Min IA',
+                               'Min IA TS',
+                               'Min IB',
+                               'Min IB TS',
+                               'Min IC',
+                               'Min IC TS',
+                               'Min IN',
+                               'Min IN TS',
+                               'Min IG',
+                               'Min IG TS',
+                               'Last I Max-Min Reset TS']
+    
+    repos.etu_dictionary['Max IA']              = [0, "Q4"]
+    repos.etu_dictionary['Max IA TS']           = [0, "Date"]
+    repos.etu_dictionary['Max IB']              = [0, "Q4"]
+    repos.etu_dictionary['Max IB TS']           = [0, "Date"]
+    repos.etu_dictionary['Max IC']              = [0, "Q4"]
+    repos.etu_dictionary['Max IC TS']           = [0, "Date"]   
+    repos.etu_dictionary['Max IN']              = [0, "Q4"]
+    repos.etu_dictionary['Max IN TS']           = [0, "Date"]
+    repos.etu_dictionary['Max IG']              = [0, "Q4"]
+    repos.etu_dictionary['Max IG TS']           = [0, "Date"]      
+    repos.etu_dictionary['Min IA']              = [0, "Q4"]
+    repos.etu_dictionary['Min IA TS']           = [0, "Date"]
+    repos.etu_dictionary['Min IB']              = [0, "Q4"]
+    repos.etu_dictionary['Min IB TS']           = [0, "Date"]
+    repos.etu_dictionary['Min IC']              = [0, "Q4"]
+    repos.etu_dictionary['Min IC TS']           = [0, "Date"]
+    repos.etu_dictionary['Min IN']              = [0, "Q4"]
+    repos.etu_dictionary['Min IN TS']           = [0, "Date"]
+    repos.etu_dictionary['Min IG']              = [0, "Q4"]
+    repos.etu_dictionary['Min IG TS']           = [0, "Date"]
+    repos.etu_dictionary['Last I Max-Min Reset TS']                = [0, "Date"]
+
+    repos.mapping_dictionary['Buffer 5']    = [repos.buffer_five_keys,     "N/A" , "read_real_time_data_buffer_five_request"]
+
+    
+def add_buffer_six(repos):
+
+    repos.buffer_six_keys = ['Ext Total Short Circuit Counter',
+                            'Ext Short Delay Trip Counter',
+                            'Ext Instantaneous Trip Counter',
+                            'Ext High Current Trip Counter',
+                            'Ext Total Overload Trip Counter',
+                            'Ext Long Delay Trip Counter',
+                            'Ext Ground Fault Trip Counter',
+                            'Ext Total Operations Counter',
+                            'Ext Trip Operations Counter',
+                            'Ext Test Operations Counter',
+                            'Ext Opens Operations Counter',
+                            'Ext Manual Operations Counter',
+                            'Ext Time Of Last Operations',
+                            'Ext Max Temp',
+                            'Ext Time Of Max Temp',
+                            'Ext Running Minute',
+                            'Ext Running Hour',
+                            'Ext Running Day',
+                            'Ext Life Points']
+    
+    repos.etu_dictionary['Ext Total Short Circuit Counter']     = [0, "Uint16"]
+    repos.etu_dictionary['Ext Short Delay Trip Counter']        = [0, "Uint16"]
+    repos.etu_dictionary['Ext Instantaneous Trip Counter']      = [0, "Uint16"]
+    repos.etu_dictionary['Ext High Current Trip Counter']       = [0, "Uint16"]
+    repos.etu_dictionary['Ext Total Overload Trip Counter']     = [0, "Uint16"]
+    repos.etu_dictionary['Ext Long Delay Trip Counter']         = [0, "Uint16"]
+    repos.etu_dictionary['Ext Ground Fault Trip Counter']       = [0, "Uint16"]
+    repos.etu_dictionary['Ext Total Operations Counter']        = [0, "Uint16"]
+    repos.etu_dictionary['Ext Trip Operations Counter']         = [0, "Uint16"]
+    repos.etu_dictionary['Ext Test Operations Counter']         = [0, "Uint16"]
+    repos.etu_dictionary['Ext Opens Operations Counter']        = [0, "Uint16"]
+    repos.etu_dictionary['Ext Manual Operations Counter']       = [0, "Uint16"]
+    repos.etu_dictionary['Ext Total Short Circuit Counter']     = [0, "Uint16"]
+    repos.etu_dictionary['Ext Time Of Last Operations']         = [0, "Date"]
+    repos.etu_dictionary['Ext Max Temp']                        = [0, "Q4Padded"]
+    repos.etu_dictionary['Ext Time Of Max Temp']                = [0, "Date"]
+    repos.etu_dictionary['Ext Running Minute']                  = [0, "Uint16"]
+    repos.etu_dictionary['Ext Running Hour']                    = [0, "Uint16"]
+    repos.etu_dictionary['Ext Running Day']                     = [0, "Uint16"]
+    repos.etu_dictionary['Ext Life Points']                     = [0, "Uint32"]
+
+    repos.mapping_dictionary['Buffer 6']    = [repos.buffer_six_keys,     "N/A" , "read_real_time_data_buffer_six_request"]
+
+def add_buffer_eleven(repos):
+    
+    repos.buffer_eleven_keys =  ['Int Short Circuit Count',
+                                'Int Short Delay Count',
+                                'Int Instant Count',
+                                'Int High Current Count',
+                                'Int Total Overload Count',
+                                'Int Long Delay Count',
+                                'Int Ground Fault Count',
+                                'Int Total Op Count',
+                                'Int Trip Op Count',
+                                'Int Test Op Count',
+                                'Int Opens Op Count',
+                                'Int Manual Op Count',
+                                'Int Time Of Last Op',
+                                'Int Max Temp',
+                                'Int Time Max Temp',
+                                'Int Run Miniute',
+                                'Int Run Hour',
+                                'Int Run Day',
+                                'Int Life Points']
+
+    repos.etu_dictionary['Int Short Circuit Count'] =  [0, "Uint16"]
+    repos.etu_dictionary['Int Short Delay Count']   =  [0, "Uint16"]
+    repos.etu_dictionary['Int Instant Count']       =  [0, "Uint16"]
+    repos.etu_dictionary['Int High Current Count']  =  [0, "Uint16"]
+    repos.etu_dictionary['Int Total Overload Count']=  [0, "Uint16"]
+    repos.etu_dictionary['Int Long Delay Count']    =  [0, "Uint16"]
+    repos.etu_dictionary['Int Ground Fault Count']  =  [0, "Uint16"]
+    repos.etu_dictionary['Int Total Op Count']      =  [0, "Uint16"]
+    repos.etu_dictionary['Int Trip Op Count']       =  [0, "Uint16"]
+    repos.etu_dictionary['Int Test Op Count']       =  [0, "Uint16"]
+    repos.etu_dictionary['Int Opens Op Count']      =  [0, "Uint16"]
+    repos.etu_dictionary['Int Manual Op Count']     =  [0, "Uint16"]
+    repos.etu_dictionary['Int Time Of Last Op']     =  [0, "Uint16"]
+    repos.etu_dictionary['Int Max Temp']            =  [0, "Uint16"]
+    repos.etu_dictionary['Int Time Max Temp']       =  [0, "Uint16"]
+    repos.etu_dictionary['Int Run Miniute']         =  [0, "Uint16"]
+    repos.etu_dictionary['Int Run Hour']            =  [0, "Uint16"]
+    repos.etu_dictionary['Int Run Day']             =  [0, "Uint16"]
+    repos.etu_dictionary['Int Life Points']         =  [0, "Uint32"]
+
+    repos.mapping_dictionary['Buffer 11']    = [repos.buffer_eleven_keys,     "N/A" , "read_real_time_data_buffer_eleven_request"]
+
+def add_buffer_fifteen(repos):
+
+    repos.buffer_fifteen_keys = ['Current Unbalance',
+                                 'Voltage Unbalance']
+
+    repos.etu_dictionary['Current Unbalance']   =  [0, "Int32"]
+    repos.etu_dictionary['Voltage Unbalance']   =  [0, "Int32"]
+
+    repos.mapping_dictionary['Buffer 15']    = [repos.buffer_fifteen_keys,     "N/A" , "read_real_time_data_buffer_fifteen_request"]
+
+def add_buffer_twenty(repos):
+
+    repos.crest_seventy_keys = ['Ia Current Crest Factor',
+                                'Ib Current Crest Factor',
+                                'Ic Current Crest Factor',
+                                'In Current Crest Factor']
+    
+    repos.etu_dictionary['Ia Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['Ib Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['Ic Current Crest Factor']=[0, "Q9"]
+    repos.etu_dictionary['In Current Crest Factor']=[0, "Q9"]
+
+    repos.mapping_dictionary['Buffer 20']    = [repos.buffer_twenty_keys,     "N/A" , "read_real_time_data_buffer_twenty_request"]
+
+def add_configuration(repos):
+
+    repos.configuration_keys =      ["Poles",
+                                    "Standard",
+                                    "Device Type",
+                                    "DC Rating",
+                                    "Config Voltage",
+                                    "Max IEC Amps",
+                                    "Max UL Amps",
+                                    "Max ANSI/UL Amps",
+                                    "Purchased",
+                                    "Min In",
+                                    "Withstand", 
+                                    "Override",
+                                    "MCR",
+                                    "Config Ground",
+                                    "Max Interrupt Label",
+                                    "Label Interrupt",
+                                    "Config Inst"]
+
+    add_dictionary_values(repos, repos.configuration_keys)
+    repos.etu_dictionary["Override"][0] = 150
+    repos.mapping_dictionary['Configuration']   = [repos.configuration_keys,  "write_breaker_configuraiton", "read_breaker_configuraiton_request"]
+
+
+    
 def get_dictionary(repos):
+
+    repos.mapping_dictionary = {'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
+                                'Main'            : [repos.main_keys, "N/A", "N/A"],
+                                'Inputs'          : [repos.expected_keys, "N/A", "N/A"],
+                                'Power Harvester Keys': [repos.power_harvester_keys, "N/A", "N/A"]}
     
     repos.etu_dictionary =  {'Rating'        : [0, "Uint16"],
                             'Frame'          : [0, "Uint16"],
@@ -337,11 +950,6 @@ def get_dictionary(repos):
                             'IEC61860 Configuration'          :  [0,"Uint16"],
                             'Demand Logging Interval'         :  [0,"Uint16"],
                             'Reserved16'                      :  [0,"Uint16"],
-                            'Reserved16_5-1'                 :  [0,"Uint16"],
-                            'Reserved16_5-2'                 :  [0,"Uint16"],
-                            'Reserved16_5-3'                 :  [0,"Uint16"],
-                            'Reserved16_5-4'                 :  [0,"Uint16"],
-                            'Reserved16_5-5'                 :  [0,"Uint16"],
                             'Reserved16_5-6'                 :  [0,"Uint16"],
                             'Reserved16_5-7'                 :  [0,"Uint16"], 
                             'High Load Time'                  :  [0,"Uint16"],
@@ -521,9 +1129,26 @@ def get_dictionary(repos):
                             'Under Frequency Alarm Pickup' : [0,"Uint16"],
                             'Under Frequency Alarm Time' : [0,"Uint16"],
                             'Demand Mode Precision' : [16, "Uint16"],
+                            'Power Harvester A'       : [2, "Uint16"],
+                            'Power Harvester B'       : [2, "Uint16"],
+                            'Power Harvester C'       : [2, "Uint16"],
                             'Reserved16_2' : [192, "Uint16"],
                              'Reserved16_3' : [193, "Uint16"]}
 
+
+    add_setpoint_group_zero(repos)
+    add_setpoint_group_one(repos)
+    add_setpoint_group_two(repos)
+    add_setpoint_group_three(repos)
+    add_setpoint_group_five(repos)
+    add_buffer_zero(repos)
+    add_buffer_one(repos)
+    add_configuration(repos)
+    mapping_keys = []
+    repos.mapping_keys = list(repos.mapping_dictionary.keys())
+    repos.power_harvester_keys = ['Power Harvester A',
+                                  'Power Harvester B',
+                                  'Power Harvester C']
 
 
 
@@ -536,124 +1161,7 @@ def get_dictionary(repos):
 def get_setpoint_keys(repos):
 
     repos.mech_time = .019
-    repos.sp_zero_keys =   ['Rating',
-                            'Frame',
-                            'Style1',
-                            'Style2',
-                            'MM Mode',
-                            'MM Level',
-                            'Line Frequency',
-                            'Reverse Feed',
-                            'Sign',
-                            'Power Window',
-                            'Power Interval',
-                            'Language',
-                            'LCD Rotatation',
-                            'Relay 1',
-                            'Relay 2',
-                            'Relay 3',
-                            'Pole Location',
-                            'I Window',
-                            'I Interval',
-                            'Health Level',
-                            'System Voltage',
-                            'Neutral Sensor',
-                            'Source Ground Sensor']
-        
-    repos.sp_one_keys =     ['Rating',
-                            'Frame',
-                            'Style1',
-                            'Style2',
-                            'LD Thermal',
-                            'ZSI',
-                            'LD Slope',
-                            'LD PU',
-                            'LD Time',
-                            'HL Alarm 1', 
-                            'SD Slope',
-                            'SD PU',
-                            'SD Time',
-                            'Inst PU',
-                            'GF Type',
-                            'GF Mode',
-                            'GF Slope',
-                            'GF PU',
-                            'GF Time',
-                            'GF Thermal',
-                            'Neutral Ratio',
-                            'HL Alarm 2',
-                            'GF Alarm',
-                            'Thermal Alarm'
-                            ]
-
-    repos.sp_etu_keys =     ['Etu Rating',
-                            'Etu Frame',
-                            'Etu Style1',
-                            'Etu Style2',
-                            'Etu LD Thermal',
-                            'Etu ZSI',
-                            'Etu LD Slope',
-                            'Etu LD PU',
-                            'Etu LD Time',
-                            'Etu HL Alarm 1', 
-                            'Etu SD Slope',
-                            'Etu SD PU',
-                            'Etu SD Time',
-                            'Etu Inst PU',
-                            'Etu GF Type',
-                            'Etu GF Mode',
-                            'Etu GF Slope',
-                            'Etu GF PU',
-                            'Etu GF Time',
-                            'Etu GF Thermal',
-                            'Etu Neutral Ratio',
-                            'Etu HL Alarm 2',
-                            'Etu GF Alarm',
-                            'Etu Thermal Alarm'
-                            ]  
-
-    repos.sp_two_keys   =   ['MBus Address',
-                             'MBus Baud',
-                             'MBus Parity',
-                             'MBus Stop Bit']
-                            
-    repos.sp_three_keys   =   [ 'Cam Satus',
-                                'mCam Address',
-                                'mCam Baud',
-                                'mCam Parity',
-                                'mCam Stop Bit', 
-                                'Incom Address',
-                                'Incom Baud',
-                                'eCam DHCP',
-                                'eCam IP Zero',
-                                'eCam IP One',
-                                'eCam IP Two',
-                                'eCam IP Three',
-                                'eCam Subnet',
-                                'eCam Default Two',
-                                'eCam Default One',
-                                'eCam Reset',
-                                'pCam Address']
-    
-    repos.sp_five_keys =   ['Over V Action',
-                            'Over V PU',
-                            'Over V Time',
-                            'Under V Action',
-                            'Under V PU', 
-                            'Under V Time',
-                            'V Unbalance Action',
-                            'V Unbalance PU',
-                            'V Unbalance Time',
-                            'I Unbalance Action',
-                            'I Unbalance PU',
-                            'I Unbalance Time',
-                            'Reverse Forward Power Action',
-                            'Reverse Forward Power Pickup',
-                            'Reverse Forward Power Time',
-                            'Power Rev Sense',
-                            'Power Rev Type',
-                            'Phase Loss Action',
-                            'Phase Loss Time']
+  
 
     repos.sp_six_keys = []
     repos.sp_seven_keys = []
@@ -705,9 +1213,15 @@ def get_setpoint_keys(repos):
                             "Vb_Phase_Angle",
                             "Vc_Phase_Angle"]
 
+    repos.power_harvester_keys = ['Power Harvester A',
+                                  'Power Harvester B',
+                                  'Power Harvester C']
+
     
 def get_buffer_keys(repos):
 
+
+    '''
     repos.buffer_zero_keys = ['primary_status',
                             'second_status',
                             'cause_of_status',
@@ -740,7 +1254,8 @@ def get_buffer_keys(repos):
                             'pf',
                             'temp',
                             'batt_val']
-            
+    '''
+    
     repos.buffer_two_keys = ['forward energy',
                             'reverse energy',
                             'total energy',
@@ -971,6 +1486,7 @@ def get_buffer_keys(repos):
                                 'MCU2 Flash Firmware Debugger']
 def get_mapping_dictionary(repos):
 
+    '''
     repos.mapping_dictionary = {'Setpoint 0'      : [repos.sp_zero_keys,   "read_setpoint_zero_request", "write_setpoint_zero_request"],
                                 'Setpoint 1'      : [repos.sp_one_keys,    "read_setpoint_one_request", "write_setpoint_one_request"],
                                 'Setpoint etu'    : [repos.sp_etu_keys,   "read_setpoint_one_request", "write_setpoint_one_request"],
@@ -994,15 +1510,18 @@ def get_mapping_dictionary(repos):
                                 'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
                                 'Main'            : [repos.main_keys, "N/A", "N/A"],
                                 'Inputs'          : [repos.expected_keys, "N/A", "N/A"]}
+    '''
 
 
     repos.default_array =  ['Setpoint etu']
 def get_rog_ratio(frame, rating):
 
-
+    print("GET ROG RATIO")
+    print(str(frame))
     if frame == 0:
-        #row_ratio = .000335
-        row_ratio = .0003315
+        row_ratio = .000345
+        #row_ratio = .0003315
+        print("NF")
         
     elif frame == 1:
         #row_ratio = 0.000335
@@ -1025,6 +1544,7 @@ def get_ct_ratio(frame, rating):
     return ct_ratio, ph, ph_type
 def reset_to_no_trip_values(repos):
 
+
     #Group 0 Values
     repos.etu_dictionary['MM Mode'][0] = 0
     repos.etu_dictionary['MM Level'][0] = 2
@@ -1035,27 +1555,63 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['Power Interval'][0] = 5
     repos.etu_dictionary['Language'][0] = 0
     repos.etu_dictionary['I Window'][0] = 0
-    repos.etu_dictionary['I Interval'][0] = 2
+    repos.etu_dictionary['I Interval'][0] = 5
     repos.etu_dictionary['Health Level'][0] = 25
 
 
-    #Group 1 Values                        
+                                    
+ 
+    #Group 1 Values
+    repos.etu_dictionary['LD Thermal'][0] = 0
     repos.etu_dictionary['LD Slope'][0] = 2
     repos.etu_dictionary['LD PU'][0] = 100
     repos.etu_dictionary['LD Time'][0] = 24
-    repos.etu_dictionary['SD PU' ][0] = 14
-    repos.etu_dictionary['SD PU' ][0] = 14
+    
+    repos.etu_dictionary['SD Time' ][0] = .5
+    repos.etu_dictionary['SD Slope' ][0] = 0
+    repos.etu_dictionary['SD PU' ][0] = 10
+
     repos.etu_dictionary['Inst PU'][0] = 15
+    repos.etu_dictionary['GF Slope'][0] = 0
+    repos.etu_dictionary['GF Time'][0] = 1
+    repos.etu_dictionary['GF PU'][0] = .2
     repos.etu_dictionary['GF Mode'][0] = 2
+    
     repos.etu_dictionary['Etu LD Slope'][0] = 2
     repos.etu_dictionary['Etu LD PU' ][0] = 100
     repos.etu_dictionary['Etu LD Time'][0] = 240
-    repos.etu_dictionary['Etu SD PU' ][0] = 140
+    repos.etu_dictionary['Etu SD Time' ][0] = 50
+    repos.etu_dictionary['Etu SD Slope' ][0] = 0
+    repos.etu_dictionary['Etu SD PU' ][0] = 100
     repos.etu_dictionary['Etu Inst PU' ][0] =150
+    repos.etu_dictionary['Etu GF Slope'][0] = 0
+    repos.etu_dictionary['Etu GF Time'][0] = 100
+    repos.etu_dictionary['Etu GF PU'][0] = 20
     repos.etu_dictionary['Etu GF Mode'][0] = 2
     repos.etu_dictionary['ZSI'][0] = 0
 
 
+    #Group 5 Values  
+    
+    repos.etu_dictionary['Over V Action'][0]      = 2
+    repos.etu_dictionary['Over V PU'][0]        = 180
+    repos.etu_dictionary['Over V Time'][0]      = 300
+    repos.etu_dictionary['Under V Action'][0]     = 2
+    repos.etu_dictionary['Under V PU'][0]       = 60
+    repos.etu_dictionary['Under V Time'][0]     = 300
+    repos.etu_dictionary['V Unbalance Action'][0] = 2
+    repos.etu_dictionary['V Unbalance PU'][0]   = 10
+    repos.etu_dictionary['V Unbalance Time'][0] = 300
+    repos.etu_dictionary['I Unbalance Action'][0] = 2
+    repos.etu_dictionary['I Unbalance PU'][0]   = 10
+    repos.etu_dictionary['I Unbalance Time'][0]   = 300
+    repos.etu_dictionary['Reverse Real Power Action'][0]   = 2
+    repos.etu_dictionary['Reverse Real Power Pickup'][0]     = 1
+    repos.etu_dictionary['Reverse Real Power Time'][0]   = 300
+    repos.etu_dictionary['Power Rev Sense'][0]  = 0
+    repos.etu_dictionary['Power Rev Action'][0]   = 2
+    repos.etu_dictionary['Phase Loss Action'][0]  = 2
+    repos.etu_dictionary['Phase Loss Time'][0]  = 1
 
 
 

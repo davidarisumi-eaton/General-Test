@@ -202,7 +202,7 @@ def add_configuration(repos):
                                         'Poles',
                                         'Standard', 
                                         'Ct Version', 
-                                        'Withstand',
+                                        'Override',
                                         'MCR',              
                                         'Max Interrupt Label', 
                                         'Frame Construction']
@@ -210,12 +210,11 @@ def add_configuration(repos):
     repos.etu_dictionary["Poles"]                   =  [0,"Uint16"]
     repos.etu_dictionary["Standard"]                =  [0,"Uint16"]
     repos.etu_dictionary["Ct Version"]              =  [0,"Uint16"]
-    repos.etu_dictionary["Withstand"]                =  [1100 ,"Uint32"]
+    repos.etu_dictionary["Override"]                =  [1100 ,"Uint32"]
     repos.etu_dictionary["MCR"]                     =  [0,"Uint32"]             
     repos.etu_dictionary['Max Interrupt Label']     =  [0,"Uint32"]
     repos.etu_dictionary["Frame Construction"]      =  [0,"Uint32"]
                             
-    add_dictionary_values(repos, repos.breaker_protection_capacity_keys)
 
 def add_buffer_zero(repos):
     
@@ -667,7 +666,7 @@ def get_dictionary(repos):
                             'external_Vb_two'   :  [0,"Float"],
                             'external_Vc_two'   :  [0,"Float"],
                             'V_LN_Average_two'  :  [0,"Float"],
-                            'Withstand'  :  [0,"Float"],
+                             "Withstand"  :  [0,"Float"],
                             'Frequency Protection Enable' : [0,"Uint16"],
                             'Overfrequency Action'        : [0,"Uint16"],
                             'Overfrequency Pickup'        : [0,"Uint16"],
@@ -948,33 +947,6 @@ def get_buffer_keys(repos):
 
 def get_mapping_dictionary(repos):
 
-    #Dictionary {Name: [keys, type, usb_read, usb_write]}
-
-    
-##    repos.mapping_dictionary = {'Setpoint 0'      : [repos.sp_zero_keys,   "write_setpoint_zero_request", "read_setpoint_zero_request"],
-##                                'Setpoint 1'      : [repos.sp_one_keys,    "write_setpoint_one_request", "read_setpoint_one_request"],
-##                                'Setpoint etu'    : [repos.sp_etu_keys,   "write_setpoint_one_request", "read_setpoint_one_request"],
-##                                'Setpoint 2'      : [repos.sp_two_keys,          "write_setpoint_two_request", "read_setpoint_two_request"],
-##                                'Setpoint 3'      : [repos.sp_three_keys,        "write_setpoint_three_request", "read_setpoint_three_request"],
-##                                'Setpoint 5'      : [repos.sp_five_keys,      "write_setpoint_five_request", "read_setpoint_five_request"],
-##                                'Setpoint 6'      : [repos.sp_six_keys,      "write_setpoint_six_request", "read_setpoint_six_request"],
-##                                'Setpoint 7'      : [repos.sp_seven_keys,      "write_setpoint_seven_request", "read_setpoint_seven_request"],
-##                                'Buffer 0'        : [repos.buffer_zero_keys,     "N/A" , "read_real_time_data_buffer_zero_request"],
-##                                'Buffer 1'        : [repos.buffer_one_keys,      "N/A" , "read_real_time_data_buffer_one_request"],
-##                                'Buffer 2'        : [repos.buffer_two_keys,     "N/A" , "read_real_time_data_buffer_two_request"],
-##                                'Buffer 3'        : [repos.buffer_three_keys,      "N/A" , "read_real_time_data_buffer_three_request"],
-##                                'Buffer 4'        : [repos.buffer_four_keys,     "N/A" , "read_real_time_data_buffer_four_request"],
-##                                'Buffer 5'        : [repos.buffer_five_keys,      "N/A" , "read_real_time_data_buffer_five_request"],
-##                                'Buffer 6'        : [repos.buffer_six_keys,  "N/A" , "read_real_time_data_buffer_six_request"],
-##                                'Buffer 7'        : [repos.buffer_seven_keys,    "N/A" , "read_real_time_data_buffer_seven_request"],
-##                                'Buffer 8'        : [repos.buffer_eight_keys,     "N/A" , "read_real_time_data_buffer_eight_request"],
-##                                'Buffer 10'       : [repos.buffer_ten_keys,   "N/A" , "read_real_time_data_buffer_ten_request"],
-##                                'Buffer 11'       : [repos.buffer_eleven_keys,  "N/A" , "read_real_time_data_buffer_eleven_request"],
-##                                'Configuration'   : [repos.breaker_protection_capacity_keys,  "N/A" , "read_real_time_data_buffer_zero_request"],
-##                                'angle_keys'      : [repos.angle_keys, "N/A", "N/A"],
-##                                'Main'            : [repos.main_keys, "N/A", "N/A"],
-##                                'Inputs'          : [repos.expected_keys, "N/A", "N/A"]}
-
 
    repos.mapping_dictionary = {'Setpoint 0'      : [repos.sp_zero_keys,   "write_setpoint_zero_request", "read_setpoint_zero_request"],
                                 'Setpoint 1'      : [repos.sp_one_keys,    "write_setpoint_one_request", "read_setpoint_one_request"],
@@ -1006,52 +978,32 @@ def get_mapping_dictionary(repos):
 
 def get_rog_ratio(frame, rating):
 
-    print("Rog Ratio")
-    print(frame)
-    if frame == 21: #PD2
-        row_ratio = 0
-    elif frame == 22 or frame == 23 or frame == 24: #PD3A/3B/4
-        row_ratio = 1/3276.8
-    
-    elif frame == 25: #PD5
-        row_ratio = 335/1000000
+    row_ratio = 0
 
-    elif frame == 26: #PD6
-        row_ratio = 364/1000000
-
-    else:
-        row_ratio = .0000000001 #PD2 Or Invalid
-
-    
     return row_ratio
 
 def get_ct_ratio(frame, rating):
-    if frame == 21: #PD2
 
-        ph = False
-        ph_type = 0 
-        
-        if rating > 100:
-            ct_ratio = 3750
-        else:
+    #Don't use as rogowski power harvester CT. 
+    ph = False
+    ph_type = 0
+
+    
+    if frame == 51: #L103
+        ct_ratio = 875
+      
+    else: #A103
+        if rating == 100: 
             ct_ratio = 1500
-    else:
-        ct_ratio = 0
-        ph = True
-        ph_type = 1
+        else:
+            ct_ratio = 375
+
 
     return ct_ratio, ph, ph_type
 
 def get_mech_time(frame):
 
-    if frame == 21: #PD2
-        mech_time = .004
-    elif frame == 22 or frame == 23 or frame == 24: #PD5
-        mech_time = .004
-    elif frame == 25: #PD5
-        mech_time = .014
-    else: #PD6
-        mech_time = .016
+    mech_time = .008
 
     return mech_time 
         
@@ -1116,8 +1068,8 @@ def reset_to_no_trip_values(repos):
 
     #Group 1 Values                        
     repos.etu_dictionary['LD Slope'][0] = 2
-    repos.etu_dictionary['LD PU'][0] = repos.etu_dictionary['Rating'][0]
-    repos.etu_dictionary['LD Time'][0] = 24
+    repos.etu_dictionary['LD PU'][0] = 100
+    repos.etu_dictionary['LD Time'][0] = 26
     repos.etu_dictionary['SD PU'][0] = 10
     repos.etu_dictionary['SD Slope'][0] = 0
     repos.etu_dictionary['GF Mode'][0] = 2
@@ -1127,12 +1079,9 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['SD Time'][0] = .05
 
 
-        
-
-    
     repos.etu_dictionary['Etu LD Slope'][0] = 2
-    repos.etu_dictionary['Etu LD PU'][0] = repos.etu_dictionary['Rating'][0]
-    repos.etu_dictionary['Etu LD Time'][0] = 240
+    repos.etu_dictionary['Etu LD PU'][0] = 100
+    repos.etu_dictionary['Etu LD Time'][0] = 260
     repos.etu_dictionary['Etu SD PU'][0] = 10
     repos.etu_dictionary['Etu SD Slope'][0] = 0
     repos.etu_dictionary['Etu SD Time'][0] = 50
@@ -1141,138 +1090,47 @@ def reset_to_no_trip_values(repos):
     repos.etu_dictionary['Etu LD Thermal'][0] = 0
     repos.etu_dictionary['Etu GF Thermal'][0] = 0
 
+
+
+    
     if repos.pxr == "PXR10":
         repos.etu_dictionary['SD PU'][0] = 0
         repos.etu_dictionary['Etu SD PU'][0] = 100
         repos.etu_dictionary['SD Time'][0] = 0
         repos.etu_dictionary['Etu SD Time'][0] = 0
-        repos.etu_dictionary['LD Time'][0] = 10
-        repos.etu_dictionary['Etu LD Time'][0] = 100
+
 
         
     frame = repos.etu_dictionary['Frame'][0]
     
-    if frame == 21: #PD2
-        if repos.etu_dictionary['Rating'][0] == 60:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 183
-            repos.etu_dictionary['Inst PU'][0] = 18.3
-            repos.etu_dictionary['Withstand'][0] = 1100
-        elif repos.etu_dictionary['Rating'][0] == 63:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 174
-            repos.etu_dictionary['Inst PU'][0] = 17.4
-            repos.etu_dictionary['Withstand'][0] = 1100
-        elif repos.etu_dictionary['Rating'][0] ==100:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 110
-            repos.etu_dictionary['Inst PU'][0] = 11
-            repos.etu_dictionary['Withstand'][0] = 1100
-        elif repos.etu_dictionary['Rating'][0] == 150:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 140
-            repos.etu_dictionary['Inst PU'][0] = 14
-            repos.etu_dictionary['Withstand'][0] = 2100
-        elif repos.etu_dictionary['Rating'][0] == 160:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 131
-            repos.etu_dictionary['Inst PU'][0] = 13.1
-            repos.etu_dictionary['Withstand'][0] = 2100
-        elif repos.etu_dictionary['Rating'][0] == 200:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 105
-            repos.etu_dictionary['Inst PU'][0] = 10.5
-            repos.etu_dictionary['Withstand'][0] = 2100
-        elif repos.etu_dictionary['Rating'][0] == 225:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 93
-            repos.etu_dictionary['Inst PU'][0] = 9.3
-            repos.etu_dictionary['Withstand'][0] = 2100
-        elif repos.etu_dictionary['Rating'][0] == 250:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 84
-            repos.etu_dictionary['Inst PU'][0] = 8.4
-            repos.etu_dictionary['Withstand'][0] = 2100
-
+    if frame == 51: #L103
+        repos.etu_dictionary['LD PU'][0] = 15
+        repos.etu_dictionary['SD PU'][0] = 2
         
-    elif frame == 22: #PD3A
-        repos.etu_dictionary['Withstand'][0] = 4400
+        repos.etu_dictionary['SD Slope'][0] = 0
+        repos.etu_dictionary['Etu SD PU'][0] = 0
         
-        if repos.etu_dictionary['Rating'][0] == 125:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 240
-            repos.etu_dictionary['Inst PU'][0] = 24
-            repos.etu_dictionary['Withstand'][0] = 3300
-        elif repos.etu_dictionary['Rating'][0] == 250:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 176
-            repos.etu_dictionary['Inst PU'][0] = 17.6
-        elif repos.etu_dictionary['Rating'][0] == 400:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 110
-            repos.etu_dictionary['Inst PU'][0] = 11
+        #repos.etu_dictionary['Inst PU'][0] = 40
+        #repos.etu_dictionary['Etu Inst PU'][0] = 400
 
-    elif frame == 23: #PD3B
-        repos.etu_dictionary['Withstand'][0] = 7200
-        if repos.etu_dictionary['Rating'][0] == 250:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 288
-            repos.etu_dictionary['Inst PU'][0] = 28.8
-        elif repos.etu_dictionary['Rating'][0] == 400:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 180
-            repos.etu_dictionary['Inst PU'][0] = 18
-        elif repos.etu_dictionary['Rating'][0] == 600:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 120
-            repos.etu_dictionary['Inst PU'][0] = 12
-        elif repos.etu_dictionary['Rating'][0] == 630:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 114
-            repos.etu_dictionary['Inst PU'][0] = 11.4
-            
-    elif frame == 24: #PD4
-        if repos.etu_dictionary['Rating'][0] == 800:
-            repos.etu_dictionary['Withstand'][0] = 6800
-        elif repos.etu_dictionary['Rating'][0] == 1000:
-            repos.etu_dictionary['Withstand'][0] = 8000
-            
-        repos.etu_dictionary['Etu Inst PU' ][0] = 80
-        repos.etu_dictionary['Inst PU'][0] = 8
+    elif frame == 52: #A103
+        repos.etu_dictionary['LD PU'][0] = 40
+        repos.etu_dictionary['SD PU'][0] = 10
+        repos.etu_dictionary['SD Slope'][0] = 0
+        repos.etu_dictionary['Etu SD Slope'][0] = 0
 
-        if repos.pxr != "PXR10":
-            repos.etu_dictionary['SD PU'][0] = 8
-            repos.etu_dictionary['Etu SD PU'][0] = 80
+        repos.etu_dictionary['SD PU'][0] = 2
+        repos.etu_dictionary['Etu SD PU'][0] = 0
+        
+        #repos.etu_dictionary['Inst PU'][0] = 20
+        #repos.etu_dictionary['Etu Inst PU'][0] = 200
 
-    elif frame == 25: #PD5
-        repos.etu_dictionary['Withstand'][0] = 6800
-        repos.etu_dictionary['Etu Inst PU' ][0] = 90
-        if repos.etu_dictionary['Rating'][0] == 800:
-            repos.etu_dictionary['LD Time'][0] = 14
-            repos.etu_dictionary['Inst PU'][0] = 15
-            repos.etu_dictionary['Etu Inst PU' ][0] = 150
-        elif repos.etu_dictionary['Rating'][0] == 1600:
-            repos.etu_dictionary['LD Time'][0] = 20
-            repos.etu_dictionary['Inst PU'][0] = 9
-            repos.etu_dictionary['Etu Inst PU' ][0] = 90
-            
-    else: #PD6
-        repos.etu_dictionary['Withstand'][0] = 17500
-        if repos.etu_dictionary['Rating'][0] == 1600:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 100
-            repos.etu_dictionary['Inst PU'][0] = 10
-        else:
-            repos.etu_dictionary['Etu Inst PU' ][0] = 70
-            repos.etu_dictionary['Inst PU'][0] = 7
-
-
-    
-
-
-    #Group 5 Values  
-    repos.etu_dictionary['Over V Action'][0]      = 0
-    repos.etu_dictionary['Over V PU'][0]        = 180
-    repos.etu_dictionary['Over V Time'][0]      = 300
-    repos.etu_dictionary['Under V Action'][0]     = 2
-    repos.etu_dictionary['Under V PU'][0]       = 60
-    repos.etu_dictionary['Under V Time'][0]     = 300
-    repos.etu_dictionary['V Unbalance Action'][0] = 2
-    repos.etu_dictionary['V Unbalance PU'][0]   = 5
-    repos.etu_dictionary['V Unbalance Time'][0] = 300
-    repos.etu_dictionary['I Unbalance Action'][0] = 2
-    repos.etu_dictionary['I Unbalance PU'][0]   = 5
-    repos.etu_dictionary['Rev Power Action'][0]   = 2
-    repos.etu_dictionary['Rev Power PU'][0]     = 1
-    repos.etu_dictionary['Rev Power Time'][0]   = 300
-    repos.etu_dictionary['Power Rev Sense'][0]  = 1
-    repos.etu_dictionary['Power Rev Action'][0]   = 2
-    repos.etu_dictionary['Phase Loss Action'][0]  = 2
-    repos.etu_dictionary['Phase Loss Time'][0]  = 1
+    repos.etu_dictionary['Inst PU'][0] = 40
+    repos.etu_dictionary['Etu Inst PU'][0] = 400
+    print("inst")
+    print(repos.etu_dictionary['Inst PU'][0] )
+    print(repos.etu_dictionary['Etu Inst PU'][0])
+ 
 
 
 

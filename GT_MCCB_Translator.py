@@ -100,8 +100,13 @@ def translate_generic(msg, key_array, dictionary):
     val_array = translate_generic_no_write(msg, key_array, dictionary)
 
     i = 0
-    for key in key_array:   
-        dictionary[key][0] = val_array[i]
+    for key in key_array:
+        try:
+            dictionary[key][0] = val_array[i]
+        except:
+            print("Error Reading " + str(key))
+            dictionary[key][0] = dictionary[key][0]
+            
         i = i + 1
 
 

@@ -4,6 +4,7 @@ from __future__ import division
 
 from openpyxl import load_workbook
 from openpyxl import Workbook
+from openpyxl.chart import LineChart, Reference
 
 from openpyxl.styles import Alignment
 from openpyxl.styles.borders import Border, Side
@@ -384,7 +385,7 @@ class Test_File(object):
     def write_column_with_dictionary(self, my_col, my_row, tab, keys, dictionary):
 
         ws = self.wb[self.sheet_array[tab]]
-        for val in my_array:
+        for key in keys:
             ws.cell(column = my_col, row = my_row, value = dictionary[key])
             my_row= my_row + 1
 
@@ -403,6 +404,18 @@ class Test_File(object):
             my_col = my_col + 1       
 
 
+    def create_chart(self, my_col, my_row, tab, location, title):
+
+        chart = LineChart()
+        ws = self.wb[self.sheet_array[tab]]
+        data = Reference(ws, min_col = my_col, min_row = 1, max_col = my_col, max_row = 560)
+
+        chart.title = title
+        
+        chart.add_data(data, titles_from_data = True) 
+
+        ws.add_chart(chart,location)
+        
     def save_file(self):
         self.wb.save(self.name)
 

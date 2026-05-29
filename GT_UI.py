@@ -54,7 +54,8 @@ from GT import GT_Test, GT_USB, GT_Omicron, GT_Calibration, GT_Conversions,GT_Se
 from GT import GT_MCCB_Translator, GT_ACB_Translator, GT_Main, GT_Repository, GT_Custom
 
 import time #for testing purposes
-import sys 
+import sys
+import random
 
 
 
@@ -162,9 +163,16 @@ class General_Test_UI(object):
         self.pass_entry = Entry(self.serial_frame)
         self.pass_entry.grid(row = 2, column = 0, columnspan = 1)
 
+        self.pass_num_cbox = ttk.Combobox(self.serial_frame, width = 10, values = [4, 6], state = "readonly")
+        self.pass_num_cbox.current(1)
+        self.pass_num_cbox.grid(row = 2, column = 2)
+        self.pass_num_cbox.bind("<<ComboboxSelected>>", lambda e : self.pass_selection(repos, self.pass_num_cbox.get(), usb))
+        
+
+
         self.save_dir_button = Button(self.serial_frame, text = "Set Password", command = lambda: self.set_pass(usb, repos))
         self.save_dir_button.grid(row = 2, column = 1)
-        
+
 
         '''
         ================================================================================================================================================================================
@@ -184,103 +192,85 @@ class General_Test_UI(object):
         self.result_index = 0
 
 
+                
+
         '''
         ================================================================================================================================================================================
         Tab One Frame (Test)
         =================================================================================================================================================================================
         '''
-                
-        Label(self.tab_zero, text = 'Options').grid(row = 1, column = 0)
+
+        '''
+        Bottom Row (Override Test Options)
+        '''
+
+
+        Label(self.tab_zero, text = "File and Directory Options").grid(row = 1, column = 0, columnspan = 2)
+
+        self.save_dir_button = Button(self.tab_zero, text = "Pick Save Directory", command = lambda: self.save_dir())
+        self.save_dir_button.grid(row = 3, column = 0, columnspan = 2)
         
-        Label(self.tab_six, text = 'ia_amp').grid(row = 2, column = 0)
-        self.ia_amp_entry = ttk.Entry(self.tab_six, width = 10)
-        self.ia_amp_entry.grid(row = 3, column = 0)
-        self.CT_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["25", "1500", "3750"], state = "readonly")
-        self.CT_cbox.current(0)
-        self.CT_cbox.grid(row = 3, column = 0)
+        self.save_dir_entry = Entry(self.tab_zero, width = 40)
+        self.save_dir_entry.grid(row = 4, column = 0, columnspan = 2)
+        save_file_path = os.getcwd()
+        self.save_dir_entry.insert(0,save_file_path)
+
+        self.sav_start_dir = os.getcwd()
+
+
+
+
+        Label(self.tab_zero, text = "Run Files or Folder").grid(row = 5, column = 0, columnspan = 2)
+
+        self.fof_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Folder", "Files"])
+        self.fof_cbox.current(0) #Sets inital value to values[0], aka 0
+        self.fof_cbox.grid(row = 6, column = 0, columnspan = 2)
+        self.fof_cbox.bind("<<ComboboxSelected>>", lambda e : self.change_open_type())
+
+        self.open_start_dir = os.getcwd()
+
+        self.open_file_button = Button(self.tab_zero, text = "Pick Choose File", command = lambda: self.open_file())
+        self.open_file_button.grid(row = 7, column = 0, columnspan = 2)
+
+        self.file_scroll = tkst.ScrolledText(master = self.tab_zero, width = 40, height = 10)
+        self.file_scroll.grid(row = 8, column = 0, rowspan = 6, columnspan = 2)
+        self.file_scroll.grid_remove()
+        self.file_index = 0
+
+        self.open_dir_button = Button(self.tab_zero, text = "Pick Choose Directory", command = lambda: self.open_dir())
+        self.open_dir_button.grid(row = 7, column = 0, columnspan = 2)
         
-        Label(self.tab_zero, text = 'Neutral').grid(row = 4, column = 0)        
-        self.neutral_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Neutral", "No Neutral"], state = "readonly")
-        self.neutral_cbox.current(1)
-        self.neutral_cbox.grid(row = 5, column = 0)
+        self.open_dir_entry = Entry(self.tab_zero, width = 50)
+        self.open_dir_entry.grid(row = 8, column = 0, columnspan = 2)
+        open_file_path = os.getcwd()
+        self.open_dir_entry.insert(0,open_file_path)
 
-        Label(self.tab_zero, text = 'Power:').grid(row = 6, column = 0)
-        self.power_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["All Power", "Cold Start", "USB Only", "Aux Only"], state = "readonly")
-        self.power_cbox.grid(row = 7, column = 0)
-        self.power_cbox.current(0)
 
-        Label(self.tab_zero, text = 'Phases').grid(row = 8, column = 0)
-        self.phase_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["A", "B", "C", "AB", "BC", "AC", "ABC"], state = "readonly")
-        self.phase_cbox.current(0)
-        self.phase_cbox.grid(row = 9, column = 0)
 
-        Label(self.tab_zero, text = 'Test Type').grid(row = 10, column = 0)
-        self.test_type_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Trip", "Firmware Test", "Hardware Test", "Excel"], state = "readonly")
-        self.test_type_cbox.current(3)
-        self.test_type_cbox.grid(row = 12, column = 0) 
-   
+        self.test_button = Button(self.tab_zero, text = "Run Test", bg = 'cyan', width = 14, height = 2, command = lambda: self.start_setup(repos, usb))
+        self.test_button.grid(column = 0, row = 10, columnspan = 2)
 
+        self.save_unpause_button = Button(self.tab_zero, text = "Pause/Redo", command = lambda: self.unpause_test(usb))
+        self.save_unpause_button.grid(row = 12, column = 0, columnspan = 2)
         
 
         '''
         Column 1
         '''
         
-        Label(self.tab_zero, text = 'More Options').grid(row = 1, column = 1)
-        Label(self.tab_zero, text = 'Family').grid(row = 2, column = 1)
-        self.family_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["ACB", "MCCB"])
-        self.family_cbox.current(1) #Sets inital value to value[1], aka MCCB
-        self.family_cbox.grid(row = 3, column = 1)
+        Label(self.tab_zero, text = 'More Options').grid(row = 1, column = 8)
+
         
-        Label(self.tab_zero, text = 'Number of Runs').grid(row = 4, column = 1)
+        Label(self.tab_zero, text = 'Number of Runs').grid(row = 4, column = 8)
         self.num_runs = ttk.Combobox(self.tab_zero, width = 10, values = [1,2,3,4,5])
         self.num_runs.current(0) #Sets inital value to value[0], aka 1
-        self.num_runs.grid(row = 5, column = 1)
-
-        Label(self.tab_zero, text = 'Frequency').grid(row = 6, column = 1)
-        self.freq_choice = ttk.Combobox(self.tab_zero, width = 10, values = [50, 60, 400])
-        self.freq_choice.current(1) #Sets inital value to values[1], aka 60
-        self.freq_choice.grid(row = 7, column = 1)
+        self.num_runs.grid(row = 5, column = 8)
 
 
         '''
         Column 2
         '''
         
-        Label(self.tab_zero, text = 'Phase Angles').grid(row = 1, column = 2)
-
-        Label(self.tab_zero, text = 'Ia').grid(row = 2, column = 2)
-        self.ia_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
-        self.ia_ang_choice.current(0) #Sets inital value to values[0], aka 0
-        self.ia_ang_choice.grid(row = 3, column = 2)        
-
-        Label(self.tab_zero, text = 'Ib').grid(row = 4, column = 2)
-        self.ib_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
-        self.ib_ang_choice.current(1) #Sets inital value to values[1], aka 120
-        self.ib_ang_choice.grid(row = 5, column = 2)
-
-
-        Label(self.tab_zero, text = 'Ic').grid(row =6, column = 2)
-        self.ic_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
-        self.ic_ang_choice.current(2) #Sets inital value to values[2], aka -120
-        self.ic_ang_choice.grid(row = 7, column = 2)
-
-
-        Label(self.tab_zero, text = 'Rowgowski Va').grid(row = 8, column = 2)
-        self.ra_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
-        self.ra_ang_choice.current(0) #Sets inital value to values[0], aka 0
-        self.ra_ang_choice.grid(row = 9, column = 2)        
-
-        Label(self.tab_zero, text = 'Rowgowski Vb').grid(row = 10, column = 2)
-        self.rb_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
-        self.rb_ang_choice.current(0) #Sets inital value to values[1], aka 120
-        self.rb_ang_choice.grid(row = 11, column = 2)
-
-        Label(self.tab_zero, text = 'Rowgowski Vc').grid(row =12, column = 2)
-        self.rc_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
-        self.rc_ang_choice.current(0) #Sets inital value to values[2], aka -120
-        self.rc_ang_choice.grid(row = 13, column = 2)
-
 
         '''
         Column 3
@@ -313,66 +303,99 @@ class General_Test_UI(object):
         self.omi_llo_cbox.current(0)
         self.omi_llo_cbox.grid(row = 7, column = 4)
 
-   
+        Label(self.tab_zero, text = 'Default Omicron').grid(row = 10, column = 4)
 
-        self.save_unpause_button = Button(self.tab_zero, text = "Pause/Redo", command = lambda: self.unpause_test(usb))
-        self.save_unpause_button.grid(row = 12, column = 4)
+        Label(self.tab_zero, text = 'Phase Angle Ia').grid(row = 11, column = 4)
+        self.ia_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
+        self.ia_ang_choice.current(0) #Sets inital value to values[0], aka 0
+        self.ia_ang_choice.grid(row = 12, column = 4)        
 
+        Label(self.tab_zero, text = 'Phase Angle Ib').grid(row = 13, column = 4)
+        self.ib_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
+        self.ib_ang_choice.current(1) #Sets inital value to values[1], aka 120
+        self.ib_ang_choice.grid(row = 14, column = 4)
+
+
+        Label(self.tab_zero, text = 'Phase Angle Ic').grid(row =15, column = 4)
+        self.ic_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [0, 120, -120])
+        self.ic_ang_choice.current(2) #Sets inital value to values[2], aka -120
+        self.ic_ang_choice.grid(row = 16, column = 4)
+
+
+        Label(self.tab_zero, text = 'Phase Angle Rowgowski Va').grid(row = 17, column = 4)
+        self.ra_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
+        self.ra_ang_choice.current(0) #Sets inital value to values[0], aka 0
+        self.ra_ang_choice.grid(row = 18, column = 4)        
+
+        Label(self.tab_zero, text = 'Phase Angle Rowgowski Vb').grid(row = 19, column = 4)
+        self.rb_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
+        self.rb_ang_choice.current(0) #Sets inital value to values[1], aka 120
+        self.rb_ang_choice.grid(row = 20, column = 4)
+
+        Label(self.tab_zero, text = 'Phase Angle Rowgowski Vc').grid(row =21, column = 4)
+        self.rc_ang_choice = ttk.Combobox(self.tab_zero, width = 10, values = [90, 270])
+        self.rc_ang_choice.current(0) #Sets inital value to values[2], aka -120
+        self.rc_ang_choice.grid(row = 22, column = 4)
+
+        Label(self.tab_zero, text = 'Frequency').grid(row = 23, column = 4)
+        self.freq_choice = ttk.Combobox(self.tab_zero, width = 10, values = [50, 60, 400])
+        self.freq_choice.current(1) #Sets inital value to values[1], aka 60
+        self.freq_choice.grid(row = 24, column = 4)
+        
         '''
         Column 5 and 6
         '''
+
+        Label(self.tab_zero, text = 'Override Options').grid(row = 1, column = 5)
+
+        Label(self.tab_zero, text = 'Override Power:').grid(row = 2, column = 5)
+        self.power_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["All Power", "Cold Start", "USB Only", "Aux Only"], state = "readonly")
+        self.power_cbox.grid(row = 3, column = 5)
+        self.power_cbox.current(0)
         
-        Label(self.tab_zero, text = "File and Directory Options").grid(row = 1, column = 5, columnspan = 2)
-
-        self.save_dir_button = Button(self.tab_zero, text = "Pick Save Directory", command = lambda: self.save_dir())
-        self.save_dir_button.grid(row = 3, column = 5, columnspan = 2)
+        Label(self.tab_zero, text = 'Override Test Type').grid(row =4, column = 5)
+        self.test_type_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Trip", "Firmware Test", "Hardware Test", "Write Check", "Excel"], state = "readonly")
+        self.test_type_cbox.current(4)
+        self.test_type_cbox.grid(row = 5, column = 5)
         
-        self.save_dir_entry = Entry(self.tab_zero, width = 40)
-        self.save_dir_entry.grid(row = 4, column = 5, columnspan = 2)
-        save_file_path = os.getcwd()
-        self.save_dir_entry.insert(0,save_file_path)
-
-        self.sav_start_dir = os.getcwd()
-
-
-        Label(self.tab_zero, text = "Run Files or Folder").grid(row = 5, column = 5, columnspan = 2)
-
-        self.fof_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Folder", "Files"])
-        self.fof_cbox.current(0) #Sets inital value to values[0], aka 0
-        self.fof_cbox.grid(row = 6, column = 5, columnspan = 2)
-        self.fof_cbox.bind("<<ComboboxSelected>>", lambda e : self.change_open_type())
-
-
-
-        self.open_start_dir = os.getcwd()
-
-
-##        self.input_scroll = tkst.ScrolledText(master = self.tab_zero, width = 28, height = 10)
-##        self.input_scroll.grid(row = 8, column = 5, rowspan = 6, columnspan = 2)
-##        self.input_scroll.grid_remove()
-##        self.input_index = 0
         
-        self.open_file_button = Button(self.tab_zero, text = "Pick Choose File", command = lambda: self.open_file())
-        self.open_file_button.grid(row = 7, column = 5, columnspan = 2)
+        Label(self.tab_zero, text = 'Neutral').grid(row = 6, column = 5)        
+        self.neutral_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["Neutral", "No Neutral"], state = "readonly")
+        self.neutral_cbox.current(1)
+        self.neutral_cbox.grid(row = 7, column = 5)
 
-        self.file_scroll = tkst.ScrolledText(master = self.tab_zero, width = 28, height = 10)
-        self.file_scroll.grid(row = 8, column = 5, rowspan = 6, columnspan = 2)
-        self.file_scroll.grid_remove()
-        self.file_index = 0
 
-        self.open_dir_button = Button(self.tab_zero, text = "Pick Choose Directory", command = lambda: self.open_dir())
-        self.open_dir_button.grid(row = 7, column = 5, columnspan = 2)
+        Label(self.tab_zero, text = 'Phases').grid(row = 8, column = 5)
+        self.phase_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["A", "B", "C", "AB", "BC", "AC", "ABC"], state = "readonly")
+        self.phase_cbox.current(0)
+        self.phase_cbox.grid(row = 9, column = 5)
+
+
+        Label(self.tab_zero, text = 'Override CT').grid(row = 10, column = 5)
+        self.CT_Ov_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["False", "True"], state = "readonly")
+        self.CT_Ov_cbox.current(0)
+        self.CT_Ov_cbox.grid(row = 11, column = 5)
         
-        self.open_dir_entry = Entry(self.tab_zero, width = 40)
-        self.open_dir_entry.grid(row = 8, column = 5, columnspan = 2)
-        open_file_path = os.getcwd()
-        self.open_dir_entry.insert(0,open_file_path)
-        
+        Label(self.tab_zero, text = 'Aux Options').grid(row = 12, column = 5)
+        self.aux_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["24", "40"], state = "readonly")
+        self.aux_cbox.current(0)
+        self.aux_cbox.grid(row = 13, column = 5)
+
+        self.aux_button = Button(self.tab_zero, text = "Change Aux", bg = 'cyan', width = 10, height = 2, command = lambda: self.change_aux(repos, omicron))
+        self.aux_button.grid(column = 5, row = 14, columnspan = 2)
+
+        Label(self.tab_zero, text = 'Box CT').grid(row = 15, column = 5)
+        self.boxct_cbox = ttk.Combobox(self.tab_zero, width = 10, values = ["25", "50"], state = "readonly")
+        self.boxct_cbox.current(0)
+        self.boxct_cbox.grid(row = 16, column = 5)
+
+        '''
+        OTHER
+        '''
 
         self.reset_therm = Button(self.tab_zero, text = "Reset Thermal", command = lambda: self.reset_therm(repos))
         self.reset_therm.grid(column = 8, row = 0)   
-        #self.custom_button = Button(self.tab_zero, text = "Custom", command = lambda: self.custom_test(repos, usb))
-        #self.custom_button.grid(column = 8, row = 6)
+
         
         self.save_properties = Button(self.tab_zero, text = "Get Prop", command = lambda: self.get_prop())
         self.save_properties.grid(column = 9, row = 0)                
@@ -384,12 +407,17 @@ class General_Test_UI(object):
         #self.cal_sec_button.grid(column = 9, row = 10)
         #self.check_button = Button(self.tab_zero, text = "Check Inputs", command = lambda: self.check_setup(repos, usb, omicron))
         #self.check_button.grid(column = 9, row = 12)
-        self.test_button = Button(self.tab_zero, text = "Run Test", bg = 'cyan', width = 14, height = 2, command = lambda: self.start_setup(repos, usb))
-        self.test_button.grid(column = 8, row = 8)
 
-        self.test_button = Button(self.tab_zero, text = "Run Custom", bg = 'cyan', width = 14, height = 2, command = lambda: self.run_custom(repos, usb))
-        self.test_button.grid(column = 8, row = 10)
 
+        self.custom_button = Button(self.tab_zero, text = "Run Custom", bg = 'cyan', width = 14, height = 2, command = lambda: self.run_custom(repos, usb))
+        self.custom_button.grid(column = 9, row = 10)
+
+        self.custom_two_button = Button(self.tab_zero, text = "Run Custom 2", bg = 'cyan', width = 14, height = 2, command = lambda: self.run_custom_two(repos, usb))
+        self.custom_two_button.grid(column = 9, row = 12)
+
+        self.custom_two_button = Button(self.tab_zero, text = "Run Custom 3", bg = 'cyan', width = 14, height = 2, command = lambda: self.run_custom_three(repos, usb))
+        self.custom_two_button.grid(column = 9, row = 14)
+        
         self.get_prop()
 
 
@@ -701,7 +729,7 @@ class General_Test_UI(object):
         self.sec_one_twenty_seven_entry     = Entry(self.tab_one, width = 20)
         self.sec_one_twenty_eight_entry     = Entry(self.tab_one, width = 20)
         self.sec_one_twenty_nine_entry      = Entry(self.tab_one, width = 20)
-        self.sec_one_thirty_entry      = Entry(self.tab_one, width = 20)
+        self.sec_one_thirty_entry           = Entry(self.tab_one, width = 20)
         self.sec_one_thirty_one_entry       = Entry(self.tab_one, width = 20)
         self.sec_one_thirty_two_entry       = Entry(self.tab_one, width = 20)
         self.sec_one_thirty_three_entry     = Entry(self.tab_one, width = 20)
@@ -1707,7 +1735,13 @@ class General_Test_UI(object):
         '''
         Column 2
         '''
+
+        Label(self.tab_six, text = 'Phase Angles').grid(row = 1, column = 1)
+        self.usb_entry = ttk.Entry(self.tab_six, width = 20)
+        self.usb_entry.grid(row = 2, column = 1)
         
+        self.write_config_button = Button(self.tab_six, text = "Write USB", command = lambda: self.write_custom_usb(repos, usb))
+        self.write_config_button.grid(row = 3, column = 1)
 ##        Label(self.tab_six, text = 'Phase Angles').grid(row = 1, column = 2)
 ##
 ##        Label(self.tab_six, text = 'Ia').grid(row = 2, column = 2)
@@ -1768,10 +1802,8 @@ class General_Test_UI(object):
     '''
 
     def check_for_new_ports(self, usb):
-        print(self.open_ports)
         self.USB_Menu['menu'].delete(0,'end')
         self.open_ports = usb.get_open_ports()
-        print(self.open_ports)
         self.USB_cbox.set(usb.portname)
         self.USB_Menu.set_menu(*self.open_ports)
 
@@ -1783,118 +1815,58 @@ class General_Test_UI(object):
             self.testing_thread = threading.Thread(target = self.start, daemon = True, kwargs={'repos':repos, 'usb':usb})
             self.q.put(self.testing_thread)
             self.testing_thread.start()
-            
-    def start(self, repos, usb):
+
+    def omicron_ready_check(self, repos, omicron):
 
         ready = True
-        bs = self.get_bs()
         
+        omi_config = self.get_omi_config()
+        my_config = self.omi_config_cbox.get()
+        llo = self.omi_llo_cbox.get()
+        repos.cmc_in_use = True
+
         try:
-            rsp = usb.communicate("read_setpoint_one_request")
-            repos.translator.translate_setpoint_one(rsp)
+            msg = omicron.connect_omicron()           #  sets up Omicron Engine.app along with Omicron Amplifiers
+            repos.append_output_msg(msg)
+            self.write_results(repos)
             
+            aux_val = self.aux_cbox.get()
+            omicron.set_aux_level(aux_val)
+            omicron.aux_on()
+            
+            if omi_config == 'Output A and B':
+                print("ROUTING A AND B")
+                omicron.route_a_and_b()
+
+            if llo == '1-3':
+                omicron.route_llo(3)
+            elif llo == '4-6':
+                omicron.route_llo(4)
+
+        except:
+            ready = False 
+            msg = "Omicron can't Connect"
+            self.write_fail_status(repos, msg)
+
+        return ready
+
+    def brainstem_ready_check(self, repos, usb):
+
+        ready = True
+        
+        msg = "Connecting Brainstem"
+        repos.append_output_msg(msg)
+        try:
+            usb.connect_brain_stem()
+            msg = "Brainstem Connected"
+            repos.append_output_msg(msg)
+             
         except:
             ready = False
-            msg = "USB Connection Problem."
-            self.write_results(repos)
+            msg = "Brainstem can't Connect"
+            self.write_fail_status(repos, msg)
 
-        
-        omicron = GT_Omicron.Omicron()
-        use_omicron = self.get_omi_connect()
-
-
-        
-        if ready and use_omicron == True:
-            omi_config = self.get_omi_config()
-            my_config = self.omi_config_cbox.get()
-            llo = self.omi_llo_cbox.get()
-            repos.cmc_in_use = True
-
-            try:
-                msg = omicron.connect_omicron()           #  sets up Omicron Engine.app along with Omicron Amplifiers
-                repos.append_output_msg(msg)
-                self.write_results(repos)
-                omicron.aux_on()
-                
-                if omi_config == 'Output A and B':
-                    print("ROUTING A AND B")
-                    omicron.route_a_and_b()
-
-                print("THE LLO IS")
-                print(llo)
-                if llo == '1-3':
-                    omicron.route_llo(3)
-                elif llo == '4-6':
-                    omicron.route_llo(4)
-                    
-            except:
-                ready = False
-                
-                msg = "Omicron can't Connect"
-                repos.append_output_msg(msg)
-    
-                msg = sys.exc_info()[0]
-                repos.append_output_msg(msg)
-                
-                self.write_results(repos)
-
-                
-        elif use_omicron == False:
-            repos.cmc_in_use = False
-
-
-        if ready and bs == 'Brainstem':
-            msg = "Connecting Brainstem"
-            repos.append_output_msg(msg)
-            try:
-                usb.connect_brain_stem()
-                msg = "Brainstem Connected"
-                repos.append_output_msg(msg)
-                 
-            except:
-                ready = False
-                msg = "Brainstem can't Connect"
-                repos.append_output_msg(msg)
-                
-                msg = sys.exc_info()[0]
-                repos.append_output_msg(msg)
-                
-                self.write_results(repos)
-        elif ready and bs == 'No Brainstem':
-            pwr = self.get_power
-            if pwr == 'Cold Start Only' or pwr == 'Aux Only':
-                ready = Flase
-                msg = "Brainstem is needed for Cold Start or Aux Only power tests"
-                self.write_results(msg)
-
-        
-        if ready:
-
-            save_dir = self.save_dir_entry.get()
-            test_group = self.create_test_group()
-            GT_Main.run_from_ui(self, repos, save_dir, test_group, omicron, usb)
-            self.update_msgs(repos)
-            
-        else:
-            self.test_running = False
-            
-
-    def check_setup(self, repos, usb, omicron):
-        
-        self.check_thread = threading.Thread(target = self.check_inputs, daemon = True, kwargs={'repos':repos, 'usb':usb, 'omicron':omicron})
-        self.q.put(self.check_thread)
-        self.check_thread.start()
-            
-    def check_inputs(self, repos, usb, omicron):
-
-        ready = True
-        
-        if ready:
-
-            save_dir = self.save_dir_entry.get()
-            test_group = self.create_test_group()
-            GT_Main.run_check_inputs(self, repos, test_group, usb, omicron)
-
+        return ready 
 
 
     def check_queue(self):
@@ -1903,73 +1875,341 @@ class General_Test_UI(object):
             task = self.q.get(0)
         except Empty:
             self.my_tk.after(100, self.check_queue(repos))
-     
-    def run_custom(self, repos, usb):
+
+
+    def write_fail_status(self, repos, msg):
+        repos.append_output_msg(msg)
+        msg = sys.exc_info()[0]
+        repos.append_output_msg(msg)    
+        self.write_results(repos)
+    
+    def start(self, repos, usb):
 
         ready = True
+        bs = self.get_bs()
         omicron = GT_Omicron.Omicron()
         use_omicron = self.get_omi_connect()
-        
+
+        #Checks to see if the unit is communicating by read setpoint 1
+        try:
+            print("Skipping for now")
+            #rsp = usb.communicate("read_setpoint_one_request")
+            #repos.translator.translate_generic_no_write(rsp)        
+        except Exception as e:
+            print(e)
+            ready = False
+            print("USB FAIL")
+            msg = "USB Connection Problem."
+            self.write_results(repos)
+
+        #Checks to see if Omicron is communicating and can be setup
         if ready and use_omicron == True:
-            omi_config = self.get_omi_config()
-            my_config = self.omi_config_cbox.get()
-            llo = self.omi_llo_cbox.get()
-            repos.cmc_in_use = True
+            ready = self.omicron_ready_check(repos, omicron)
+        elif use_omicron == False:
+            repos.cmc_in_use = False
 
-            try:
-                msg = omicron.connect_omicron()           #  sets up Omicron Engine.app along with Omicron Amplifiers
-                print(msg)
-                omicron.aux_on()
-                
-                if omi_config == 'Output A and B':
-                    print("ROUTING A AND B")
-                    omicron.route_a_and_b()
-
-                print("THE LLO IS")
-                print(llo)
-                if llo == '1-3':
-                    omicron.route_llo(3)
-                elif llo == '4-6':
-                    omicron.route_llo(4)
-                    
-            except:
-                ready = False
-                
-                msg = "Omicron can't Connect"
-                print(msg)
-    
-                msg = sys.exc_info()[0]
-                print(msg)
-                
-                self.write_results(repos)
-
-        bs = self.get_bs()     
+        #Checks to see if the Acronym(Brainstem) is communicating 
         if ready and bs == 'Brainstem':
-            msg = "Connecting Brainstem"
-            print(msg)
-            try:
-                usb.connect_brain_stem()
-                msg = "Brainstem Connected"
-                print(msg)
-                 
-            except:
-                ready = False
-                msg = "Brainstem can't Connect"
-                print(msg)
-                
-                msg = sys.exc_info()[0]
-                print(msg)
-                
-                self.write_results(repos)
-                
+             ready = self.brainstem_ready_check(repos, usb)
         elif ready and bs == 'No Brainstem':
             pwr = self.get_power
             if pwr == 'Cold Start Only' or pwr == 'Aux Only':
-                ready = Flase
-                print(msg)
-                
-        GT_Custom.custom_run(self, repos, omicron, usb)
+                ready = False
+                msg = "Brainstem is needed for Cold Start or Aux Only power tests"
+                self.write_results(msg)
 
+        #If everything is ready to turn, it moves to the main. 
+        if ready:
+            save_dir = self.save_dir_entry.get()
+            test_group = self.create_test_group()
+            GT_Main.run_from_ui(self, repos, save_dir, test_group, omicron, usb)
+            self.update_msgs(repos)
+
+        else:
+            print("Aborting Test")
+            self.test_running = False
+            
+
+##    Check function that is currently not in use. Readd when time allows. 
+##    def check_setup(self, repos, usb, omicron):
+##        
+##        self.check_thread = threading.Thread(target = self.check_inputs, daemon = True, kwargs={'repos':repos, 'usb':usb, 'omicron':omicron})
+##        self.q.put(self.check_thread)
+##        self.check_thread.start()
+##
+##            
+##    def check_inputs(self, repos, usb, omicron):
+##
+##        save_dir = self.save_dir_entry.get()
+##        test_group = self.create_test_group()
+##        GT_Main.run_check_inputs(self, repos, test_group, usb, omicron)
+
+
+
+    def run_custom(self, repos, usb):
+
+        '''
+        rsp = usb.communicate("read_flags_request")
+        print("read flags request")
+        print(rsp)
+
+
+        cor = "busy"
+        while cor == "busy":
+                rsp = usb.communicate("read_mcu1_fram_check")
+                cor = usb.get_correctness(rsp)
+                
+        rsp = usb.communicate("read_flags_check")
+        print("read_flags check")
+        print(rsp)
+        '''
+        
+
+        file_path = self.sav_start_dir
+        file_loc = file_path + '/' + "Original FRAM" + ".txt"
+        
+        my_file = open(file_loc, 'w')
+        original_FRAM_vals = []
+
+        address = 0; 
+
+        #Setups up Acronym
+        ready = self.brainstem_ready_check(repos, usb)
+        
+        #Enter Into Manufactory Mode
+        usb.communicate("enter_into_manufactory_mode_request")                   
+        usb.communicate("enter_into_manufactory_mode_check")                   
+        while address < 9000:
+
+            cor = "busy"
+            lower_address_byte = address%256
+            uppder_address_byte = math.floor(address/256)
+
+            print(str(address)) 
+            #Sends the request to read the FRAM address
+            rsp = usb.communicate("read_mcu1_fram_request",0, lower_address_byte, uppder_address_byte, 0)
+
+            #Gets the FRAM read (repeats if a busy correctnes bite)
+            fail_count = 0
+            while cor == "busy":
+                rsp = usb.communicate("read_mcu1_fram_check")
+                cor = usb.get_correctness(rsp)
+                time.sleep(.2)
+
+
+                if fail_count > 5:
+
+                    #Power Cycle
+                    usb.turn_off_port()
+                    time.sleep(5)
+                    usb.turn_on_port()
+                    time.sleep(5)
+
+                    rsp = usb.communicate("read_mcu1_fram_request",0, lower_address_byte, uppder_address_byte, 0)
+                    fail_count = 0
+                    break
+                fail_count = fail_count+1
+                
+            #Appends the message to an array that will be compared to new FRAM reads later
+            original_FRAM_vals.append(rsp)
+
+            #Writes original message into a tex file 
+            for val in rsp:
+                my_file.write(str(val))
+                
+            my_file.write("\n")
+
+            #Increments address by 100
+            address = address + 100
+
+        ##Adding Loop
+
+        
+        file_num = 0
+        no_difference = True
+
+        '''
+        while(True):
+
+
+            #Create_File_To Save_Results
+            file_loc = file_path + '/' + "FRAM Compare Run " + str(file_num) + ".txt"
+            my_file = open(file_loc, 'w')
+
+            #Reset Min/Max Current USB Command
+            print("reseting Current")
+            rsp = usb.communicate("reset_max_min_current_request")
+            print(rsp)
+            time.sleep(5)
+
+
+
+            #Power Cycle
+            usb.turn_off_port()
+            time.sleep(5)
+            usb.turn_on_port()
+            time.sleep(5)
+
+
+            #FRAM neeeds Manufactory Mode to be read
+            usb.communicate("enter_into_manufactory_mode_request")                   
+            usb.communicate("enter_into_manufactory_mode_check")
+
+            time.sleep(1)
+            address = 0
+            run_num = 0
+
+            #Read Fram
+            while address < 9000:
+
+                cor = "busy"
+                lower_address_byte = address%256
+                uppder_address_byte = math.floor(address/256)
+
+                print("reading at address " + str(address))
+                rsp = usb.communicate("read_mcu1_fram_request",0, lower_address_byte, uppder_address_byte, 0)
+                fail_count = 0
+                while cor == "busy":
+                    rsp = usb.communicate("read_mcu1_fram_check")
+                    cor = usb.get_correctness(rsp)
+                    time.sleep(.2)
+
+                    if fail_count > 5:
+
+                        #Power Cycle
+                        usb.turn_off_port()
+                        time.sleep(5)
+                        usb.turn_on_port()
+                        time.sleep(5)
+                        break
+                    
+                    fail_count = fail_count+1
+                    
+                    
+                #Check For Change
+                if(original_FRAM_vals[run_num] != rsp):
+                    print("difference found at read number" + str(run_num))
+                    my_file.write("difference found")
+                    my_file.write("\n")    
+                    no_difference = False
+
+
+                my_file.write(str(rsp))
+                my_file.write("\n")    
+                my_file.write(str(original_FRAM_vals[run_num]))
+                my_file.write("\n")
+                
+                address = address + 100
+                run_num = run_num + 1
+
+
+            my_file.close()
+            if(no_difference == False):
+                os.rename(file_loc, file_path + '/' + "FRAM Compare Run DIFFERENCE FOUND" + str(file_num) + ".txt")
+
+            no_difference = True
+            file_num = file_num + 1
+    '''
+            
+
+    def run_custom_two(self, repos, usb):
+
+        ready = True
+        omicron = GT_Omicron.Omicron()
+        omicron.connect_omicron()
+
+        #Checks to see if Omicron is communicating and can be setup
+        if ready:
+            ready = self.omicron_ready_check(repos, omicron)
+
+        #Create_File_To Save_Results
+        file_path = self.sav_start_dir
+        file_num = 0
+        file_loc = file_path + '/' + "Power Cycle_" + str(file_num) + ".txt"
+        my_file = open(file_loc, 'w')
+        omicron.write_omicron_current(2, 0, 60, 1)
+        omicron.write_omicron_current(2, 120, 60, 2)
+        omicron.write_omicron_current(2, 240, 60, 3)   
+
+
+        run = 1
+        if ready:
+            while True:
+                wait_time = random.randint(1,60)
+
+                if run%100 == 0:
+                    my_file.close()
+                    file_loc = file_path + '/' + "Power Cycle_" + str(file_num) + ".txt"
+                    my_file = open(file_loc, 'w')
+                    file_num = file_num + 1
+                    
+                rsp = "Run Number " + str(run)
+                my_file.write(rsp)
+                my_file.write("\n")
+                rsp = "Wait Time " + str(wait_time)
+                my_file.write(rsp)
+                my_file.write("\n")
+                my_file.write("\n")
+
+                
+                omicron.omicron_on()
+                omicron.write_bin_out_on(1)
+                time.sleep(wait_time)
+
+                omicron.omicron_off()
+                omicron.write_bin_out_off(1)
+                time.sleep(wait_time)
+
+                run = run + 1
+
+
+
+    def run_custom_three(self, repos, usb):
+
+        ready = True
+        omicron = GT_Omicron.Omicron()
+        omicron.connect_omicron()
+
+        #Checks to see if Omicron is communicating and can be setup
+        if ready:
+            ready = self.omicron_ready_check(repos, omicron)
+            omicron.route_b()
+
+        #Create_File_To Save_Results
+        #file_path = self.sav_start_dir
+        #file_num = 0
+        #file_loc = file_path + '/' + "Power Cycle_" + str(file_num) + ".txt"
+        #my_file = open(file_loc, 'w')
+
+
+        omicron.write_omicron_current(6, 0, 60, 1)
+        omicron.write_omicron_current(6, 120, 60, 2)
+        omicron.write_omicron_current(6, 240, 60, 3)
+        omicron.write_omicron_current_two(0, 0, 60, 1)
+        omicron.write_omicron_current_two(0, 0, 60, 2)
+        count = 0
+
+        while count < 20:
+            
+            omicron.omicron_on()
+            time.sleep(.6)
+            
+            omicron.write_omicron_current_two(6, 0, 60, 1)
+            omicron.omicron_on()
+            time.sleep(.6)
+            
+            omicron.write_omicron_current_two(5, 0, 60, 2)
+            omicron.omicron_on()
+            time.sleep(15)
+            
+            omicron.omicron_off()
+            omicron.write_omicron_current_two(0, 0, 60, 1)
+            omicron.write_omicron_current_two(0, 0, 60, 2)
+            count = count + 1
+            time.sleep(15)
+        
+
+        
 
     '''
     ============================================================================================================================================================================
@@ -2018,6 +2258,13 @@ class General_Test_UI(object):
         rsp = usb.communicate("exit_out_of_manufactory_mode_check")
 
 
+    def pass_selection(self, repos, pass_len, usb):
+
+        print(pass_len)
+        repos.pass_len = int(pass_len)
+        usb.change_password_len(int(pass_len))
+        
+        
     '''
     ============================================================================================================================================================================
     Button Methods (Tab 0)
@@ -2068,7 +2315,7 @@ class General_Test_UI(object):
                         test_group.append(file_path + '/' + str(os.path.join(name)))
             else:
                 temp_group = self.file_scroll.get('1.0', 'end-1c')
-                file_group = temp_group.split(',')
+                file_group = temp_group.split(',\n')
                 for file in file_group:
                     if len(file) > 5:
                         #Makes sure that the filename is valid.
@@ -2150,16 +2397,22 @@ class General_Test_UI(object):
         if choice == "Folder":
 
             self.file_scroll.grid_remove()
-            self.open_dir_entry.grid(row = 8, column = 5, columnspan = 2)
+            self.open_dir_entry.grid(row = 8, column = 0, columnspan = 2)
             self.open_file_button.grid_remove()
-            self.open_dir_button.grid(row = 7, column = 5, columnspan = 2)
+            self.open_dir_button.grid(row = 7, column = 0, columnspan = 2)
+ 
+            self.test_button.grid(column = 0, row = 10, columnspan = 2)
+            self.save_unpause_button.grid(row = 12, column = 0, columnspan = 2)
             
         else:
 
-            self.file_scroll.grid(row = 8, column = 5, rowspan = 6, columnspan = 2)
+            self.file_scroll.grid(row = 8, column = 0, rowspan = 6, columnspan = 2)
             self.open_dir_button.grid_remove()
-            self.open_file_button.grid(row = 7, column = 5, columnspan = 2)
+            self.open_file_button.grid(row = 7, column = 0, columnspan = 2)
             self.open_dir_entry.grid_remove()
+
+            self.test_button.grid(column = 0, row = 16, columnspan = 2)
+            self.save_unpause_button.grid(row = 18, column = 0, columnspan = 2)
 
     def open_dir(self):
 
@@ -2172,18 +2425,23 @@ class General_Test_UI(object):
     def open_file(self):
 
         start_path = os.getcwd()
-        open_file = filedialog.askopenfilename(parent=self.my_tk, initialdir= self.open_start_dir, title='Please select a file')
-        if len(open_file) > 5:
-            self.file_scroll.insert(END, open_file)
-            self.file_scroll.insert(END, ",")
-            self.file_scroll.see("end")
+        open_files = filedialog.askopenfilenames(parent=self.my_tk, initialdir= self.open_start_dir, title='Please select a file')
 
-            self.open_start_dir = ""
-            file_parts = open_file.split('/')
-            k = len(file_parts)
-            for j in range(0, k-1): 
-                self.open_start_dir = self.open_start_dir + file_parts[j]
-        
+        for open_file in open_files:
+
+            if len(open_file) > 5:
+                self.file_scroll.insert(END, open_file)
+                self.file_scroll.insert(END, ',\n')
+                self.file_scroll.see("end")
+
+
+                #Used to remember the directory of the last file that was used. 
+                self.open_start_dir = ""
+                file_parts = open_file.split('/')
+                k = len(file_parts)
+                for j in range(0, k-1): 
+                    self.open_start_dir = self.open_start_dir + file_parts[j]
+            
 
       
 
@@ -2295,6 +2553,13 @@ class General_Test_UI(object):
         self.test_running = True
         print("RUN")
 
+    def change_aux(self, repos, omicron):
+
+        ready = self.omicron_ready_check(repos, omicron)
+        aux_val = self.aux_cbox.get()
+        omicron.set_aux_level(aux_val)
+        omicron.unlock_omicron()
+
     '''
     ============================================================================================================================================================================
     Updating Outputs
@@ -2380,6 +2645,7 @@ class General_Test_UI(object):
         col = grid_array[1]   
         
         j = 0
+
 
         tab_sel = self.tab_screen.index(self.tab_screen.select())
 
@@ -2530,28 +2796,6 @@ class General_Test_UI(object):
             msg = keys[i] + "  " + str(data)
             print(msg)
             repos.etu_dictionary[keys[i]][0] = float(data)
-
-##        if choice == "Setpoint 0":
-##            usb_com = "write_setpoint_zero_request"
-##            
-##        elif choice == "Setpoint 1":
-##            GT_Conversions.convert_standard_to_etu(repos)
-##            usb_com = "write_setpoint_one_request"
-##            
-##        elif choice == "Setpoint 2":
-##            usb_com = "write_setpoint_two_request"
-##
-##        elif choice == "Setpoint 3":
-##            usb_com = "write_setpoint_three_request"
-##
-##        elif choice == "Setpoint 4":
-##            usb_com = "write_setpoint_four_request"
-##            
-##        elif choice == "Setpoint 5":
-##            usb_com = "write_setpoint_five_request"
-##
-##        elif choice == "Setpoint 6":
-##            usb_com = "write_setpoint_six_request"
             
         GT_Conversions.convert_standard_to_etu(repos)
         
@@ -2561,14 +2805,25 @@ class General_Test_UI(object):
         p3 = repos.password[3]
         p4 = repos.password[4]
         p5 = repos.password[5]
-        if repos.family == "35":
-            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
-        else:
-            rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+
+        
+        if repos.frame == 0 or repos.frame == 1:
+            rsp = usb.communicate("write_setpoint_zero_request", repos.sp_zero_keys,  repos.etu_dictionary)
+            rsp = usb.communicate("write_setpoint_one_request",  repos.sp_one_keys, repos.etu_dictionary)
+            rsp = usb.communicate("write_setpoint_two_request", repos.sp_two_keys,  repos.etu_dictionary)
+            rsp = usb.communicate("write_setpoint_three_request", repos.sp_three_keys,  repos.etu_dictionary)
+            
+        else: 
+            if repos.pass_len == 6:
+                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3,p4,p5)
                 
-        cor = usb.get_correctness(rsp)
-        rsp = usb.communicate(usb_com, keys,  repos.etu_dictionary)
-        cor = usb.get_correctness(rsp)
+            else:
+                rsp = usb.communicate("enter_password_request",p0,p1,p2,p3)
+
+                
+            cor = usb.get_correctness(rsp)
+            rsp = usb.communicate(usb_com, keys,  repos.etu_dictionary)
+            cor = usb.get_correctness(rsp)
                              
     def change_zero_check(self, repos, usb):
 
@@ -2875,6 +3130,7 @@ class General_Test_UI(object):
 
 
         frame = repos.translator.translate("translate_breaker_rating", rsp)
+        
         self.rating_entry.delete(0, END)
         self.rating_entry.insert(0, frame)
   
@@ -3045,7 +3301,46 @@ class General_Test_UI(object):
             
     def write_health(self, repos, usb):
         print("HI")
-    
+
+    '''
+    ============================================================================================================================================================================
+    USB Write Tab Methods (Tab 6)
+    ============================================================================================================================================================================
+    '''
+
+    def write_custom_usb(self, repos, usb):
+        
+        usb_entry = self.usb_entry.get()
+        print(usb_entry)
+
+        my_msg = '80 00 02 08 82 08 fd'
+        tx = my_msg
+        tx = bytes.fromhex(my_msg)
+        tag = "Read Breaker Frame Response"
+        rsp = usb.communicate_manual(tx, tag)
+        id_choice = repos.translator.translate_event_id(rsp)
+
+        #id_choice = 104
+        package_index = [[64, id_choice, 0],
+                        [64, id_choice, 1],
+                        [64, id_choice, 2],
+                        [64, id_choice, 3],
+                        [64, id_choice, 4],
+                        [64, id_choice, 5],
+                        [64, id_choice, 6],
+                        [64, id_choice, 7]]
+              
+
+        for entry in package_index:
+            rsp = usb.communicate("read_waveform_sample_request", entry[0], entry[1], entry[2])
+            #rsp = usb.read_specific()
+
+            array_one = repos.translator.translate_waveform(rsp)
+            print(array_one)
+            
+        
+
+        #repos.append_usb_msg(str(tx), tag, str(rsp))
         
     '''
     ============================================================================================================================================================================
@@ -3136,18 +3431,108 @@ class General_Test_UI(object):
     def get_bs(self):
         my_bs = self.bs_cbox.get()
         return my_bs
+
+    def get_CT_Ov(self):
+        my_CT = self.CT_Ov_cbox.get()
+        if my_CT == "True":
+            return True
+        else:
+            return False
+
+    def get_boxct(self):
+        box_ct = self.boxct_cbox.get()
+        return int(box_ct)
     '''
     ============================================================================================================================================================================
-    USB Check 
+    USB Connection. Figures out unit family and frame on connection
     ============================================================================================================================================================================
+
+    check_if_MCCB(self, repos, usb) Checks to see if the connected unit is MCCB (PD2,3,4,5 or 6) by writing a MCCB USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(PD2, 3, 4, 5 or 6)
+        Outputs
+            True/False(Boolean) - If True, USB message was a success, False USB message failed.
+
+   check_if_ACB_20_25(self, repos, usb) Checks to see if the connected unit is ACB 20/25 unit by sending an 20/25 USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+        Outputs
+            True/False(Boolean) - If True, USB message was a success, False USB message failed.
+
+   check_if_ACB_35(self, repos, usb) Checks to see if the connected unit is ACB 35 unit by sending an 35 USB command and looking for a valid response
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+        Outputs
+            N/A
+
+    ACB_20_25_reads(self, repos, usb) Reads ACB info, mainly to find if it is a PXR20/25
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.frame - holds the frame information(Narrow/Standard/Double Narrow/Double Standard)
+            repos.pxr - determines if the unit is a PXR25, PXR20 or PXR10
+            repos.setting_file = holds the setting for it the unit is a 2.0 or a 3.0 firmware
+        Outputs
+            N/A
+
+    MCCB_reads(self, repos, usb) Reads ACB info, mainly to find if it is a PXR20/25
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            repos.pxr - determines if the unit is a PXR25, PXR20 or PXR10
+        Outputs
+            N/A
+            
+    ACB_35_reads(self, repos, usb) Reads ACCB 35 digitization.
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages 
+        Changes
+            N/A
+        Outputs
+            N/A
+
+    def setup_UI_buff_and_setpoints(self, repos):
+        Inputs
+            repos(object) - hold trip unit information
+        Changes
+            self.ui_buffer_keys(Array) = Array used by the combobox (zero_cbox) for the valid Real Time Data Buffer Groups that can be read
+            self.ui_setpoint_keys(Array) = Array used by the combobox (s_zero_cbox) for the valid Setpoint Groups that can be read
+        Outputs
+            N/A
+            
+    get_unit_info(self, repos, usb) Sends USB Info to figure out what type of unit this is (MCCB/ACB) other info (Frame/PXR Type)
+        Inputs
+            repos(object) - hold trip unit information
+            usb(object) - sends and recieves usb messages
+        Uses
+            ACB_35_reads
+            ACB_20_25_reads
+            MCCB_reads
+            check_if_ACB_35
+            check_if_ACB_20_25
+            check_if_MCCB
+        Changes
+            N/A
+        Outputs
+            N/A
+
+
     '''
 
-    def get_unit_info(self, repos, usb):
 
-        remove_var = 0
-        connected = True
-
-                
+    def check_if_MCCB(self, repos, usb):
 
         try:
             tx = '80 00 07 d1 87 d1 fd'
@@ -3155,120 +3540,185 @@ class General_Test_UI(object):
 
             tag = "Read Breaker Frame Request"
             rsp = usb.communicate_manual(tx, tag)
-            print(tag)
-            print(rsp)
+
             repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
-            print("Frame is")
-            print(repos.frame)
+
         except:
-            print("ACB?")
-            msg = "MCCB Message Failed, Trying ACB"
-            repos.append_output_msg(msg)
-            
-            try:
-                tx = '80 04 04 1c 84 20 fd'
-                tx = bytes.fromhex(tx)
-                tag = "Read Breaker Frame Request"
-                rsp = usb.communicate_manual(tx, tag)
+            return False
 
-                tx = '80 00 04 1c 84 1c fd'
-                tx = bytes.fromhex(tx)
-                tag = "Read Breaker Frame Response"
-                rsp = usb.communicate_manual(tx, tag)
-                
-                repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
-                print("ACB FRAME IS")
-                print(repos.frame)
-                if repos.frame>20:
-                    repos.frame = 3
-                    remove_var = 35
+        return True
 
-                repos.frame = 3
-                remove_var = 35      
-            except:
-                msg = "ACB Message Failed."
-                repos.append_output_msg(msg)
-                #connected = False
-                print("35?")
-                msg = "PXR35?????"
-                repos.frame = 3
-                remove_var = 35
+    def check_if_Navy(self, repos, usb):
 
-        if connected:
-            if repos.frame > 20:
-                print("Family is MCCB?")
-                repos.setup("MCCB")
-                usb.set_command_list("MCCB")
-            elif remove_var == 35:
-                print("Family is 35?")
-                repos.setup("35")
-                usb.set_command_list("35")
+        try:
+            tx = '80 00 07 d1 87 d1 fd'
+            tx = bytes.fromhex(tx)
+
+            tag = "Read Breaker Frame Request"
+            rsp = usb.communicate_manual(tx, tag)
+
+            repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
+            if repos.frame == 51 or repos.frame == 52:
+                return True
             else:
-                print("Family is ACB?")
-                repos.setup("ACB")
-                usb.set_command_list("ACB")
+                return False
+
+        except:
+            return False
+
+        return True
+    def check_if_ACB_20_25(self, repos, usb):
+
+        try:
+            tx = '80 04 04 1c 84 20 fd'
+            tx = bytes.fromhex(tx)
+            tag = "Read Breaker Frame Request"
+            rsp = usb.communicate_manual(tx, tag)
+
+            tx = '80 00 04 1c 84 1c fd'
+            tx = bytes.fromhex(tx)
+            tag = "Read Breaker Frame Response"
+            rsp = usb.communicate_manual(tx, tag)
             
+            repos.frame = GT_Conversions.uint_sixteen_to_dec(rsp, 24)
+            print("ACB FRAME IS")
+            print(repos.frame)
 
-            if repos.family == "ACB":
-                rsp = usb.communicate("read_trip_unit_style_request")
-                rsp = usb.communicate("read_trip_unit_style_check")
-                style_array = repos.translator.translate("translate_style", rsp)
+            
+        
+        except:
+            return False
 
-                if style_array[0] == 25:
-                    repos.pxr = "PXR25"
-                else:
-                    repos.pxr = "PXR20"
+        return True
 
-                rsp = usb.communicate("read_firmware_version_request")
-                firmware_array = repos.translator.translate(rsp, repos.firmware_keys, repos.etu_dictionary)
-                if repos.etu_dictionary['MCU1 Version'][0] == 2:
-                    repos.setting_file.version_two_keys(repos)
-                    
-                    
-            elif repos.family == "MCCB":
-                rsp = usb.communicate("read_etu_style_request")
-                print(rsp)
-                style_array = repos.translator.translate("translate_style", rsp)
+    
+    def check_if_ACB_35(self, repos, usb):
 
-                style_one_array = style_array[0]
-                style_two_array = style_array[1]
-                print(style_two_array)
+        try:
+            tx = '80 0 0 38 80 38 fd' #Read Group 6. PXR35 can do it. ACB20/25 and MCCB cant. 
+            msg = "ACB Message Failed."
+            repos.append_output_msg(msg)
+            msg = "PXR35"
+
+            rsp = usb.communicate("read_digitalization_features_request")
+            rsp = usb.communicate("read_digitalization_features_check")
+            gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
+            repos.frame = 3 #Assumes Standard. Needs fixed. 
+        
+        except:
+            return False        
+
+        return True
+
+    def ACB_20_25_reads(self, repos, usb):
+
+        rsp = usb.communicate("read_trip_unit_style_request")
+        rsp = usb.communicate("read_trip_unit_style_check")
+        style_array = repos.translator.translate("translate_style", rsp)
+
+        if style_array[0] == 25:
+            repos.pxr = "PXR25"
+        else:
+            repos.pxr = "PXR20"
+
+        rsp = usb.communicate("read_firmware_version_request")
+        firmware_array = repos.translator.translate(rsp, repos.firmware_keys, repos.etu_dictionary)
+        if repos.etu_dictionary['MCU1 Version'][0] == 2: #Checks to see if this is a 2.0 Unit. 
+            repos.setting_file.version_two_keys(repos)
+
+    def MCCB_reads(self, repos, usb):
+
+        rsp = usb.communicate("read_etu_style_request")
+        print(rsp)
+        style_array = repos.translator.translate("translate_style", rsp)
+
+        style_one_array = style_array[0]
+        style_two_array = style_array[1]
+        print(style_two_array)
+        
+
+        if style_two_array[0] == 1: #Style 2 array 0 should be Modbus
+            repos.pxr = "PXR25"
+        else:
+            if style_two_array[4] == 0: #b4 is ZSI. PXR10 Shouldn't have it
+                repos.pxr = "PXR10"
+                repos.set_pxr10()
+            else:
+                repos.pxr = "PXR20"
+                repos.set_pxr20()
+
+        print(repos.pxr)
+
+
+    def ACB_35_reads(self, repos, usb):    
+
+        
+        rsp = usb.communicate("read_digitalization_features_request")
+        rsp = usb.communicate("read_digitalization_features_check")
+        gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
+
+
+
+    def setup_UI_buff_and_setpoints(self, repos):
+        self.ui_buffer_keys = []
+        self.ui_setpoint_keys = []
+        for val in repos.mapping_keys:
+            if "Buffer" in val:
+                self.ui_buffer_keys.append(val)
                 
+        for val in repos.mapping_keys:
+            if "Setpoint" in val:
+                self.ui_setpoint_keys.append(val)
+                
+        
+        self.zero_cbox['values'] = self.ui_buffer_keys
+        self.s_zero_cbox['values'] = self.ui_setpoint_keys
 
-                if style_two_array[0] == 1:
-                    repos.pxr = "PXR25"
-                else:
-                    if style_two_array[4] == 0: #b4 is ZSI. PXR10 Shouldn't have it
-                        repos.pxr = "PXR10"
-                        repos.set_pxr10()
-                    else:
-                        repos.pxr = "PXR20"
-                        repos.set_pxr20()
+        
+    def get_unit_info(self, repos, usb):
 
-                print(repos.pxr)
+        remove_var = 0
+        connected = True
 
-            elif repos.family == "35":
-                rsp = usb.communicate("read_digitalization_features_request")
-                rsp = usb.communicate("read_digitalization_features_check")
-                gf_en, gf_by = repos.translator.translate("read_digitization_bits", rsp)
-                print(gf_en)
-                print(gf_by)
+        is_mccb = self.check_if_MCCB(repos, usb)
+        is_navy = self.check_if_Navy(repos, usb)
+        is_20_or_25 = self.check_if_ACB_20_25(repos, usb)
+        is_35 = self.check_if_ACB_35(repos, usb)
+             
+        if is_mccb and is_navy != True:
+            print("Family is MCCB?")
+            repos.setup("MCCB")
+            usb.set_command_list("MCCB", repos.frame)
+            self.MCCB_reads(repos, usb)
+        elif is_navy:
+            print("Family is Navy")
+            repos.setup("Navy")
+            usb.set_command_list("MCCB", repos.frame) #Uses MCCB Commands. 
+            self.MCCB_reads(repos, usb)
+        elif is_35:
+            print("Family is 35?")
+            repos.setup("35")
+            usb.set_command_list("35", repos.frame)
+            self.ACB_35_reads(repos, usb)
+        elif is_20_or_25:
+            print("Family is ACB?")
+            repos.setup("ACB")
+            usb.set_command_list("ACB", repos.frame)
+            print(repos.frame)
+            if repos.frame == 0 or repos.frame == 1:
+                print("Family is NRX?")
+                usb.set_nrx()
+            self.ACB_20_25_reads(repos, usb)
 
-            repos.set_mapping_dictionary()
+        else:
+            print("NO CONNECTION")
+            connected = False
 
-            self.ui_buffer_keys = []
-            self.ui_setpoint_keys = []
-            for val in repos.mapping_keys:
-                if "Buffer" in val:
-                    self.ui_buffer_keys.append(val)
-                    
-            for val in repos.mapping_keys:
-                if "Setpoint" in val:
-                    self.ui_setpoint_keys.append(val)
-                    
-            
-            self.zero_cbox['values'] = self.ui_buffer_keys
-            self.s_zero_cbox['values'] = self.ui_setpoint_keys
+
+
+        repos.set_mapping_dictionary()
+
+        self.setup_UI_buff_and_setpoints(repos)
             
         return connected
 
@@ -3406,17 +3856,17 @@ class General_Test_UI(object):
             if open_choice == "Folder":
 
                 self.file_scroll.grid_remove()
-                self.open_dir_entry.grid(row = 8, column = 5, columnspan = 2)
+                self.open_dir_entry.grid(row = 8, column = 0, columnspan = 2)
                 self.open_file_button.grid_remove()
-                self.open_dir_button.grid(row = 7, column = 5, columnspan = 2)
+                self.open_dir_button.grid(row = 7, column = 0, columnspan = 2)
                 self.open_dir_entry.delete(0, END)
                 self.open_dir_entry.insert(0,open_dir)
                 
             else:
 
-                self.file_scroll.grid(row = 8, column = 5, rowspan = 6, columnspan = 2)
+                self.file_scroll.grid(row = 8, column = 0, rowspan = 6, columnspan = 2)
                 self.open_dir_button.grid_remove()
-                self.open_file_button.grid(row = 7, column = 5, columnspan = 2)
+                self.open_file_button.grid(row = 7, column = 0, columnspan = 2)
                 self.open_dir_entry.grid_remove()
                 self.file_scroll.delete('1.0', END)
                 self.file_scroll.insert(END, open_group)

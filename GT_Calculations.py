@@ -61,9 +61,12 @@ def metering_result(results, expected, UI):
 
 def calc_max_min_time(repos):
 
+    #If the unit has a user specified trip time, don't calcualte anyting. 
     if repos.expected['Max Time'] != 0:
         return repos.expected['Max Time'], repos.expected['Min Time'], False
-        
+
+    all_max_times = []
+    all_min_times = []
 
     no_trip_case = False
 
@@ -99,10 +102,13 @@ def calc_max_min_time(repos):
     neutral_level = setpoints['Neutral Ratio'][0]
 
     #High Current Settings
+    #ACB has override, the MCCB has withstand
     try:
         override  = setpoints['Override'] [0] * 1000
+        print("Override is " + str(override))
     except:
-        override  = setpoints['withstand'] [0]
+        override  = setpoints['Withstand'] [0]
+        print("Withstand is " + str(override))
     usb_mm_mode   = setpoints['MM Mode'][0]
     mm_level  = setpoints['MM Level'][0]
 
@@ -129,9 +135,9 @@ def calc_max_min_time(repos):
 
 
     if family == "35":
-        rp_action = setpoints['Reverse Forward Power Action'][0]
-        rp_pu = setpoints['Reverse Forward Power Pickup'][0] * -1000
-        rp_t = setpoints['Reverse Forward Power Time'][0]/100
+        rp_action = setpoints['Reverse Real Power Action'][0]
+        rp_pu = setpoints['Reverse Real Power Pickup'][0] * -1000
+        rp_t = setpoints['Reverse Real Power Time'][0]/100
         pr_sense = setpoints['Power Rev Sense'][0]
         sys_volt = setpoints['System Voltage'][0]
         rr_pu     = setpoints['Reverse Reactive Power Pickup'][0] * -1000
@@ -161,18 +167,23 @@ def calc_max_min_time(repos):
         gf_on = setpoints["GF Style Enable"]
         gf_bp = setpoints["1200 GF Bypas"] #1200 amp bypass
 
+
+        #Over Voltage, Under Voltage, Voltage Unalanced and Current Unbalanced setpoints are different from the 20/25
+        #Over Voltage nad Under Voltage pickup is in percentage
         ov_pu = (ov_pu/1000)*sys_volt
         ov_t = ov_t/100
 
         uv_pu = (uv_pu/1000) * sys_volt
         uv_t = uv_t/100
 
-        vu_pu = vu_pu
+        #Voltage Unbalanced USB setpoint is divided by 100 
         vu_t = vu_t/100
-
-        cu_pu = cu_pu
         cu_t = cu_t/100
 
+
+        #Over/Under Voltage Action settings for the #PXR25 0 = on, 1 = alarm, 2 = off to
+        #PXR35 settings are 0 = off and 1 = on
+        #Therefore the settings need to be swapped to make sure consistantcy between the two styles
         if ov_action == 0:
             ov_action = 1
         else:
@@ -196,8 +207,9 @@ def calc_max_min_time(repos):
 
 
     else:
+        #Turns off all 35 features for PXR25 units which don't have them
         pwr_en = 0
-        mtr_en = 0
+        mtr_en = 1
         freq_proc = 0
         rp_action = 2
         rp_pu = 100
@@ -236,9 +248,6 @@ def calc_max_min_time(repos):
     neutral      = repos.neutral
 
 
-    all_max_times = []
-    all_min_times = []
-
 
     
     '''
@@ -246,7 +255,7 @@ def calc_max_min_time(repos):
     Inputs Current/Voltage/Power
     ============================================================
     '''        
-    #Inputs
+    #Line Current Inputs
     I_test_A = expected['I A (Amps)']
     I_test_B = expected['I B (Amps)']
     I_test_C = expected['I C (Amps)']
@@ -269,18 +278,9 @@ def calc_max_min_time(repos):
     vc_ang = math.radians(int(setpoints["Vc_Phase_Angle"][0]))
 
 
-    pf = (va_ang -ra_ang - math.radians(90))
+    pf = (va_ang -ra_ang - math.radians(90)) #90 Degree Shift From Omicron 
     #pf = (ra_ang -va_ang)
     unit_pf = math.cos(pf) *100
-
-
-    #a_real_power = I_test_A * Va * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
-    #b_real_power = I_test_B * Vb * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
-    #c_real_power = I_test_C * Vc * math.cos(pf + math.radians(90))#90 Degree Shift For Omicron 
-    
-    #a_reactive_power = I_test_A * Va * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
-    #b_reactive_power = I_test_B * Vb * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
-    #c_reactive_power = I_test_C * Vc * math.sin(pf - math.radians(90))#90 Degree Shift For Omicron 
 
     a_real_power = I_test_A * Va * math.cos(pf)
     b_real_power = I_test_B * Vb * math.cos(pf) 
@@ -295,7 +295,6 @@ def calc_max_min_time(repos):
     c_apparent_power = I_test_C * Vc
     
     real_power     = max(a_real_power, b_real_power, c_real_power)
-    print("REAL POWER = " + str(real_power))
     reactive_power = max(a_reactive_power, b_reactive_power, c_reactive_power)
     apparent_power = max(a_apparent_power, b_apparent_power, c_apparent_power)
     
@@ -318,26 +317,30 @@ def calc_max_min_time(repos):
         V_unbal_per = ((max_V - min(VAB, VBC, VCA))/max_V)*100
     except: 
         V_unbal_per = 0
+
+    
         
     try: 
         I_unbal_per = ((max_I - min(I_test_A, I_test_B, I_test_C))/max_I)*100
     except:
         I_unbal_per = 0
 
+    print("I Unbal Percent " + str(I_unbal_per))
 
 
     '''
-    =========================================================
+    ===========================================================
     Translating some of the variables
     ============================================================
     '''
-        
+
+    #Short Delay/Ground Fault Slope setting = 1 is actually an i2t slope ( 2 for calculations)
     if sds == 1:
         sds = 2
     if gfs == 1:
         gfs = 2
 
-    if gfpu == 0: #Not going to be used anyway. Stops divide by 0 error
+    if gfpu == 0: #PXR20 shows up as 0 when off. Not going to be used anyway. Stops divide by 0 error
         gfpu = 1
 
 
@@ -351,7 +354,7 @@ def calc_max_min_time(repos):
         ground_I = .01 #avoids divide by 0 error
 
 
-
+    #ACB Long Delay Pickup setting in terms of amps is a percentage of the rating
     if family == "ACB" or family == "35":
         ldpu = ldpu*rating/100
 
@@ -384,30 +387,49 @@ def calc_max_min_time(repos):
     '''
     ===========================================================================================
     Calculates Protection Time Tolerances
+
+
+    For each trip type it calculates the max and min trip time.
+    These times are saved into an array with the name of the trip, the max trip and the min trip
+    If a trip should not occur it is saved as -1 which is an invalid time. 
     ===========================================================================================
     '''
 
     'Line Protection Calculations'
-    #Calculates Max Long Delay Time, Min Long Delay Time, and the Expectd Long Delay Time
-    max_ld, min_ld, long_delay    = calc_long_delay(max_I, ldpu, lds, t_ld)
-    
-    #Calculates Max Short Delay Time, Min Short Delay Time, and the Expectd Short Delay Time
-    max_sd, min_sd, short_delay   = calc_short_delay(max_I, ldpu, sdpu, sds, t_sd)
-    
-    #Adjusts Long Delay Times Based On Special Rules
-    max_ld, min_ld                = calc_long_delay_special_rules(max_I, max_ld, min_ld, short_delay, sdpu, t_sd, frame) #Adjusts Long Delay Times Based On Special Rules
+
+    if frame == 51 or frame == 52: #Navy
+        #Calculates Max Long Delay Time, Min Long Delay Time, and the Expectd Long Delay Time
+        max_ld, min_ld, long_delay    = calc_long_delay_navy(max_I, ldpu, lds, t_ld, freq)
+        
+        #Calculates Max Short Delay Time, Min Short Delay Time, and the Expectd Short Delay Time
+        max_sd, min_sd, short_delay   = calc_short_delay_navy(max_I, ldpu, sdpu, sds, t_sd, freq)
+
+        #Calculates Max Instaneous Time and Min Instantaneous Time
+        max_inst, min_inst            = calc_inst_navy(max_I, rating, ipu, freq)
+
+
+    else: #Not Navy
+        #Calculates Max Long Delay Time, Min Long Delay Time, and the Expectd Long Delay Time
+        max_ld, min_ld, long_delay    = calc_long_delay(max_I, ldpu, lds, t_ld)
+        
+        #Calculates Max Short Delay Time, Min Short Delay Time, and the Expectd Short Delay Time
+        max_sd, min_sd, short_delay   = calc_short_delay(max_I, ldpu, sdpu, sds, t_sd)
+        
+        #Adjusts Long Delay Times Based On Special Rules
+        max_ld, min_ld                = calc_long_delay_special_rules(max_I, max_ld, min_ld, short_delay, sdpu, t_sd, freq, frame) #Adjusts Long Delay Times Based On Special Rules
+
+        #Calculates Max Instaneous Time and Min Instantaneous Time
+        max_inst, min_inst            = calc_inst(max_I, rating, ipu)
+
 
     #Calculates Max Ground Fault Time and Min Ground Fault Time
     max_gf, min_gf                = calc_gf_delay(max_I, rating, gf_type, gf_sensor, gfpu, t_gf, gfs, gf_mode, frame, style_2, gf_on, gf_bp)
-
-    #Calculates Max Instaneous Time and Min Instantaneous Time
-    max_inst, min_inst            = calc_inst(max_I, rating, ipu)
 
     #Calculates Max Maintenance Mode Time and Min Maintenance Mode Time
     max_mm, min_mm                = calc_mm_mode(max_I, rating, usb_mm_mode, mm_level)
 
     #Calculates Max Maintenance Mode Time and Min Maintenance Mode Time
-    max_override, min_override    = calc_override(max_I, override)
+    max_override, min_override    = calc_override(max_I, override, family)
 
     #Appends the specified trip time to an index of all the max times and all the min times [Trip Time, Trip Name]
     all_max_times, all_min_times  = append_max_and_mins(max_ld, min_ld, "Long Delay", all_max_times, all_min_times) 
@@ -433,11 +455,11 @@ def calc_max_min_time(repos):
         max_pl                       = calc_time_generic(I_unbal_per, pl_action, 75, pl_t, 2, .3, 3)
         min_pl                       = calc_time_generic(I_unbal_per, pl_action, 75, pl_t, -2, -.3, 3)
 
-        #Calculates Max and Min Current Over Voltage Trip Times
+        #Calculates Max and Min Over Voltage Trip Times
         max_ov                       = calc_time_generic(max_V, ov_action, ov_pu, ov_t,  1.02, .3, 1)
         min_ov                       = calc_time_generic(max_V, ov_action, ov_pu, ov_t,  .98, -.3, 1)
 
-        #Calculates Max and Min Current Under Voltage Trip Times
+        #Calculates Max and Min Under Voltage Trip Times
         max_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, .98, .3, 5)
         min_uv                       = calc_time_generic(max_V, uv_action, uv_pu, uv_t, 1.02, -.3, 5)
 
@@ -451,35 +473,43 @@ def calc_max_min_time(repos):
         
     'Power Protection Calculations'
     if pwr_en != 0:
-        
+
+        #Calculates Max and Min Forward Real Power Trip Times
         min_fw_power                 = calc_time_generic(real_power, fw_action, fw_pu, fw_t, .98, -.3, 1)
         max_fw_power                 = calc_time_generic(real_power, fw_action, fw_pu, fw_t, 1.02, +.3, 1)
         all_max_times, all_min_times = append_max_and_mins(max_fw_power, min_fw_power, "Forward Real Power", all_max_times, all_min_times)
-        
+
+        #Calculates Max and Min Forward Reactive Power Trip Times
         min_fvar_power               = calc_time_generic(reactive_power, fvar_action, fvar_pu, fvar_t, .98, -.3, 1)
         max_fvar_power               = calc_time_generic(reactive_power, fvar_action, fvar_pu, fvar_t, 1.02, +.3, 1)
         all_max_times, all_min_times = append_max_and_mins(max_fvar_power, min_fvar_power, "Forward Reactive Power", all_max_times, all_min_times)
-                
+
+        #Calculates Max and Min Apparent Power Trip Times       
         min_va_power                 = calc_time_generic(apparent_power, va_action, va_pu, va_t, .98, -.3, 1)
         max_va_power                 = calc_time_generic(apparent_power, va_action, va_pu, va_t, 1.02, +.3, 1)
         all_max_times, all_min_times = append_max_and_mins(max_va_power, min_va_power, "Forward Apparent Power", all_max_times, all_min_times)
 
+        #Calculates Max and Min Reverse Forward Power Trip Times 
         min_rp_power                 = calc_time_generic(rev_real_power, rp_action, rp_pu, rp_t, .98, -.3, 5)
         max_rp_power                 = calc_time_generic(rev_real_power, rp_action, rp_pu, rp_t, 1.02, +.3, 5)
         all_max_times, all_min_times = append_max_and_mins(max_rp_power, min_rp_power, "Reverse Forward Power", all_max_times, all_min_times)
 
+        #Calculates Max and Min Reverse Reactive Power Trip Times 
         min_rr_power                 = calc_time_generic(rev_reactive_power, rr_action, rr_pu, rr_t, .98, -.3, 5)
         max_rr_power                 = calc_time_generic(rev_reactive_power, rr_action, rr_pu, rr_t, 1.02, +.3, 5)
         all_max_times, all_min_times = append_max_and_mins(max_rr_power, min_rr_power, "Reverse Reactive Power", all_max_times, all_min_times)
 
+        #Calculates Max and Min Under Power Factor Trip Times 
         min_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, 1.02, -.3, 5)
         max_upf_power                 = calc_time_generic(unit_pf, up_action, up_pu, up_t, .98, +.3, 5)
         all_max_times, all_min_times = append_max_and_mins(max_upf_power, min_upf_power, "Under Power Factor", all_max_times, all_min_times)
 
+        #Calculates Max and Min Real Demand Power
         min_r_demand_power                 = calc_time_generic(real_power, rpd_action, rpd_pu, rpd_t, .95, .95, 0)
         max_r_demand_power                 = calc_time_generic(real_power, rpd_action, rpd_pu, rpd_t, 1.05, 1.05, 0)
         all_max_times, all_min_times = append_max_and_mins(max_r_demand_power, min_r_demand_power, "Real Demand Power", all_max_times, all_min_times)
 
+        #Calculates Max and Min Apparent Demand Power
         min_a_demand_power                 = calc_time_generic(apparent_power, apd_action, apd_pu, apd_t, .95, .95, 0)
         max_a_demand_power                 = calc_time_generic(apparent_power, apd_action, apd_pu, apd_t, 1.05, 1.05, 0) 
         all_max_times, all_min_times = append_max_and_mins(max_a_demand_power, min_a_demand_power, "Apparent Demand Power", all_max_times, all_min_times)
@@ -487,9 +517,10 @@ def calc_max_min_time(repos):
         
     if freq_proc != 0:
 
-        freq_level = freq/expected_freq
+        freq_level = freq/expected_freq #Calculates the percentage over/under the frequency is compared to the what is expected (sp)
 
-        #Needs to be flip flopped due to calc time checks actions
+        #The usual setting is 0 = on, 1 = alarm and 2 is off
+        #Over frequency/ Under Freqeuncy has 0 = off and 1 = on. It needs to be swapped for calc_time_generic to work 
         if ofreq_action == 0:
             ofreq_action = 1
         else:
@@ -519,19 +550,22 @@ def calc_max_min_time(repos):
     min_trip_times = [] 
     array_len = len(all_max_times)
 
-    
+    #Goes through all the times and adds them to a final trip times (skips 1 because tags are added to the "all_max/min_times" 
     for j in range(0, array_len, 2):
+        #If the max time is valid (not -1) then append the max time to max times. 
         if all_max_times[j] != -1:
             max_trip_times.append(all_max_times[j])
             print(all_max_times[j+1])
             print(all_max_times[j])
 
+        #If the min time is valid (not -1) then append the min time to the min trip times. 
         if all_min_times[j] != -1:
             min_trip_times.append(all_min_times[j])
 
         j = j + 1
 
 
+    #Checks to see if the unit should trip at all. If it can't, it goes into the no trip condition
     if len(max_trip_times) != 0:
         max_time = min(max_trip_times)
     else:
@@ -539,7 +573,7 @@ def calc_max_min_time(repos):
         no_trip_case = True
         max_time = -1
         
-
+    #Checks to see if the unit should trip at all. If it can't, it goes into the no trip condition
     if len(min_trip_times) != 0:
         min_time = min(min_trip_times)
     else:
@@ -547,7 +581,7 @@ def calc_max_min_time(repos):
         min_time = -1
 
         
-    
+    #Choses a time the unit should wait if no trip condition is encountered
     if no_trip_case == True:
         if gf_mode == 0: 
             max_time = 2
@@ -559,8 +593,8 @@ def calc_max_min_time(repos):
             max_time = vu_t
         elif cu_action == 0:
             max_time = cu_t + 1
-        elif rp_action == 0 and pwr_en != 0:
-            max_time = rp_t
+        elif rp_action == 0:
+            max_time = rp_t + 1
         elif pl_action == 0:
             max_time = pl_t
         elif pwr_en != 0:
@@ -684,6 +718,7 @@ calc_override(I, override)
 
 
 def calc_long_delay(I, ldpu, lds_setpoint, t_ld):
+
     lds_setpoint = round(lds_setpoint,0)
     
     if lds_setpoint > 3:
@@ -746,12 +781,12 @@ def calc_long_delay(I, ldpu, lds_setpoint, t_ld):
     else:
         long_delay_max = -1
 
-    
+        
     return long_delay_max, long_delay_min, long_delay
 
 
 
-def calc_long_delay_special_rules(I, long_delay_max, long_delay_min, short_delay, sd_pu, sd_t, frame):
+def calc_long_delay_special_rules(I, long_delay_max, long_delay_min, short_delay, sd_pu, sd_t, freq, frame):
     #Long Delay Can't Be Faster Than Short Delay
 
     if frame > 10 and sd_pu != 0: 
@@ -777,7 +812,8 @@ def calc_long_delay_special_rules(I, long_delay_max, long_delay_min, short_delay
     elif frame == 21 and I > 1800:
         long_delay_max = long_delay_max/1.8
         long_delay_min = long_delay_min/1.8            
-                
+
+
     return long_delay_max, long_delay_min
 
 
@@ -959,12 +995,15 @@ def calc_mm_mode(I, rating, usb_mm_mode, mm_level):
     return max_mm, min_mm
         
 
-def calc_override(I, override):            
+def calc_override(I, override, family):            
     '''
     Override Pickup Check
     '''
 
-    peak_I = I * math.sqrt(2)
+    if family == "ACB": #ACB uses peak.
+        peak_I = I * math.sqrt(2)
+    else:
+        peak_I = I
     
     if peak_I > override *1.15:
         max_override = .025
@@ -1041,7 +1080,99 @@ def calc_time_generic(input_level, action, pu_level, trip_time, pu_tol, time_tol
 
 
     return result_time
+
+
+def calc_long_delay_navy(I, ldpu, lds, t_ld, freq):
+
+    long_delay = ((6/(I/ldpu))**lds)*t_ld 
+    ldpu_pickup = ldpu * 1.6 #LD Pickup for navy is 160% of LDPU 
+
+    freq = 60 #temp
+        
+    if freq == 60:
+        ld_tol_low = .9
+        ld_tol_high = 1.1
+    else:
+        ld_tol_low = .85
+        ld_tol_high = 1.15
+
+
+    
+    if I >= ldpu_pickup * ld_tol_high:
+        long_delay_min = ((6/(I/ldpu))**lds)*t_ld * (1-.26) 
+    else:
+        long_delay_min = -1
+
+    #LDPU Max Pickup Tolerance is 110%
+    if I >= ldpu_pickup *1.15:
+        long_delay_max = ((6/(I/ldpu))**lds)*t_ld * (1+.26) 
+    else:
+        long_delay_max = -1
+        
+    return long_delay_max, long_delay_min, long_delay      
+
+def calc_short_delay_navy(I, ldpu, sdpu, sds, t_sd, freq):
+
+    freq = 60 #temp
+    if freq == 60:
+        sd_tol_low = .9
+        sd_tol_high = 1.1
+    else:
+        sd_tol_low = .85
+        sd_tol_high = 1.15
+        
+    short_delay = ((6/(I/ldpu))**sds)*t_sd
+
+    if I > 16:
+        short_delay = t_sd
+    
+    #Checks to see if the trip is in Short Dealy Pickup (+10%)
+    if I >= ldpu * sdpu * sd_tol_high and sdpu != 0:
+        if sds == 0: 
+           short_delay_max = t_sd
+        else:
+            short_delay_max = short_delay * 1.2
+
+    else:       
+        short_delay_max = -1
+        
+
+
+    #Checks to see if the trip is in Short Dealy Pickup (-10%)
+    if I >= ldpu*sdpu*sd_tol_low and sdpu != 0:
+        if sds == 0:
+            if t_sd == .05:
+                short_delay_min = .025
+            elif t_sd == .1:
+                short_delay_min = .055
+            elif t_sd == .2:
+                short_delay_min = .150
+            else:
+                short_delay_min = .250
+
+        else: 
+            short_delay_min = t_sd * .8 
             
+    else:
+        short_delay_min = -1
+
+    return short_delay_max, short_delay_min, short_delay
+
+def calc_inst_navy(I, rating, ipu, freq):
+
+    if I >= ipu * rating * 1.1: #If applied current is greater than the inst pikcup * rating * upper tolerance
+       max_inst = .021 #Becomes maximum value
+    else:
+        max_inst = -1 #No trip
+
+    #If applied current is greater than the inst pikcup * rating * upper tolerance
+    if I > ipu * rating *.9:
+        min_inst = .005 #Becomes minimum value 
+    else:
+        min_inst = -1 #No trip
+
+    return max_inst, min_inst
+        
 def append_max_and_mins(max_time, min_time, tag, max_array, min_array):
 
     max_array.append(max_time)
@@ -1050,3 +1181,5 @@ def append_max_and_mins(max_time, min_time, tag, max_array, min_array):
     min_array.append(tag)
 
     return max_array, min_array
+
+    

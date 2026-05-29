@@ -163,8 +163,8 @@ class usb_commands():
         self.command_dictionary["read_setpoint_four_request"]   = [[128, 0, 0, 4], "No Input"]
         self.command_dictionary["read_setpoint_five_request"]   = [[128, 0, 0, 5], "No Input"]
         
-        self.command_dictionary["write_setpoint_zero_request"]  = [[128, 2, 0, 0, 1, 1, 42], "dictionary and Keys"]
-        self.command_dictionary["write_setpoint_one_request"]   = [[128, 2, 0, 1, 1, 1, 52], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_zero_request"]  = [[128, 2, 0, 0, 1, 1, 49], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_one_request"]   = [[128, 2, 0, 1, 1, 1, 51], "dictionary and Keys"]
         self.command_dictionary[ "write_setpoint_two_request"]  = [[128, 2, 0, 2, 1 ,1, 9], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_three_request"] = [[128, 2, 0, 3, 1 ,1, 37], "dictionary and Keys"]
         self.command_dictionary["write_setpoint_four_request"]  = [[128, 2, 0, 4, 1, 1, 53], "dictionary and Keys"]
@@ -196,8 +196,8 @@ class usb_commands():
 
     def add_commands(self):
 
-        self.command_dictionary["enter_password_request"]                                = [[128, 4, 3, 14, 1, 1, 4, 0], "Uint08"]
-        self.command_dictionary["set_password_request"]                                  = [[128, 4, 3, 31, 1, 1, 4, 0], "Uint08"]
+        self.command_dictionary["enter_password_request"]                                = [[128, 4, 3, 14, 1, 1, 6, 0], "Uint08"]
+        self.command_dictionary["set_password_request"]                                  = [[128, 4, 3, 31, 1, 1, 6, 0], "Uint08"]
         self.command_dictionary["reset_trip_unit_request"]                               = [[128, 4, 3, 1], "No Input"]
         self.command_dictionary["reset_trip_unit_check"]                                 = [[128, 0, 3, 1], "No Input"]
 
@@ -457,6 +457,8 @@ class usb_commands():
         self.command_dictionary["read_pcba_serial_number_request"]                       = [[128, 0, 7, 194], "No Input"]  
                                 
     def add_acb_commands(self):
+
+        self.command_dictionary["write_setpoint_one_request"]   = [[128, 2, 0, 1, 1, 1, 51], "dictionary and Keys"]
         self.command_dictionary["read_real_time_current_crest_factor"]                   = [[128, 0, 1, 20], "No Input"]
         self.command_dictionary["read_real_power_factor_freqeuncy_min_max"]              = [[128, 0, 1, 22], "No Input"]
         self.command_dictionary["read_real_time_data_buffer_power"]                      = [[128, 0, 1, 23], "No Input"]  
@@ -628,8 +630,73 @@ class usb_commands():
         self.command_dictionary["write_breaker_frame_request"]           = [[128, 2, 4, 29, 1, 1, 2, 0], "Uint16"]
         self.command_dictionary["write_breaker_frame_check"]             = [[128, 0, 4, 29], "No Input"]
 
-            
-    def set_family(self, family):
+        self.command_dictionary["reset_max_min_current_request"]        = [[128, 4, 3, 17], "No Input"]
+        self.command_dictionary["reset_max_min_current_check"]          = [[128, 0, 3, 17], "No Input"]
+
+        self.command_dictionary["capture_waveform_request"]        = [[128, 4, 3, 2], "No Input"]
+        self.command_dictionary["capture_waveform_check"]          = [[128, 0, 3, 2], "No Input"]
+        self.command_dictionary["read_waveform_check"]          = [[128, 0, 3, 3], "No Input"]
+
+        self.command_dictionary["read_ct_version_request"]          = [[128, 4, 4, 80], "No Input"]
+        self.command_dictionary["read_ct_version_check"]          = [[128, 0, 4, 80], "No Input"]
+
+        self.command_dictionary["read_current_offset_request"]        = [[128, 4, 4, 200], "No Input"]
+        self.command_dictionary["read_current_offset_check"]          = [[128, 0, 4, 200], "No Input"]
+
+        self.command_dictionary["read_vdb_version_request"]        = [[128, 4, 4, 200], "No Input"]
+        self.command_dictionary["read_vdb_version_check"]          = [[128, 0, 4, 200], "No Input"]
+
+    
+        self.command_dictionary["read_current_offset_request"]        = [[128, 4, 4, 144], "No Input"]
+        self.command_dictionary["read_current_offset_check"]          = [[128, 0, 4, 144], "No Input"]  
+        
+        self.command_dictionary["read_rogowski_gain_request"]        = [[128, 4, 4, 146], "No Input"]
+        self.command_dictionary["read_rogowski_gain_check"]          = [[128, 0, 4, 146], "No Input"]
+
+        self.command_dictionary["read_etu_gain_request"]        = [[128, 4, 4, 208], "No Input"]
+        self.command_dictionary["read_etu_gain_check"]          = [[128, 0, 4, 208], "No Input"]
+
+        self.command_dictionary["read_voltage_offset_request"]        = [[128, 4, 4, 148], "No Input"]
+        self.command_dictionary["read_voltage_offset_check"]          = [[128, 0, 4, 148], "No Input"]
+
+        self.command_dictionary["read_voltage_gain_request"]        = [[128, 4, 4, 150], "No Input"]
+        self.command_dictionary["read_voltage_gain_check"]          = [[128, 0, 4, 150], "No Input"]
+
+        self.command_dictionary["read_phase_shift_gain_request"]        = [[128, 4, 4, 152], "No Input"]
+        self.command_dictionary["read_phase_shift_gain_check"]          = [[128, 0, 4, 152], "No Input"]
+
+        self.command_dictionary["read_sg_offset_request"]        = [[128, 4, 4, 154], "No Input"]
+        self.command_dictionary["read_sg_offset_check"]          = [[128, 0, 4, 154], "No Input"]  
+
+        self.command_dictionary["read_sg_gain_request"]        = [[128, 4, 4, 156], "No Input"]
+        self.command_dictionary["read_sg_gain_check"]          = [[128, 0, 4, 156], "No Input"]
+
+        self.command_dictionary["read_vdb_cal_request"]        = [[128, 4, 4, 202], "No Input"]
+        self.command_dictionary["read_vdb_cal_check"]          = [[128, 0, 4, 202], "No Input"]
+        
+        #Milo Test Code
+
+        self.command_dictionary["read_mcu1_fram_request"]           = [[128, 4, 3, 44, 1, 1, 4, 0], "Uint08"]
+        self.command_dictionary["read_mcu1_fram_check"]             = [[128, 0, 3, 44], "No Input"]
+
+        
+        self.command_dictionary["write_breaker_configuraiton"]                           = [[128, 2, 4, 110, 1, 1, 34], "dictionary and Keys"]
+        self.command_dictionary["read_breaker_configuraiton_request"]                    = [[128, 4, 4, 110], "No Input"]
+        self.command_dictionary["read_breaker_configuraiton_check"]                      = [[128, 0, 4, 110], "No Input"]
+
+
+        #FOR NRX
+        #self.command_dictionary["read_mcu1_fram_request"]           = [[128, 4, 4, 62, 1, 1, 4, 0], "Uint08"]
+        #self.command_dictionary["read_mcu1_fram_check"]             = [[128, 0, 4, 62], "No Input"]
+
+        self.command_dictionary["read_flags_request"]           = [[128, 4, 3, 73], "No Input"]
+        self.command_dictionary["read_flags_check"]             = [[128, 0, 3, 73], "No Input"]
+
+        self.command_dictionary["write_real_time_clock"]        =[[128, 4, 3, 5, 1, 1, 8, 0], "Uint08"]
+
+
+    def set_family(self, family, frame):
+        self.frame = frame
         self.family = family
         if family == "MCCB":
 
@@ -638,7 +705,7 @@ class usb_commands():
             self.add_mccb_commands()
 
         if family != "MCCB":
-            print("pass")
+            self.add_acb_commands()
         if family == "35":
             self.add_pxr_35(family)
 
@@ -747,15 +814,31 @@ class usb_commands():
 
         self.command_dictionary["write_breaker_configuraiton"]                           = [[128, 2, 4, 111, 1, 1, 34], "dictionary and Keys"]
         self.command_dictionary["read_breaker_configuraiton_request"]                    = [[128, 0, 4, 111], "No Input"]
+        self.command_dictionary["read_breaker_configuraiton_check"]                      = [[128, 4, 4, 111], "No Input"]
         self.command_dictionary["enter_password_request"]                                = [[128, 4, 3, 14, 1, 1, 6, 0], "Uint08"]
 
         self.command_dictionary["read_digitalization_features_request"]                  = [[128, 4, 4, 180], "No Input"]
         self.command_dictionary["read_digitalization_features_check"]                    = [[128, 0, 4, 180], "No Input"]
         self.command_dictionary["write_digitalization_features_request"]                 = [[128, 0, 4, 180], "bin"]
 
+        self.command_dictionary["read_waveform_id_request"]                              = [[128, 0, 2, 8], "No Input"]
+        self.command_dictionary["read_waveform_sample_request"]                          = [[128, 0, 2], "Event"]
 
-   
-            
+    
+    def add_nrx_commands(self):
+        self.command_dictionary["write_setpoint_zero_request"]   = [[128, 2, 0, 0, 1, 1, 17], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_one_request"]   = [[128, 2, 0, 1, 1, 1, 41], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_two_request"]   = [[128, 2, 0, 2, 1, 1, 9], "dictionary and Keys"]
+        self.command_dictionary["write_setpoint_three_request"]   = [[128, 2, 0, 3, 1, 1, 35, 0], "dictionary and Keys"]
+
+        self.command_dictionary["secondary_injection_rms_test_with_trip_request"]        = [[128, 4, 3, 6, 1, 1, 4], "NRX_Secondary"]
+        self.command_dictionary["secondary_injection_rms_test_with_trip_check"]          = [[128, 0, 3, 6], "No Input"]
+        #51 for other firmware
+        
+    def change_password_len(self, pass_len):
+        self.command_dictionary["enter_password_request"]                                = [[128, 4, 3, 14, 1, 1, pass_len, 0], "Uint08"]
+        
+        
     def get_message(self, def_name, *argv):
 
         print(def_name)
@@ -785,12 +868,20 @@ class usb_commands():
             tx, packet = self.dictionary_and_keys(packet_start, argv[0], argv[1])
         elif add_data == "Secondary":
             tx, packet = self.secondary(packet_start, argv[0], argv[1])
+        elif add_data == "NRX_Secondary":
+            tx, packet = self.nrx_secondary(packet_start, argv[0], argv[1])
         elif add_data == "char":
             tx, packet = self.add_char(packet_start, *argv)
         elif add_data == "Uint08_Array":
             tx, packet = self.add_uint_eight_array(packet_start, argv[0])
         elif add_data == "write_breaker_protection_capacity":
             tx, packet = self.write_breaker_protection_capacity(packet_start, argv[0], argv[1])
+        elif add_data == "Event":
+            print(argv[0])
+            print(argv[1])
+            print(argv[2])
+            print(packet_start)
+            tx, packet = self.read_event(packet_start, argv[0], argv[1], argv[2])
         elif add_data == "bin":
             tx, packet = self.add_bin(packet_start, argv[0], argv[1])
             
@@ -1069,7 +1160,7 @@ class usb_commands():
         data_packet = []
 
         
-        if  packet_start[3] == 0 or packet_start[3] == 1 or packet_start[3] == 5 or packet_start[3] > 7:
+        if  packet_start[3] == 0 or packet_start[3] == 2 or packet_start[3] == 1 or packet_start[3] == 5 or packet_start[3] > 7:
 
 
             if self.family == "MCCB":
@@ -1164,43 +1255,60 @@ class usb_commands():
                 
             else:
 
-                if packet_start[3] == 0:
-                    style = dictionary["Style1"][0]
-                    vb1, vb2, vb3 = self.acb_setpoint_zero_validity_bits(style)
+                if self.frame == 0 or self.frame == 1:
+
+                    if packet_start[3] == 0:
+                        vb1 = 231
+                        data_packet.append(vb1)
+
+                    elif packet_start[3] == 2:
+
+                        vb1 = 15
+                        data_packet.append(vb1)
+                        
+                    else: 
+                        vb1 = 255
+                        vb2 = 255
+                        vb3 = 7
+                        data_packet.append(vb1)
+                        data_packet.append(vb2)
+                        data_packet.append(vb3)
+
+                        #vb1 = 247
+                        #vb2 = 63
+                        #vb3 = 176
                     
-                elif packet_start[3] == 1:
-                    vb1 = 247
-                    vb2 = 253
-                    vb3 = 255
+                else: 
+                    if packet_start[3] == 0:
+                        style = dictionary["Style1"][0]
+                        vb1, vb2, vb3 = self.acb_setpoint_zero_validity_bits(style)
+                        
+                    elif packet_start[3] == 1:
+                        vb1 = 247
+                        vb2 = 253
+                        vb3 = 255
 
-                elif packet_start[3] == 2:
-                    vb3 = 127
-                elif packet_start[3] == 3:
-                    vb3 = 127
-                elif packet_start[3] == 4:
-                    vb3 = 1   
-                elif packet_start[3] == 5:
-                    vb1 = 247
-                    vb2 = 127
-                    vb3 = 6
+                    elif packet_start[3] == 2:
+                        vb3 = 127
+                    elif packet_start[3] == 3:
+                        vb3 = 127
+                    elif packet_start[3] == 4:
+                        vb3 = 1   
+                    elif packet_start[3] == 5:
+                        vb1 = 247
+                        vb2 = 127
+                        vb3 = 6
+                        
+                    data_packet.append(vb1)
+                    data_packet.append(vb2)
+                    data_packet.append(vb3)
 
-                data_packet.append(vb1)
-                data_packet.append(vb2)
-                data_packet.append(vb3)
 
         
         for key in keys:
 
-##            a = int(dictionary[key][0]%256)
-##            b = int(dictionary[key][0]/256)
-##            print("a  " + str(a))
-##            print("b  " + str(b)) 
             data_packet.append(int(dictionary[key][0]%256))
             data_packet.append(int(dictionary[key][0]/256))
-
-        if packet_start[3] == 5:
-            for k in range(10):
-                data_packet.append(0)
 
         packet_end = [0, 0, 253]
 
@@ -1215,6 +1323,22 @@ class usb_commands():
         tx  = self.format_packet(packet)
 
         return tx, packet
+
+    def nrx_secondary(self, msg, phase, current): #Table 149-150
+
+        I_byte_four  = (math.floor(current/(256*256*256)))%256
+        I_byte_three = (math.floor(current/(256*256)))%256
+        I_byte_two   = (math.floor(current/(256)))%256
+        I_byte_one   = current%256
+
+        packet = msg +  [I_byte_one, I_byte_two, I_byte_three, I_byte_four, 0, 0, 253] #Table 149 software RMS test with trip request from PC 
+        
+        packet = self.calc_checksum(packet)
+        tx = self.format_packet(packet)
+
+
+        return tx, packet
+
 
     def secondary(self, msg, phase, current): #Table 149-150
 
@@ -1295,7 +1419,21 @@ class usb_commands():
         return tx, packet
 
 
+    def read_event(self, packet_start, requested_waveform, event_id, cycle):
 
+
+        event_id_four   = (math.floor(event_id/(256*256*256)))%256
+        event_id_three  = (math.floor(event_id/(256*256)))%256
+        event_id_two    = (math.floor(event_id/(256)))%256
+        event_id_one    = event_id%256
+
+        packet = packet_start +  [requested_waveform, event_id_one, event_id_two, event_id_three, event_id_four, cycle, 0, 0, 253] #Table 149 software RMS test with trip request from PC 
+        
+        packet = self.calc_checksum(packet)
+        tx = self.format_packet(packet)
+
+        return tx, packet
+        
     def acb_setpoint_zero_validity_bits(self, style):
         
 

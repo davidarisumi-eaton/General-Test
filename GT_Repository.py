@@ -33,7 +33,7 @@ from struct import *
 import time
 
 from GT import GT_MCCB_Translator, GT_ACB_Translator, GT_Conversions
-from GT import GT_MCCB_Settings, GT_ACB_Settings, GT_ACB35_Settings
+from GT import GT_MCCB_Settings, GT_ACB_Settings, GT_ACB35_Settings, GT_Navy_Settings
 
 class Repository(object):           #  creates object to manage core setpoints
     
@@ -77,6 +77,8 @@ class Repository(object):           #  creates object to manage core setpoints
         self.debug_msg = ""
         self.starting_life_points = 0
         self.life_point_change = 0
+        self.override_ct = False #Temporary for coldstart. need to fix.
+        self.pass_len = 6
 
         self.static_style_1 = 0 #only to be changed when reading from the trip unit
         self.static_style_2 = 0 #only to be changed when reading from the trip unit
@@ -146,13 +148,15 @@ class Repository(object):           #  creates object to manage core setpoints
         self.set_setting_file(choice)
         self.set_translator(choice)
         self.set_keys()
-        
+
     def set_family(self, choice):
 
         if choice == "ACB":
             self.family = "ACB"
         elif choice == "35":
-            self.family = "35" 
+            self.family = "35"
+        elif choice == "Navy":
+            self.family = "Navy" 
         else:
             self.family = "MCCB"
 
@@ -171,6 +175,8 @@ class Repository(object):           #  creates object to manage core setpoints
             self.setting_file = GT_ACB_Settings
         elif choice == "35":
             self.setting_file = GT_ACB35_Settings
+        elif choice == "Navy":
+            self.setting_file = GT_Navy_Settings
         else:
             self.setting_file = GT_MCCB_Settings
             
@@ -321,6 +327,10 @@ class Repository(object):           #  creates object to manage core setpoints
             frame_num  = 4
         elif frame == "Double Narrow":
             frame_num  = 5
+        elif frame == "L103":
+            frame_num  = 51
+        elif frame == "A103":
+            frame_num  = 52
         else:
             frame_num = -1
         print(frame)

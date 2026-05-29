@@ -393,7 +393,47 @@ def read_digitization_bits(msg, *argv):
 
 
         return gf_on, bypass
+
+
+def translate_event_id(msg, *argv):
+
+
+    byte_num = len(msg) - 20
+    
+    val = GT_Conversions.uint_thirtytwo_to_dec(msg, byte_num)
+
+    return val 
+
+
+    
+def translate_waveform(msg, *argv):
+
+    start_num = 23 * 3
+    waveform_array = []
+    i = 0
+
+    if len(msg) < 40:
+        waveform_array.append(0)
+        return waveform_array
+    
+    for k in range(0, 57):
+        byte_num = start_num + k * 12
+        val = GT_Conversions.hex_to_float(msg,byte_num)
+##        if val > 200000 or val < -200000: #invalid read check (number will never be over 200,000)
+##            val =0 
+        waveform_array.append(val)
+
+    start_num = (23 * 3) + (254 * 3) 
+    for k in range(0, 23):
+        byte_num = start_num + k * 12
+        val = GT_Conversions.hex_to_float(msg,byte_num)
+##        if val > 200000 or val < -200000: #invalid read check (number will never be over 200,000)
+##            val =0
+            
+        waveform_array.append(val)
         
+    return waveform_array
+    
 def translate_buffer_zero(msg, *argv):
 
         stat_hex_one     =  (msg[24])+(msg[25])

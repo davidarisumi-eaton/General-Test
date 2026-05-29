@@ -209,8 +209,14 @@ class USB_Communication(object):
     def set_repository(self, repos):
         self.repos = repos
 
-    def set_command_list(self, family):
-        self.commands.set_family(family)
+    def set_command_list(self, family, frame):
+        self.commands.set_family(family, frame)
+
+    def change_password_len(self, pass_len):
+        self.commands.change_password_len(pass_len)
+
+    def set_nrx(self):
+        self.commands.add_nrx_commands()
 
     '''
     ===========================================================================================
@@ -220,17 +226,17 @@ class USB_Communication(object):
     
     def turn_off_port(self):
         self.bs.PowerOffPort(0)
-        self.bs.PowerOffPort(1)
-        self.bs.PowerOffPort(2)
-        self.bs.PowerOffPort(3)
+        #self.bs.PowerOffPort(1)
+        #self.bs.PowerOffPort(2)
+        #self.bs.PowerOffPort(3)
 
         
         
     def turn_on_port(self):
         self.bs.PowerOnPort(0)
-        self.bs.PowerOnPort(1)
-        self.bs.PowerOnPort(2)
-        self.bs.PowerOnPort(3)
+        #self.bs.PowerOnPort(1)
+        #self.bs.PowerOnPort(2)
+        #self.bs.PowerOnPort(3)
 
         
     def close_port(self):
@@ -331,9 +337,8 @@ class USB_Communication(object):
         tx, packet = self.commands.get_message(command, *argv) #Gets the message in bytes and as an index
         if tx == False: #If no valid message was found, quits out of the method
             return False
-        
-        time.sleep(.01)
 
+        time.sleep(.015)
         try:
             msg = self.usb_transaction(tx) #Sends usb message(tx)
         except Exception as err:
@@ -395,14 +400,14 @@ class USB_Communication(object):
         tx = "" 
         for b in tx:
             temp = str(hex(b))
-            print(b)
+            #print(b)
             val = temp.replace("0x","")
             if len(val) == 1:
                 val = "0" + val
             
             tx = tx + val + " "
 
-        print(tx)
+        #print(tx)
         if self.repos != None:
             self.repos.append_usb_msg(tag, str(tx), str(msg))
             
@@ -482,7 +487,7 @@ class USB_Communication(object):
                 try:
                     good_write = True
                     self.ser.write(tx)  #Sends the command
-                    time.sleep(.1)
+                    time.sleep(.001)
                 except:
                     print("write error " + str(fail_count))
                     print(tx)
@@ -511,8 +516,7 @@ class USB_Communication(object):
         else:
             ack = self.normalize_buffer_read(ack, len(ack)+1)
 
-
-        time.sleep(.05)    
+  
         self.ser.flushOutput()
         self.ser.flushInput()
             
@@ -522,7 +526,7 @@ class USB_Communication(object):
     def read_specific(self):
 
         ack = ' '
-         
+        time_out = 0 
         while self.ser.in_waiting:
             inp = ''
             try:
@@ -541,7 +545,11 @@ class USB_Communication(object):
             
             check = inp.hex() #gives the correct bytes, each on a newline
             ack = ack + ' ' + check
-             
+
+            time_out = time_out + 1
+            if time_out > 2000:
+                print("Timeout")
+                break
 
         return ack
     
